@@ -1,4 +1,3 @@
-import com.android.build.api.dsl.Packaging
 import java.util.Properties
 
 val localProperties = Properties().apply {
@@ -52,8 +51,7 @@ android {
 }
 
 dependencies {
-    implementation(libs.accompanist.pager)
-    implementation(libs.accompanist.pager.indicators)
+    implementation(libs.androidx.foundation)
     //DataStore
     implementation(libs.androidx.datastore.preferences)
     // Ktor client
@@ -65,7 +63,6 @@ dependencies {
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)
     implementation(libs.koin.compose.viewmodel.navigation)
-
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.splashscreen)

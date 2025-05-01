@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.screen.login
+package com.acteam.vocago.presentation.screen.auth
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

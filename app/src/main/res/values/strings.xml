@@ -1,3 +1,24 @@
 <resources>
-    <string name="app_name">VocaGo</string>
+    <string name="app_name" translatable="false">VocaGo</string>
+    <string name="onboarding_title_1">Enhance Your English Vocabulary!</string>
+    <string name="onboarding_detail_1">Explore new English words through fun and engaging lessons. Learn new vocabulary every day and improve your language skills efficiently!</string>
+    <string name="onboarding_title_2">Challenge Yourself with Friends!</string>"
+    <string name="onboarding_detail_2">Join challenges with your friends, compete, and see who learns faster! Prove you’re the best in the group and progress together!</string>
+    <string name="onboarding_title_3">Relax After Every Lesson!</string>
+    <string name="onboarding_detail_3">After each lesson, unwind and enjoy some chill moments!</string>
+    <string name="onboarding_title_5">Start!</string>
+    <string name="onboarding_detail_5">Begin your new game!</string>
+    <string name="btn_prev">Prev</string>
+    <string name="btn_next">Next</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_skip">Skip</string>
+    <string name="onboarding_title_4">Choose your language</string>
+    <string name="english">English</string>
+    <string name="vietnamese">Vietnamese</string>
+    <string name="system">System</string>
+    <string name="txt_screen_may_be_flicker">The screen may flicker</string>
+    <string name="txt_screen_may_be_flicker_detail">Changing the language may temporarily cause screen flickering.</string>
+    <string name="btn_continue">Continue</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="mess_is_current_language"> is current language!</string>
 </resources>

@@ -5,7 +5,7 @@ import com.acteam.vocago.domain.repository.WelcomeRepository
 class SaveOnBoardingStateUseCase(
     private val welcomeRepository: WelcomeRepository
 ) {
-    suspend operator fun invoke(completed: Boolean): Result<Unit> {
+    operator fun invoke(completed: Boolean): Result<Unit> {
         return try {
             welcomeRepository.saveOnBoardingState(completed)
             Result.success(Unit)

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_title_1">Cải Thiện Từ Vựng Tiếng Anh!</string>
+    <string name="onboarding_detail_1">Khám phá các từ vựng tiếng Anh qua các bài học thú vị và dễ tiếp thu. Học từ mới mỗi ngày và nâng cao kỹ năng ngôn ngữ của bạn một cách hiệu quả!</string>
+    <string name="onboarding_title_2">Thử Thách Chính Mình Với Bạn Bè!</string>"
+    <string name="onboarding_detail_2">Tham gia các thử thách với bạn bè, so tài và xem ai học nhanh hơn! Hãy chứng minh bạn là người giỏi nhất trong nhóm và cùng nhau tiến bộ!</string>
+    <string name="onboarding_title_3">Thư Giãn Sau Mỗi Lần Học!</string>
+    <string name="onboarding_detail_3">Sau mỗi buổi học, thư giãn và tận hưởng những khoảnh khắc thư thái!</string>
+    <string name="onboarding_title_5">Bắt đầu!</string>
+    <string name="onboarding_detail_5">Bắt dầu cuộc chơi mới của bạn!</string>
+    <string name="btn_prev">Quay lại</string>
+    <string name="btn_next">Tiếp theo</string>
+    <string name="btn_login">Đăng nhập</string>
+    <string name="btn_skip">Bỏ qua</string>
+    <string name="onboarding_title_4">Chọn ngôn ngữ của bạn</string>
+    <string name="english">Tiếng Anh</string>
+    <string name="vietnamese">Tiếng Việt</string>
+    <string name="system">Hệ thống</string>
+    <string name="txt_screen_may_be_flicker">Màn hình có thể nhấp nháy</string>
+    <string name="txt_screen_may_be_flicker_detail">Việc thay đổi ngôn ngữ có thể gây ra hiệu ứng nhấp nháy tạm thời trên màn hình.</string>
+    <string name="btn_continue">Tiếp tục</string>
+    <string name="btn_cancel">Hủy</string>
+    <string name="mess_is_current_language">là ngôn ngữ hiện tại!</string>
+</resources>

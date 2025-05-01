@@ -6,8 +6,6 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel {
-        WelcomeViewModel(
-            saveOnBoardingStateUseCase = get()
-        )
+        WelcomeViewModel(get(), get(), get())
     }
 }

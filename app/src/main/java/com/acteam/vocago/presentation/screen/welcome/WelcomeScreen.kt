@@ -1,131 +1,99 @@
 package com.acteam.vocago.presentation.screen.welcome
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.*
 import com.acteam.vocago.domain.model.OnBoardingPage
-import org.koin.compose.viewmodel.koinViewModel
+import com.acteam.vocago.presentation.screen.welcome.component.ChooseLanguagePage
+import com.acteam.vocago.presentation.screen.welcome.component.PageController
+import com.acteam.vocago.presentation.screen.welcome.component.PagerIndicator
+import com.acteam.vocago.presentation.screen.welcome.component.PagerScreen
+import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun WelcomeScreen(viewModel: WelcomeViewModel = koinViewModel(), onClickFinished: () -> Unit) {
+fun WelcomeScreen(
+    viewModel: WelcomeViewModel,
+    onClickToLogin: () -> Unit,
+    onClickToHome: () -> Unit
+
+) {
     val pages = listOf(
         OnBoardingPage.First,
         OnBoardingPage.Second,
-        OnBoardingPage.Third
+        OnBoardingPage.Third,
+        OnBoardingPage.Fourth,
+        OnBoardingPage.Fifth
     )
 
-    val pagerState = rememberPagerState(initialPage = 0)
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        initialPageOffsetFraction = 0f,
+        pageCount = { pages.size }
+    )
 
+    val scope = rememberCoroutineScope()
 
     Scaffold { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
-        HorizontalPager(
-            modifier = Modifier.weight(10f),
-            count = 3,
-            state = pagerState,
-            verticalAlignment = Alignment.Top
-        ) { position ->
-            PagerScreen(onBoardingPage = pages[position])
-        }
-        HorizontalPagerIndicator(
+        Column(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .weight(1f),
-            pagerState = pagerState
-        )
-        FinishButton(
-            modifier = Modifier.weight(1f),
-            pagerState = pagerState
+                .padding(innerPadding)
+                .fillMaxSize()
         ) {
-            viewModel.completeOnBoarding()
-            onClickFinished()
-        }
-    }}
-
-}
-
-
-@Composable
-fun PagerScreen(onBoardingPage: OnBoardingPage) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Image(
-            modifier = Modifier
-                .fillMaxWidth(0.5f)
-                .fillMaxHeight(0.7f),
-            painter = painterResource(id = onBoardingPage.image),
-            contentDescription = "Pager Image"
-        )
-    }
-}
-
-@ExperimentalAnimationApi
-@Composable
-fun FinishButton(
-    modifier: Modifier,
-    pagerState: PagerState,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = modifier
-            .padding(horizontal = 40.dp),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        AnimatedVisibility(
-            modifier = Modifier.fillMaxWidth(),
-            visible = pagerState.currentPage == 2
-        ) {
-            Button(
-                onClick = onClick,
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = Color.White
-                )
-            ) {
-                Text(text = "Finish")
+            HorizontalPager(
+                modifier = Modifier.weight(10f),
+                state = pagerState,
+                verticalAlignment = Alignment.Top
+            ) { position ->
+                if (position == 3) {
+                    ChooseLanguagePage(
+                        viewModel
+                    )
+                } else
+                    PagerScreen(onBoardingPage = pages[position])
             }
+            PagerIndicator(pages.size, pagerState.currentPage, Modifier.fillMaxWidth())
+            Spacer(
+                modifier = Modifier
+                    .height(
+                        24.dp
+                    )
+            )
+            PageController(
+                pageSize = pages.size,
+                current = pagerState.currentPage,
+                onNext = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                    }
+                },
+                onPrev = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                    }
+                },
+                onSkip = {
+                    viewModel.completeOnBoarding()
+                    onClickToHome()
+                },
+                onClickLogin = {
+                    viewModel.completeOnBoarding()
+                    onClickToLogin()
+                },
+            )
         }
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun FirstOnBoardingScreenPreview() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPage = OnBoardingPage.First)
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun SecondOnBoardingScreenPreview() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPage = OnBoardingPage.Second)
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun ThirdOnBoardingScreenPreview() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPage = OnBoardingPage.Third)
     }
 }
