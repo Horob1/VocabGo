@@ -1,18 +1,12 @@
 package com.acteam.vocago.di
 
-import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.serialization.kotlinx.json.*
-import kotlinx.serialization.json.Json
+import com.acteam.vocago.network.VOCAB_GO_BE_QUALIFIER
+import com.acteam.vocago.network.vocabGoBeNetwork
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val networkModule = module {
-    single {
-        HttpClient(OkHttp) {
-            install(ContentNegotiation) {
-                json(Json { ignoreUnknownKeys = true })
-            }
-        }
+    single(named(VOCAB_GO_BE_QUALIFIER)) {
+        vocabGoBeNetwork
     }
 }

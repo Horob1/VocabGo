@@ -1,8 +1,9 @@
-package com.acteam.vocago.domain.model
+package com.acteam.vocago.presentation.screen.welcome.data
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.acteam.vocago.R
+import com.acteam.vocago.domain.model.AppLanguage
 
 sealed class ChooseLanguageData(
     @StringRes val languageName: Int,

@@ -21,7 +21,7 @@ class WelcomeRepositoryImpl(context: Context) : WelcomeRepository {
     }
 
     companion object {
-        internal const val ON_BOARDING_PREF_NAME = "ON_BOARDING_PREF_NAME"
+        private const val ON_BOARDING_PREF_NAME = "ON_BOARDING_PREF_NAME"
         private const val ON_BOARDING_KEY = "ON_BOARDING_KEY"
     }
 }

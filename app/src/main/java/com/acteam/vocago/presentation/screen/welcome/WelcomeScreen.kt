@@ -15,11 +15,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.acteam.vocago.domain.model.OnBoardingPage
 import com.acteam.vocago.presentation.screen.welcome.component.ChooseLanguagePage
 import com.acteam.vocago.presentation.screen.welcome.component.PageController
 import com.acteam.vocago.presentation.screen.welcome.component.PagerIndicator
 import com.acteam.vocago.presentation.screen.welcome.component.PagerScreen
+import com.acteam.vocago.presentation.screen.welcome.data.OnBoardingPageData
 import kotlinx.coroutines.launch
 
 
@@ -32,11 +32,11 @@ fun WelcomeScreen(
 
 ) {
     val pages = listOf(
-        OnBoardingPage.First,
-        OnBoardingPage.Second,
-        OnBoardingPage.Third,
-        OnBoardingPage.Fourth,
-        OnBoardingPage.Fifth
+        OnBoardingPageData.First,
+        OnBoardingPageData.Second,
+        OnBoardingPageData.Third,
+        OnBoardingPageData.Fourth,
+        OnBoardingPageData.Fifth
     )
 
     val pagerState = rememberPagerState(
@@ -63,7 +63,7 @@ fun WelcomeScreen(
                         viewModel
                     )
                 } else
-                    PagerScreen(onBoardingPage = pages[position])
+                    PagerScreen(onBoardingPageData = pages[position])
             }
             PagerIndicator(pages.size, pagerState.currentPage, Modifier.fillMaxWidth())
             Spacer(

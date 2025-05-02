@@ -15,10 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.acteam.vocago.domain.model.OnBoardingPage
+import com.acteam.vocago.presentation.screen.welcome.data.OnBoardingPageData
 
 @Composable
-fun PagerScreen(onBoardingPage: OnBoardingPage) {
+fun PagerScreen(onBoardingPageData: OnBoardingPageData) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -28,22 +28,22 @@ fun PagerScreen(onBoardingPage: OnBoardingPage) {
         )
     ) {
         Spacer(modifier = Modifier.height(8.dp))
-        OnBoardingImageCard(onBoardingPage.image)
+        OnBoardingImageCard(onBoardingPageData.image)
         Text(
             modifier = Modifier
                 .fillMaxWidth(),
-            text = stringResource(id = onBoardingPage.title),
+            text = stringResource(id = onBoardingPageData.title),
             fontSize = MaterialTheme.typography.titleMedium.fontSize,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 40.dp)
                 .padding(top = 20.dp),
-            text = stringResource(id = onBoardingPage.description),
+            text = stringResource(id = onBoardingPageData.description),
             fontSize = MaterialTheme.typography.bodyMedium.fontSize,
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center

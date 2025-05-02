@@ -12,6 +12,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 ktorClientContentNegotiation = "2.3.4"
 ktorClientCore = "2.3.4"
+ktorClientLogging = "2.3.4"
 ktorClientOkhttp = "2.3.4"
 ktorSerializationKotlinxJson = "2.3.4"
 lifecycleRuntimeKtx = "2.8.7"
@@ -43,6 +44,7 @@ koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", ver
 koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koinComposeViewmodelNavigation" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClientContentNegotiation" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktorClientLogging" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClientOkhttp" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorSerializationKotlinxJson" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }

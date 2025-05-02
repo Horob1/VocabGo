@@ -24,8 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
 import com.acteam.vocago.domain.model.AppLanguage
-import com.acteam.vocago.domain.model.ChooseLanguageData
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
+import com.acteam.vocago.presentation.screen.welcome.data.ChooseLanguageData
 import com.acteam.vocago.utils.LanguageUtils
 
 @Composable

@@ -21,4 +21,5 @@
     <string name="btn_continue">Continue</string>
     <string name="btn_cancel">Cancel</string>
     <string name="mess_is_current_language"> is current language!</string>
+    <string name="btn_back">Back</string>
 </resources>
