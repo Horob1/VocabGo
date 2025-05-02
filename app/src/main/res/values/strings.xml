@@ -10,7 +10,7 @@
     <string name="onboarding_detail_5">Begin your new game!</string>
     <string name="btn_prev">Prev</string>
     <string name="btn_next">Next</string>
-    <string name="btn_login">Login</string>
+    <string name="btn_login">Sign In</string>
     <string name="btn_skip">Skip</string>
     <string name="onboarding_title_4">Choose your language</string>
     <string name="english">English</string>
@@ -22,4 +22,24 @@
     <string name="btn_cancel">Cancel</string>
     <string name="mess_is_current_language"> is current language!</string>
     <string name="btn_back">Back</string>
+
+    <!--Login-->
+    <string name="input_enter_username">Enter Username</string>
+    <string name="input_enter_password">Enter Password</string>
+    <string name="btn_forgot_password">Forgot Password?</string>
+    <string name="btn_sign_up">Sign Up</string>
+    <string name="text_or">or</string>
+    <string name="text_dont_have_account">Don’t have an account?</string>
+
+    <!--Register-->
+    <string name="input_first_name">First Name</string>
+    <string name="input_last_name">Last Name</string>
+    <string name="input_enter_email">Enter Email</string>
+    <string name="input_enter_phone">Enter Phone</string>
+    <string name="input_enter_address">Enter Address</string>
+    <string name="input_enter_dob">Pick your date of birth</string>
+    <string name="input_confirm_password">Confirm Password</string>
+    <string name="text_already_have_account">Already have an account?</string>
+
+
 </resources>

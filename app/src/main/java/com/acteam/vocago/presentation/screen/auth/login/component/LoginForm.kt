@@ -2,6 +2,7 @@ package com.acteam.vocago.presentation.screen.auth.login.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -47,7 +49,10 @@ import com.acteam.vocago.R
 
 
 @Composable
-fun LoginForm() {
+fun LoginForm(
+    onLoginClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
+) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -63,8 +68,6 @@ fun LoginForm() {
                     RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
                 )
         ) {
-
-            // Ô tài khoản với icon ở đầu
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -101,7 +104,7 @@ fun LoginForm() {
                     onValueChange = {
                         username = it
                     },
-                    placeholder = { Text("Enter Username") },
+                    placeholder = { Text(stringResource(R.string.input_enter_username)) },
                     singleLine = true,
                     modifier = Modifier
                         .weight(1f)
@@ -156,7 +159,7 @@ fun LoginForm() {
                         password = it
                     },
                     placeholder = {
-                        Text("Enter Password")
+                        Text(stringResource(R.string.input_enter_password))
                     },
                     singleLine = true,
                     modifier = Modifier
@@ -205,11 +208,21 @@ fun LoginForm() {
             horizontalArrangement = Arrangement.End
         ) {
             Text(
-                "Forgot Password?",
+                stringResource(R.string.btn_forgot_password),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.primary
                 ),
+                modifier = Modifier
+                    .clickable(
+                        enabled = true,
+                        onClick = {
+                            onForgotPasswordClick()
+                        }
+                    )
+                    .padding(
+                        4.dp
+                    )
             )
         }
 
@@ -217,15 +230,16 @@ fun LoginForm() {
 
         Button(
             modifier = Modifier
-                .height(40.dp)
+                .height(48.dp)
                 .padding(horizontal = 24.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
             onClick = {
-
+                onLoginClick()
             },
         ) {
             Text(
-                "Sign In",
+                stringResource(R.string.btn_login).uppercase(),
                 style = MaterialTheme.typography.titleMedium
             )
         }

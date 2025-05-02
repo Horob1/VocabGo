@@ -1,5 +1,7 @@
 package com.acteam.vocago.presentation.navigation
 
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -11,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.acteam.vocago.presentation.screen.auth.login.LoginScreen
+import com.acteam.vocago.presentation.screen.auth.register.RegisterScreen
 import com.acteam.vocago.presentation.screen.home.Home
 import com.acteam.vocago.presentation.screen.welcome.WelcomeScreen
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
@@ -25,8 +28,8 @@ fun SetupNavGraph(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn() },
-        exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut() },
+        enterTransition = { slideInHorizontally(initialOffsetX = { 1200 }) + fadeIn() },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { -1200 }) + fadeOut() },
     ) {
         composable<NavScreen.WelcomeNavScreen> {
             val welcomeViewModel = koinViewModel<WelcomeViewModel>()
@@ -34,11 +37,19 @@ fun SetupNavGraph(
                 viewModel = welcomeViewModel,
                 onClickToHome = {
                     navController.popBackStack()
-                    navController.navigate(NavScreen.HomeNavScreen)
+                    navController.navigate(NavScreen.HomeNavScreen) {
+                        launchSingleTop = true
+                    }
                 },
                 onClickToLogin = {
                     navController.popBackStack()
-                    navController.navigate(NavScreen.AuthNavScreen)
+                    navController.navigate(NavScreen.HomeNavScreen) {
+                        launchSingleTop = true
+                    }
+                    // Delay nhỏ để đảm bảo Home được render và thêm vào stack
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        navController.navigate(NavScreen.AuthNavScreen)
+                    }, 100)
                 }
             )
         }
@@ -49,18 +60,25 @@ fun SetupNavGraph(
                 LoginScreen(
                     {
                         navController.popBackStack()
-                        navController.navigate(NavScreen.HomeNavScreen)
                     },
-                    {},
                     {
                         navController.navigate(NavScreen.RegisterNavScreen)
                     },
                     {
-
+                        navController.navigate(NavScreen.ForgotPasswordNavScreen)
                     },
                 )
             }
-            composable<NavScreen.RegisterNavScreen> {}
+            composable<NavScreen.RegisterNavScreen> {
+                RegisterScreen(
+                    {
+                        navController.popBackStack()
+                    },
+                    {
+
+                    }
+                )
+            }
         }
         composable<NavScreen.HomeNavScreen> {
             Home {
