@@ -1,6 +1,5 @@
 package com.acteam.vocago.presentation.screen.auth.resetpassword
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.acteam.vocago.R
@@ -32,20 +30,21 @@ import com.acteam.vocago.presentation.screen.auth.common.BackButton
 import com.acteam.vocago.presentation.screen.auth.common.CountdownTimer
 import com.acteam.vocago.presentation.screen.auth.common.OTPInputField
 import com.acteam.vocago.presentation.screen.auth.resetpassword.component.ResetPasswordForm
+import com.acteam.vocago.utils.safeClickable
 
 @Composable
 fun ResetPasswordScreen(
     onBackClick: () -> Unit,
     onResendOtp: () -> Unit,
     onChangeClick: () -> Unit
-){
-    var email by remember { mutableStateOf("vancongng1908@gmail.com") }
+) {
+    var email by remember { mutableStateOf("vancong@gmail.com") }
     var otp by remember { mutableStateOf("") }
     var isTimerReset by remember { mutableStateOf(false) }
     var timerKey by remember { mutableStateOf(0) }
     val resetTimer = {
         isTimerReset = !isTimerReset
-        timerKey +=1
+        timerKey += 1
         onResendOtp()
     }
     Scaffold { innerPadding ->
@@ -87,7 +86,7 @@ fun ResetPasswordScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 CountdownTimer(
-                    initialTime =  60 ,
+                    initialTime = 60,
                     key = timerKey,
                 )
             }
@@ -122,13 +121,19 @@ fun ResetPasswordScreen(
                 ),
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .clickable{resetTimer()}
+
+                    .safeClickable(
+                        key = "btn_resend_email_forgot_password",
+                        onClick = {
+                            resetTimer()
+                        }
+                    )
+                    .padding(8.dp)
                     .align(Alignment.End)
             )
             Button(
                 modifier = Modifier
                     .height(48.dp)
-                    .padding(horizontal = 24.dp)
                     .fillMaxWidth()
                     .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
                 onClick = {

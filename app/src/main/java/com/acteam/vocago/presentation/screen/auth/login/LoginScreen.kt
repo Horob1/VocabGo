@@ -1,6 +1,5 @@
 package com.acteam.vocago.presentation.screen.auth.login
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +23,7 @@ import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
 import com.acteam.vocago.presentation.screen.auth.common.PlatFormSignUpButton
 import com.acteam.vocago.presentation.screen.auth.login.component.LoginForm
+import com.acteam.vocago.utils.safeClickable
 
 @Composable
 fun LoginScreen(
@@ -35,7 +35,7 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
+                .padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
@@ -63,8 +63,7 @@ fun LoginScreen(
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 HorizontalDivider(
@@ -105,14 +104,14 @@ fun LoginScreen(
                 Text(
                     text = stringResource(R.string.btn_sign_up),
                     modifier = Modifier
-                        .clickable(
-                            enabled = true,
+                        .safeClickable(
+                            "btn_sign_up",
                             onClick = {
                                 onSignUpClick()
                             }
                         )
                         .padding(
-                            4.dp
+                            8.dp
                         ),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.primary,

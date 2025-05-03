@@ -2,7 +2,6 @@ package com.acteam.vocago.presentation.screen.auth.forgotpassword
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,7 +49,7 @@ import com.acteam.vocago.presentation.screen.auth.common.BackButton
 fun ForgotPasswordScreen(
     onBackClick: () -> Unit,
     onResetPasswordClick: () -> Unit
-){
+) {
     var email by remember { mutableStateOf("") }
     val emailFocusRequester = remember { FocusRequester() }
     Scaffold { innerPadding ->
@@ -60,7 +59,6 @@ fun ForgotPasswordScreen(
                 .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -70,6 +68,16 @@ fun ForgotPasswordScreen(
                     onClick = onBackClick,
                 )
             }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                AuthImageCard(R.drawable.forgotpassword, width = 1.1f)
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
             Text(
                 text = stringResource(R.string.text_forgot_password),
                 style = MaterialTheme.typography.bodyLarge.copy(
@@ -80,26 +88,28 @@ fun ForgotPasswordScreen(
                 modifier = Modifier
                     .padding(8.dp)
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                AuthImageCard(R.drawable.forgotpassword, width = 0.8f)
-            }
+
+            Spacer(modifier = Modifier.height(48.dp))
+
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 24.dp)
                     .fillMaxWidth()
                     .height(56.dp)
+                    .shadow(
+                        6.dp,
+                        RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
+                    )
                     .background(
                         MaterialTheme.colorScheme.surfaceVariant,
                         RoundedCornerShape(12.dp)
                     )
+
                     .border(
                         1.dp, MaterialTheme.colorScheme.primary.copy(
                             alpha = 0.5f
                         ), RoundedCornerShape(12.dp)
                     )
+
             ) {
                 Box(
                     modifier = Modifier
@@ -139,10 +149,12 @@ fun ForgotPasswordScreen(
                     )
                 )
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             Button(
                 modifier = Modifier
                     .height(48.dp)
-                    .padding(horizontal = 24.dp)
                     .fillMaxWidth()
                     .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
                 onClick = {

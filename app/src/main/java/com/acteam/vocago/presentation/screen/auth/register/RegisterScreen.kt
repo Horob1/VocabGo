@@ -1,6 +1,5 @@
 package com.acteam.vocago.presentation.screen.auth.register
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,7 +26,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
+import com.acteam.vocago.presentation.screen.auth.common.BackButton
 import com.acteam.vocago.presentation.screen.auth.register.component.RegisterForm
+import com.acteam.vocago.utils.safeClickable
 
 @Composable
 fun RegisterScreen(
@@ -42,12 +43,17 @@ fun RegisterScreen(
                 .padding()
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(
-                    horizontal = 24.dp
-                ),
+                .padding(bottom = 24.dp, start = 24.dp, end = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                BackButton(
+                    onClick = onBackClick,
+                )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -69,6 +75,7 @@ fun RegisterScreen(
                 )
 
             }
+            Spacer(modifier = Modifier.weight(1f))
             RegisterForm()
             Button(
                 onClick = onRegisterClick,
@@ -94,14 +101,15 @@ fun RegisterScreen(
                 Text(
                     text = stringResource(R.string.btn_login),
                     modifier = Modifier
-                        .clickable(
-                            enabled = true,
+
+                        .safeClickable(
+                            "btn_login",
                             onClick = {
                                 onBackClick()
                             }
                         )
                         .padding(
-                            4.dp
+                            8.dp
                         ),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.primary,

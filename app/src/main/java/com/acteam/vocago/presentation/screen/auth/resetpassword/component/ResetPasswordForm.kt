@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
 
 @Composable
-fun ResetPasswordForm(){
+fun ResetPasswordForm() {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -53,7 +53,7 @@ fun ResetPasswordForm(){
     Column {
         Column(
             modifier = Modifier
-                .padding(top = 8.dp, start = 24.dp, end = 24.dp)
+                .padding(top = 8.dp)
                 .fillMaxWidth()
                 .shadow(
                     6.dp,
@@ -155,7 +155,7 @@ fun ResetPasswordForm(){
                         .fillMaxHeight()
                         .background(
                             MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(bottomStart =12.dp)
+                            shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
                         ),
                     contentAlignment = Alignment.Center
                 ) {

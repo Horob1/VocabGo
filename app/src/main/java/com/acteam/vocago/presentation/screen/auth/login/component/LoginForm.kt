@@ -2,7 +2,6 @@ package com.acteam.vocago.presentation.screen.auth.login.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +45,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
+import com.acteam.vocago.utils.safeClickable
 
 
 @Composable
@@ -61,7 +61,6 @@ fun LoginForm(
     Column {
         Column(
             modifier = Modifier
-                .padding(top = 24.dp, start = 24.dp, end = 24.dp)
                 .fillMaxWidth()
                 .shadow(
                     6.dp,
@@ -203,7 +202,6 @@ fun LoginForm(
 
         Row(
             modifier = Modifier
-                .padding(horizontal = 24.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
@@ -214,15 +212,13 @@ fun LoginForm(
                     color = MaterialTheme.colorScheme.primary
                 ),
                 modifier = Modifier
-                    .clickable(
-                        enabled = true,
+                    .safeClickable(
+                        "btn_forgot_password",
                         onClick = {
                             onForgotPasswordClick()
                         }
                     )
-                    .padding(
-                        4.dp
-                    )
+                    .padding(8.dp)
             )
         }
 
@@ -231,7 +227,6 @@ fun LoginForm(
         Button(
             modifier = Modifier
                 .height(48.dp)
-                .padding(horizontal = 24.dp)
                 .fillMaxWidth()
                 .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
             onClick = {

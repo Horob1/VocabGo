@@ -31,6 +31,7 @@ import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
 import com.acteam.vocago.presentation.screen.auth.common.CountdownTimer
 import com.acteam.vocago.presentation.screen.auth.common.OTPInputField
+import com.acteam.vocago.utils.safeClickable
 
 
 @Composable
@@ -110,14 +111,17 @@ fun VerifyEmailScreen(
                 ),
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .clickable{resetTimer()}
+                    .safeClickable(
+                        "resend_verify_email",
+                    ){
+                        resetTimer()
+                    }
                     .padding(8.dp)
                     .align(Alignment.End)
             )
             Button(
                 modifier = Modifier
                     .height(48.dp)
-                    .padding(horizontal = 24.dp)
                     .fillMaxWidth()
                     .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
                 onClick = {

@@ -16,6 +16,7 @@ import com.acteam.vocago.presentation.screen.auth.forgotpassword.ForgotPasswordS
 import com.acteam.vocago.presentation.screen.auth.login.LoginScreen
 import com.acteam.vocago.presentation.screen.auth.register.RegisterScreen
 import com.acteam.vocago.presentation.screen.auth.resetpassword.ResetPasswordScreen
+import com.acteam.vocago.presentation.screen.auth.verifyemail.VerifyEmailScreen
 import com.acteam.vocago.presentation.screen.home.Home
 import com.acteam.vocago.presentation.screen.welcome.WelcomeScreen
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
@@ -30,8 +31,8 @@ fun SetupNavGraph(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        enterTransition = { slideInHorizontally(initialOffsetX = { 1200 }) + fadeIn() },
-        exitTransition = { slideOutHorizontally(targetOffsetX = { -1200 }) + fadeOut() },
+        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn() },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut() },
     ) {
         composable<NavScreen.WelcomeNavScreen> {
             val welcomeViewModel = koinViewModel<WelcomeViewModel>()
@@ -77,7 +78,7 @@ fun SetupNavGraph(
                         navController.popBackStack()
                     },
                     {
-
+                        navController.navigate(NavScreen.VerifyEmailNavScreen)
                     }
                 )
             }
@@ -85,7 +86,8 @@ fun SetupNavGraph(
                 ForgotPasswordScreen(
                     {
                         navController.popBackStack()
-                    },{
+                    },
+                    {
                         navController.navigate(NavScreen.ResetPasswordNavScreen)
                     },
                 )
@@ -94,10 +96,19 @@ fun SetupNavGraph(
                 ResetPasswordScreen(
                     {
                         navController.popBackStack()
-                    },{},{
+                    }, {}, {
                         navController.navigate(NavScreen.LoginNavScreen)
                     }
                 )
+            }
+            composable<NavScreen.VerifyEmailNavScreen> {
+                VerifyEmailScreen(
+                    {
+                        navController.popBackStack()
+                    },
+                    {
+
+                    })
             }
         }
         composable<NavScreen.HomeNavScreen> {
