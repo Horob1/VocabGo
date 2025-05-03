@@ -18,5 +18,6 @@ sealed class NavScreen() {
     object ForgotPasswordNavScreen : NavScreen()
     @Serializable
     object ResetPasswordNavScreen : NavScreen()
-
+    @Serializable
+    object VerifyEmailNavScreen : NavScreen()
 }

@@ -12,8 +12,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.acteam.vocago.presentation.screen.auth.forgotpassword.ForgotPasswordScreen
 import com.acteam.vocago.presentation.screen.auth.login.LoginScreen
 import com.acteam.vocago.presentation.screen.auth.register.RegisterScreen
+import com.acteam.vocago.presentation.screen.auth.resetpassword.ResetPasswordScreen
 import com.acteam.vocago.presentation.screen.home.Home
 import com.acteam.vocago.presentation.screen.welcome.WelcomeScreen
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
@@ -76,6 +78,24 @@ fun SetupNavGraph(
                     },
                     {
 
+                    }
+                )
+            }
+            composable<NavScreen.ForgotPasswordNavScreen> {
+                ForgotPasswordScreen(
+                    {
+                        navController.popBackStack()
+                    },{
+                        navController.navigate(NavScreen.ResetPasswordNavScreen)
+                    },
+                )
+            }
+            composable<NavScreen.ResetPasswordNavScreen> {
+                ResetPasswordScreen(
+                    {
+                        navController.popBackStack()
+                    },{},{
+                        navController.navigate(NavScreen.LoginNavScreen)
                     }
                 )
             }
