@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.acteam.vocago.utils.responsiveValue
 
 @Composable
 fun GenderDropdown() {
@@ -98,8 +99,9 @@ fun GenderDropdown() {
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
+            Modifier.fillMaxWidth(
+                responsiveValue(90, 90, 40) / 100f
+            )
         ) {
             genderOptions.forEach { gender ->
                 DropdownMenuItem(

@@ -47,6 +47,8 @@ import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.screen.auth.login.LoginViewModel
 import com.acteam.vocago.presentation.screen.common.data.UIState
+import com.acteam.vocago.utils.responsiveDP
+import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.safeClickable
 
 
@@ -60,6 +62,8 @@ fun LoginForm(
     val uiState by viewModel.loginUIState.collectAsState()
     val usernameFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
+
+
     Column {
         Column(
             modifier = Modifier
@@ -216,7 +220,8 @@ fun LoginForm(
                 stringResource(R.string.btn_forgot_password),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = responsiveSP(14, 18, 20)
                 ),
                 modifier = Modifier
                     .safeClickable(
@@ -233,7 +238,7 @@ fun LoginForm(
 
         Button(
             modifier = Modifier
-                .height(48.dp)
+                .height(responsiveDP(48, 56, 60))
                 .fillMaxWidth()
                 .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
             onClick = {

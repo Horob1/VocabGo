@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,9 +25,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.acteam.vocago.R
+import com.acteam.vocago.presentation.screen.auth.common.AuthCardType
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
 import com.acteam.vocago.presentation.screen.auth.common.PlatFormSignUpButton
@@ -37,6 +39,7 @@ import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
+import com.acteam.vocago.utils.responsiveValue
 import com.acteam.vocago.utils.safeClickable
 
 @Composable
@@ -49,26 +52,25 @@ fun LoginScreen(
     val uiState by viewModel.loginUIState.collectAsState()
     val focusManager = LocalFocusManager.current
     val deviceType = getDeviceType()
-    val titleFontSize = responsiveSP(mobile = 18, tabletPortrait = 24, tabletLandscape = 28)
+    val titleFontSize = responsiveSP(mobile = 24, tabletPortrait = 28, tabletLandscape = 28)
     val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 18, tabletLandscape = 20)
     val horizontalPadding = responsiveDP(mobile = 24, tabletPortrait = 40, tabletLandscape = 48)
     val topPadding = responsiveDP(mobile = 16, tabletPortrait = 24, tabletLandscape = 28)
     val verticalSpacing = responsiveDP(mobile = 12, tabletPortrait = 20, tabletLandscape = 24)
-    if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
-        Scaffold { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    .pointerInput(Unit) {
-                        detectTapGestures(onTap = {
-                            focusManager.clearFocus()
-                        })
-                    }
-            ) {
+    Scaffold { innerPadding ->
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()
+                    })
+                }
+        ) {
+            if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
                 Column(
                     modifier = Modifier
-                        .padding(top = topPadding)
                         .padding(horizontal = horizontalPadding)
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -76,20 +78,39 @@ fun LoginScreen(
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         BackButton(
                             onClick = onBackClick,
                         )
+
+                        Text(
+                            text = stringResource(R.string.btn_login),
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = titleFontSize,
+                                textAlign = TextAlign.Center
+                            ),
+                            modifier = Modifier
+                                .weight(1f),
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(modifier = Modifier.width(40.dp))
                     }
 
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        AuthImageCard(R.drawable.login, width = 0.8f)
+                        AuthImageCard(
+                            R.drawable.login,
+                            width = if (deviceType == DeviceType.Mobile) 0.7f else 0.8f,
+                            type = if (deviceType == DeviceType.Mobile) AuthCardType.Circle else AuthCardType.Square
+                        )
+
                     }
-                    Spacer(modifier = Modifier.height(verticalSpacing/3))
+                    Spacer(modifier = Modifier.height(verticalSpacing / 3))
                     LoginForm(
                         viewModel = viewModel,
                         onLoginClick = {
@@ -110,7 +131,7 @@ fun LoginScreen(
                         )
                         Text(
                             text = stringResource(R.string.text_or).uppercase(),
-                            modifier = Modifier.padding(horizontal = horizontalPadding/3),
+                            modifier = Modifier.padding(horizontal = horizontalPadding / 3),
 
                             )
                         HorizontalDivider(
@@ -129,14 +150,14 @@ fun LoginScreen(
                         PlatFormSignUpButton(R.drawable.github) {}
                     }
 
-                    Spacer(modifier = Modifier.height(verticalSpacing/3))
+                    Spacer(modifier = Modifier.height(verticalSpacing / 3))
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = stringResource(R.string.text_dont_have_account),
-                            modifier = Modifier.padding(horizontal = horizontalPadding/3),
+                            modifier = Modifier.padding(horizontal = horizontalPadding / 3),
                         )
                         Text(
                             text = stringResource(R.string.btn_sign_up),
@@ -148,7 +169,7 @@ fun LoginScreen(
                                     }
                                 )
                                 .padding(
-                                    horizontalPadding/3
+                                    horizontalPadding / 3
                                 ),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.colorScheme.primary,
@@ -157,129 +178,117 @@ fun LoginScreen(
                         )
                     }
                 }
-
-                if (uiState is UIState.UILoading) {
-                    LoadingSurface()
-                }
-            }
-
-        }
-    } else {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = topPadding)
-                .padding(horizontal = horizontalPadding)
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = {
-                        focusManager.clearFocus()
-                    })
-                }
-        ){
-            Row(
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
+            } else {
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .padding(top = topPadding),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top
+                        .fillMaxSize()
+                        .padding(horizontal = horizontalPadding),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = topPadding, start = horizontalPadding),
-                        contentAlignment = Alignment.CenterStart
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .padding(top = topPadding),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Top
                     ) {
-                        BackButton(onClick = onBackClick)
-                    }
-                    Spacer(modifier = Modifier.height(verticalSpacing))
-                    AuthImageCard(R.drawable.login, 0.8f)
-                }
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .padding(
-                            top = topPadding,
-                        ),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(space = verticalSpacing)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = topPadding, start = horizontalPadding),
-                        contentAlignment = Alignment.CenterStart
-                    ) {}
-                    Spacer(modifier = Modifier.height(verticalSpacing))
-                    Text(
-                        text = stringResource(R.string.btn_login),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = titleFontSize
-                        ),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .padding(horizontal = horizontalPadding/3)
-
-                    )
-                    Spacer(modifier = Modifier.height(verticalSpacing))
-                    LoginForm(
-                        viewModel = viewModel,
-                        onLoginClick = { viewModel.login() },
-                        onForgotPasswordClick = onForgotPasswordClick
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        HorizontalDivider(Modifier.weight(1f).height(1.dp))
-                        Text(
-                            text = stringResource(R.string.text_or).uppercase(),
-                            fontSize = descFontSize,
-                            modifier = Modifier.padding(horizontal = horizontalPadding/3)
-                        )
-                        HorizontalDivider(Modifier.weight(1f).height(1.dp))
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        PlatFormSignUpButton(R.drawable.google) {}
-                        PlatFormSignUpButton(R.drawable.facebook) {}
-                        PlatFormSignUpButton(R.drawable.github) {}
-                    }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = stringResource(R.string.text_dont_have_account),
-                            fontSize = descFontSize
-                        )
-                        Text(
-                            text = stringResource(R.string.btn_sign_up),
+                        Box(
                             modifier = Modifier
-                                .safeClickable("btn_sign_up") { onSignUpClick() }
-                                .padding(horizontal = horizontalPadding/3),
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = descFontSize,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Medium
-                            )
-                        )
+                                .fillMaxWidth()
+                                .padding(top = topPadding, start = horizontalPadding),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            BackButton(onClick = onBackClick)
+                        }
+                        Spacer(modifier = Modifier.height(verticalSpacing))
+                        AuthImageCard(R.drawable.login, 0.8f)
                     }
-                }
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .padding(
+                                top = topPadding,
+                            ),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(space = verticalSpacing)
+                    ) {
+                        Spacer(modifier = Modifier.height(verticalSpacing * 3))
+                        Text(
+                            text = stringResource(R.string.btn_login),
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = titleFontSize
+                            ),
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .padding(horizontal = horizontalPadding / 3)
 
-            }
-            if (uiState is UIState.UILoading) {
-                LoadingSurface()
+                        )
+                        Spacer(modifier = Modifier.height(verticalSpacing))
+                        LoginForm(
+                            viewModel = viewModel,
+                            onLoginClick = { viewModel.login() },
+                            onForgotPasswordClick = onForgotPasswordClick
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            HorizontalDivider(
+                                Modifier
+                                    .weight(1f)
+                                    .height(1.dp)
+                            )
+                            Text(
+                                text = stringResource(R.string.text_or).uppercase(),
+                                fontSize = descFontSize,
+                                modifier = Modifier.padding(horizontal = horizontalPadding / 3)
+                            )
+                            HorizontalDivider(
+                                Modifier
+                                    .weight(1f)
+                                    .height(1.dp)
+                            )
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceAround,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            PlatFormSignUpButton(R.drawable.google) {}
+                            PlatFormSignUpButton(R.drawable.facebook) {}
+                            PlatFormSignUpButton(R.drawable.github) {}
+                        }
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = stringResource(R.string.text_dont_have_account),
+                                fontSize = descFontSize,
+
+                                )
+                            Text(
+                                text = stringResource(R.string.btn_sign_up),
+                                modifier = Modifier
+                                    .safeClickable("btn_sign_up") { onSignUpClick() }
+                                    .padding(horizontal = horizontalPadding / 3),
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontSize = descFontSize,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            )
+                        }
+                    }
+
+                }
             }
         }
-
+        if (uiState is UIState.UILoading) {
+            LoadingSurface(
+                picSize = responsiveValue(180, 360, 360)
+            )
+        }
     }
 }

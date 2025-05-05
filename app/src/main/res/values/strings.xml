@@ -50,6 +50,7 @@
     <string name="input_enter_otp">Enter OTP</string>
     <string name="text_verify_email">Verify Email</string>
 
+    <string name="text_input_your_email">Please provide the email you used to verify your account!</string>
 
 
 </resources>

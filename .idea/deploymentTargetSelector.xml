@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="VocaGo.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-05-05T11:37:25.417712300Z">
+        <DropdownSelection timestamp="2025-05-05T17:05:01.937003700Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\NVCon\.android\avd\Pixel_2.avd" />

@@ -47,4 +47,5 @@
     <string name="text_send_otp">Mã OTP gửi tới</string>
     <string name="input_enter_otp">Nhập OTP</string>
     <string name="text_verify_email">Xác thực Email</string>
+    <string name="text_input_your_email">Vui lòng cung cấp email bạn đã dùng để xác thực tài khoản!</string>
 </resources>
