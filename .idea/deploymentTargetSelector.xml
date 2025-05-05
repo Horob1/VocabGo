@@ -2,12 +2,12 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-      <SelectionState runConfigName="app">
+      <SelectionState runConfigName="VocaGo.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-05-05T07:54:42.098169Z">
+        <DropdownSelection timestamp="2025-05-05T11:37:25.417712300Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\lovea\.android\avd\Medium_Tablet.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\NVCon\.android\avd\Pixel_2.avd" />
             </handle>
           </Target>
         </DropdownSelection>
