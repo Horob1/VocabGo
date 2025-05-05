@@ -62,7 +62,7 @@ fun LoginForm(
     val uiState by viewModel.loginUIState.collectAsState()
     val usernameFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
-
+    val textFieldFontSize = responsiveSP(14, 20, 20)
 
     Column {
         Column(
@@ -111,6 +111,9 @@ fun LoginForm(
                         viewModel.setUsername(it)
                     },
                     placeholder = { Text(stringResource(R.string.input_enter_username)) },
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = textFieldFontSize
+                    ),
                     singleLine = true,
                     modifier = Modifier
                         .weight(1f)
@@ -169,6 +172,9 @@ fun LoginForm(
                         Text(stringResource(R.string.input_enter_password))
                     },
                     singleLine = true,
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = textFieldFontSize
+                    ),
                     modifier = Modifier
                         .weight(1f)
                         .focusRequester(passwordFocusRequester)

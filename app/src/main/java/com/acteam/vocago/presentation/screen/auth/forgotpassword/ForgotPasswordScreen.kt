@@ -167,6 +167,13 @@ fun ForgotPasswordScreen(
                                 email = it
                             },
                             placeholder = { Text(stringResource(R.string.input_enter_email)) },
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = responsiveSP(
+                                    mobile = 14,
+                                    tabletPortrait = 20,
+                                    tabletLandscape = 20
+                                )
+                            ),
                             singleLine = true,
                             modifier = Modifier
                                 .weight(1f)

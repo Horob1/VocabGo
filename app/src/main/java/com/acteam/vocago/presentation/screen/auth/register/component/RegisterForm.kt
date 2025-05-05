@@ -50,6 +50,7 @@ import com.acteam.vocago.R
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
 import com.acteam.vocago.utils.responsiveDP
+import com.acteam.vocago.utils.responsiveSP
 
 @Composable
 fun RegisterForm() {
@@ -58,6 +59,7 @@ fun RegisterForm() {
     val passwordFocusRequester = remember { FocusRequester() }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
     val deviceType = getDeviceType()
+    val textFieldFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -111,6 +113,9 @@ fun RegisterForm() {
                             text = it
                         },
                         placeholder = { Text(stringResource(R.string.input_first_name)) },
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = textFieldFontSize
+                        ),
                         singleLine = true,
                         modifier = Modifier
                             .weight(1f)
@@ -142,6 +147,9 @@ fun RegisterForm() {
                         },
                         placeholder = { Text(stringResource(R.string.input_last_name)) },
                         singleLine = true,
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = textFieldFontSize
+                        ),
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight(),
@@ -194,6 +202,9 @@ fun RegisterForm() {
                             text = it
                         },
                         placeholder = { Text(stringResource(R.string.input_enter_username)) },
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = textFieldFontSize
+                        ),
                         singleLine = true,
                         modifier = Modifier
                             .weight(1f)
@@ -246,6 +257,9 @@ fun RegisterForm() {
                             text = it
                         },
                         placeholder = { Text(stringResource(R.string.input_enter_email)) },
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = textFieldFontSize
+                        ),
                         singleLine = true,
                         modifier = Modifier
                             .weight(1f)
@@ -301,6 +315,9 @@ fun RegisterForm() {
                             text = it
                         },
                         placeholder = { Text(stringResource(R.string.input_enter_phone)) },
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = textFieldFontSize
+                        ),
                         singleLine = true,
                         modifier = Modifier
                             .weight(1f)
@@ -356,6 +373,9 @@ fun RegisterForm() {
                             text = it
                         },
                         placeholder = { Text(stringResource(R.string.input_enter_address)) },
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = textFieldFontSize
+                        ),
                         singleLine = true,
                         modifier = Modifier
                             .weight(1f)
@@ -417,6 +437,9 @@ fun RegisterForm() {
                         placeholder = {
                             Text(stringResource(R.string.input_enter_password))
                         },
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = textFieldFontSize
+                        ),
                         singleLine = true,
                         modifier = Modifier
                             .weight(1f)
@@ -492,6 +515,9 @@ fun RegisterForm() {
                         placeholder = {
                             Text(stringResource(R.string.input_confirm_password))
                         },
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = textFieldFontSize
+                        ),
                         singleLine = true,
                         modifier = Modifier
                             .weight(1f)
@@ -590,6 +616,9 @@ fun RegisterForm() {
                                 text = it
                             },
                             placeholder = { Text(stringResource(R.string.input_first_name)) },
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = textFieldFontSize
+                            ),
                             singleLine = true,
                             modifier = Modifier
                                 .weight(1f)
@@ -645,6 +674,9 @@ fun RegisterForm() {
                                 text = it
                             },
                             placeholder = { Text(stringResource(R.string.input_last_name)) },
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = textFieldFontSize
+                            ),
                             singleLine = true,
                             modifier = Modifier
                                 .weight(1f)
@@ -701,6 +733,9 @@ fun RegisterForm() {
                                 text = it
                             },
                             placeholder = { Text(stringResource(R.string.input_enter_username)) },
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = textFieldFontSize
+                            ),
                             singleLine = true,
                             modifier = Modifier
                                 .weight(1f)
@@ -756,6 +791,9 @@ fun RegisterForm() {
                                 text = it
                             },
                             placeholder = { Text(stringResource(R.string.input_enter_email)) },
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = textFieldFontSize
+                            ),
                             singleLine = true,
                             modifier = Modifier
                                 .weight(1f)
@@ -814,6 +852,9 @@ fun RegisterForm() {
                                 text = it
                             },
                             placeholder = { Text(stringResource(R.string.input_enter_phone)) },
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = textFieldFontSize
+                            ),
                             singleLine = true,
                             modifier = Modifier
                                 .weight(1f)
@@ -889,6 +930,9 @@ fun RegisterForm() {
                                 text = it
                             },
                             placeholder = { Text(stringResource(R.string.input_enter_address)) },
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = textFieldFontSize
+                            ),
                             singleLine = true,
                             modifier = Modifier
                                 .weight(1f)
@@ -953,6 +997,9 @@ fun RegisterForm() {
                             placeholder = {
                                 Text(stringResource(R.string.input_enter_password))
                             },
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = textFieldFontSize
+                            ),
                             singleLine = true,
                             modifier = Modifier
                                 .weight(1f)
@@ -1036,6 +1083,9 @@ fun RegisterForm() {
                                 .weight(1f)
                                 .focusRequester(passwordFocusRequester)
                                 .fillMaxHeight(),
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = textFieldFontSize
+                            ),
                             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             colors = OutlinedTextFieldDefaults.colors(
                                 unfocusedBorderColor = Color.Transparent,
