@@ -27,12 +27,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.acteam.vocago.R
+import com.acteam.vocago.utils.responsiveFontSize
+import com.acteam.vocago.utils.responsivePadding
+import com.acteam.vocago.utils.responsiveValue
 
 @Composable
 fun ChangeLanguageDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ) {
+    val paddingHorizontal = responsivePadding(20, 40)
+    val textSize =
+        responsiveFontSize(
+            MaterialTheme.typography.bodyMedium.fontSize.value.toInt(),
+            MaterialTheme.typography.titleMedium.fontSize.value.toInt()
+        )
+
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = RoundedCornerShape(12.dp),
@@ -44,21 +54,26 @@ fun ChangeLanguageDialog(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(
+                            responsiveValue(
+                                260,
+                                400
+                            ).dp
+                        )
                         .background(MaterialTheme.colorScheme.background)
                 ) {
                     Image(
                         painter = painterResource(R.drawable.screen_flicker),
                         contentDescription = "Pager Image",
-                        contentScale = ContentScale.Fit,
+                        contentScale = ContentScale.FillWidth,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     text = stringResource(id = R.string.txt_screen_may_be_flicker),
-                    fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                    fontSize = textSize,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.primary
@@ -67,7 +82,7 @@ fun ChangeLanguageDialog(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 40.dp)
+                        .padding(horizontal = paddingHorizontal)
                         .padding(top = 20.dp),
                     text = stringResource(id = R.string.txt_screen_may_be_flicker_detail),
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize,

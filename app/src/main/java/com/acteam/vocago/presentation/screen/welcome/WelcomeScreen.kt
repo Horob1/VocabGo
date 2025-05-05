@@ -54,7 +54,7 @@ fun WelcomeScreen(
                 .fillMaxSize()
         ) {
             HorizontalPager(
-                modifier = Modifier.weight(10f),
+                modifier = Modifier.weight(1f),
                 state = pagerState,
                 verticalAlignment = Alignment.Top
             ) { position ->

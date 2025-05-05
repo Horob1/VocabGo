@@ -2,7 +2,9 @@ package com.acteam.vocago.presentation.screen.welcome.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,7 +28,12 @@ import com.acteam.vocago.R
 import com.acteam.vocago.domain.model.AppLanguage
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import com.acteam.vocago.presentation.screen.welcome.data.ChooseLanguageData
+import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.LanguageUtils
+import com.acteam.vocago.utils.getDeviceType
+import com.acteam.vocago.utils.responsiveFontSize
+import com.acteam.vocago.utils.responsivePadding
+import com.acteam.vocago.utils.responsiveSpacing
 
 @Composable
 fun ChooseLanguagePage(
@@ -48,58 +55,124 @@ fun ChooseLanguagePage(
             R.drawable.capy_world
         }
     }
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(
-            space = 12.dp
-        )
-    ) {
-        Spacer(modifier = Modifier.height(8.dp))
-        OnBoardingImageCard(image, 0.9f, 0.5f)
-        Text(
+
+    // Responsive font sizes, paddings, and spacing
+    val titleFontSize = responsiveFontSize(mobile = 18, tablet = 24)
+    val horizontalPadding = responsivePadding(mobile = 24, tablet = 40)
+    val topPadding = responsivePadding(mobile = 16, tablet = 24)
+    val verticalSpacing = responsiveSpacing(mobile = 12, tablet = 20)
+
+    val deviceType = getDeviceType()
+
+    // Mobile layout: full column
+    if (deviceType == DeviceType.Mobile) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            text = stringResource(R.string.onboarding_title_4),
-            fontSize = MaterialTheme.typography.titleMedium.fontSize,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        LazyColumn(
-            modifier = Modifier
-                .padding(horizontal = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(
-                space = 18.dp
-            )
+                .fillMaxWidth()
+                .padding(top = topPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(space = verticalSpacing)
         ) {
-            items(languages.size) { index ->
-                val lang = languages[index]
-                ChooseLanguageButton(
-                    lang.flag,
-                    lang.languageName,
-                    lang.language == appLanguage.value
-                ) {
-                    isShowDialog = true
-                    oldLanguage = appLanguage.value
-                    viewModel.changeLanguage(lang.language)
+            Spacer(modifier = Modifier.height(verticalSpacing))
+            OnBoardingImageCard(image, 0.9f, 0.5f)
+
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(R.string.onboarding_title_4),
+                fontSize = titleFontSize,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            LazyColumn(
+                modifier = Modifier.padding(horizontal = horizontalPadding),
+                verticalArrangement = Arrangement.spacedBy(
+                    space = responsiveSpacing(
+                        mobile = 12,
+                        tablet = 24
+                    )
+                )
+            ) {
+                items(languages.size) { index ->
+                    val lang = languages[index]
+                    ChooseLanguageButton(
+                        lang.flag,
+                        lang.languageName,
+                        lang.language == appLanguage.value
+                    ) {
+                        isShowDialog = true
+                        oldLanguage = appLanguage.value
+                        viewModel.changeLanguage(lang.language)
+                    }
                 }
             }
         }
-        if (isShowDialog)
-            ChangeLanguageDialog({
-                isShowDialog = false
-                viewModel.changeLanguage(oldLanguage)
-            }, {
-                isShowDialog = false
-                viewModel.saveLanguage()
-                LanguageUtils.changeLanguage(
-                    context,
-                    appLanguage.value.languageCode
-                )
-            })
+    } else {
+        // Tablet layout: Row with image and language list
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = topPadding)
+                .padding(horizontal = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Image card on the left
+            OnBoardingImageCard(image, 0.5f, 0.8f)
 
+            // Column for text and LazyColumn on the right
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.onboarding_title_4),
+                    fontSize = titleFontSize,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Spacer(modifier = Modifier.height(verticalSpacing))
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = horizontalPadding),
+                    verticalArrangement = Arrangement.spacedBy(space = verticalSpacing)
+                ) {
+                    items(languages.size) { index ->
+                        val lang = languages[index]
+                        ChooseLanguageButton(
+                            lang.flag,
+                            lang.languageName,
+                            lang.language == appLanguage.value
+                        ) {
+                            isShowDialog = true
+                            oldLanguage = appLanguage.value
+                            viewModel.changeLanguage(lang.language)
+                        }
+                    }
+                }
+            }
+        }
     }
+
+    if (isShowDialog)
+        ChangeLanguageDialog({
+            isShowDialog = false
+            viewModel.changeLanguage(oldLanguage)
+        }, {
+            isShowDialog = false
+            viewModel.saveLanguage()
+            LanguageUtils.changeLanguage(
+                context,
+                appLanguage.value.languageCode
+            )
+        })
 }
