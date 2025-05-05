@@ -27,6 +27,7 @@ import com.acteam.vocago.utils.safeClickable
 @Composable
 fun BackButton(
     onClick: () -> Unit,
+    size: Int = 40
 ) {
     IconButton(
         onClick = onClick,
@@ -35,7 +36,7 @@ fun BackButton(
             Icons.AutoMirrored.Filled.KeyboardArrowLeft,
             contentDescription = "Back btn",
             modifier = Modifier.size(
-                30.dp
+                size.dp
             )
         )
     }

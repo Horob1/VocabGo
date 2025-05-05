@@ -45,6 +45,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
+import com.acteam.vocago.utils.responsiveDP
 
 @Composable
 fun RegisterForm() {
@@ -56,7 +57,11 @@ fun RegisterForm() {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(
+            responsiveDP(
+                8, 16, 16
+            )
+        )
     ) {
 
         Row(
