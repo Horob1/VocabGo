@@ -26,10 +26,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -45,18 +44,20 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
+import com.acteam.vocago.presentation.screen.auth.login.LoginViewModel
+import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.utils.safeClickable
 
 
 @Composable
 fun LoginForm(
+    viewModel: LoginViewModel,
     onLoginClick: () -> Unit,
     onForgotPasswordClick: () -> Unit
 ) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-
+    val formState by viewModel.loginFormState.collectAsState()
+    val uiState by viewModel.loginUIState.collectAsState()
+    val usernameFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
     Column {
         Column(
@@ -99,19 +100,21 @@ fun LoginForm(
                 }
 
                 OutlinedTextField(
-                    value = username,
+                    value = formState.username,
                     onValueChange = {
-                        username = it
+                        viewModel.setUsername(it)
                     },
                     placeholder = { Text(stringResource(R.string.input_enter_username)) },
                     singleLine = true,
                     modifier = Modifier
                         .weight(1f)
+                        .focusRequester(usernameFocusRequester)
                         .fillMaxHeight(),
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
                     keyboardActions = KeyboardActions(onNext = {
                         passwordFocusRequester.requestFocus()
                     }),
+                    readOnly = uiState is UIState.UILoading,
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = Color.Transparent,
                         focusedBorderColor = Color.Transparent,
@@ -119,7 +122,6 @@ fun LoginForm(
                     )
                 )
             }
-
 
             Row(
                 modifier = Modifier
@@ -153,9 +155,9 @@ fun LoginForm(
                 }
 
                 OutlinedTextField(
-                    value = password,
+                    value = formState.password,
                     onValueChange = {
-                        password = it
+                        viewModel.setPassword(it)
                     },
                     placeholder = {
                         Text(stringResource(R.string.input_enter_password))
@@ -165,19 +167,20 @@ fun LoginForm(
                         .weight(1f)
                         .focusRequester(passwordFocusRequester)
                         .fillMaxHeight(),
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    visualTransformation = if (formState.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = Color.Transparent,
                         focusedBorderColor = Color.Transparent,
                         disabledBorderColor = Color.Transparent
                     ),
+                    readOnly = uiState is UIState.UILoading,
                     trailingIcon = {
                         val image =
-                            if (passwordVisible) R.drawable.hidden else R.drawable.view
+                            if (formState.passwordVisible) R.drawable.hidden else R.drawable.view
                         val description =
-                            if (passwordVisible) "Hidden password" else "Show password"
+                            if (formState.passwordVisible) "Hidden password" else "Show password"
 
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
                             Icon(
                                 painter = painterResource(id = image),
                                 contentDescription = description,
@@ -192,7 +195,9 @@ fun LoginForm(
                         keyboardType = KeyboardType.Password
                     ),
                     keyboardActions = KeyboardActions(onDone = {
-
+                        if (
+                            formState.isLoginButtonEnabled && uiState !is UIState.UILoading
+                        ) onLoginClick()
                     }),
                 )
             }
@@ -215,7 +220,7 @@ fun LoginForm(
                     .safeClickable(
                         "btn_forgot_password",
                         onClick = {
-                            onForgotPasswordClick()
+                            if (uiState !is UIState.UILoading) onForgotPasswordClick()
                         }
                     )
                     .padding(8.dp)
@@ -230,7 +235,9 @@ fun LoginForm(
                 .fillMaxWidth()
                 .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
             onClick = {
-                onLoginClick()
+                if (
+                    formState.isLoginButtonEnabled && uiState !is UIState.UILoading
+                ) onLoginClick()
             },
         ) {
             Text(

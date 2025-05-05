@@ -6,7 +6,6 @@ import com.acteam.vocago.data.repository.WelcomeRepositoryImpl
 import com.acteam.vocago.domain.repository.LanguageRepository
 import com.acteam.vocago.domain.repository.SystemConfigRepository
 import com.acteam.vocago.domain.repository.WelcomeRepository
-
 import org.koin.dsl.module
 
 val repositoryModule = module {

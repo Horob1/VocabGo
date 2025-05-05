@@ -52,15 +52,18 @@ android {
 
 dependencies {
     implementation(libs.androidx.foundation)
-    //DataStore
+    // DataStore
     implementation(libs.androidx.datastore.preferences)
+    // Coin
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
     // Ktor client
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.logging)
-    //Koin
+    // Koin
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)
     implementation(libs.koin.compose.viewmodel.navigation)
