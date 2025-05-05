@@ -45,11 +45,11 @@ fun RegisterScreen(
 ) {
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
-
-    val titleFontSize = responsiveSP(mobile = 18, tabletPortrait = 28, tabletLandscape = 28)
+    val titleFontSize = responsiveSP(mobile = 30, tabletPortrait = 36, tabletLandscape = 42)
     val horizontalPadding = responsiveDP(mobile = 24, tabletPortrait = 40, tabletLandscape = 48)
     val verticalSpacing = responsiveDP(mobile = 12, tabletPortrait = 20, tabletLandscape = 24)
     val buttonHeight = responsiveDP(mobile = 48, tabletPortrait = 56, tabletLandscape = 60)
+    val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
 
     Scaffold { innerPadding ->
         Box(
@@ -128,7 +128,10 @@ fun RegisterScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = stringResource(R.string.text_already_have_account))
+                        Text(
+                            text = stringResource(R.string.text_already_have_account),
+                            fontSize = descFontSize
+                        )
                         Text(
                             text = stringResource(R.string.btn_login),
                             modifier = Modifier
@@ -136,7 +139,8 @@ fun RegisterScreen(
                                 .padding(start = 8.dp),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
+                                fontSize = descFontSize
                             )
                         )
                     }
@@ -208,15 +212,19 @@ fun RegisterScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = stringResource(R.string.text_already_have_account))
+                        Text(
+                            text = stringResource(R.string.text_already_have_account),
+                            fontSize = descFontSize
+                        )
                         Text(
                             text = stringResource(R.string.btn_login),
                             modifier = Modifier
                                 .safeClickable("btn_login", onClick = onBackClick)
-                                .padding(start = 8.dp),
+                                .padding(8.dp),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
+                                fontSize = descFontSize
                             )
                         )
                     }

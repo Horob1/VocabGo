@@ -221,7 +221,7 @@ fun LoginForm(
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.primary,
-                    fontSize = responsiveSP(14, 18, 20)
+                    fontSize = responsiveSP(14, 20, 20)
                 ),
                 modifier = Modifier
                     .safeClickable(

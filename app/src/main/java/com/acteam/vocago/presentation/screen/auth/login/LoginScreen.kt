@@ -52,8 +52,8 @@ fun LoginScreen(
     val uiState by viewModel.loginUIState.collectAsState()
     val focusManager = LocalFocusManager.current
     val deviceType = getDeviceType()
-    val titleFontSize = responsiveSP(mobile = 24, tabletPortrait = 28, tabletLandscape = 28)
-    val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 18, tabletLandscape = 20)
+    val titleFontSize = responsiveSP(mobile = 30, tabletPortrait = 36, tabletLandscape = 42)
+    val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
     val horizontalPadding = responsiveDP(mobile = 24, tabletPortrait = 40, tabletLandscape = 48)
     val topPadding = responsiveDP(mobile = 16, tabletPortrait = 24, tabletLandscape = 28)
     val verticalSpacing = responsiveDP(mobile = 12, tabletPortrait = 20, tabletLandscape = 24)
@@ -158,6 +158,7 @@ fun LoginScreen(
                         Text(
                             text = stringResource(R.string.text_dont_have_account),
                             modifier = Modifier.padding(horizontal = horizontalPadding / 3),
+                            fontSize = descFontSize
                         )
                         Text(
                             text = stringResource(R.string.btn_sign_up),
@@ -173,7 +174,9 @@ fun LoginScreen(
                                 ),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
+                                fontSize = descFontSize
+
                             )
                         )
                     }
@@ -266,8 +269,7 @@ fun LoginScreen(
                             Text(
                                 text = stringResource(R.string.text_dont_have_account),
                                 fontSize = descFontSize,
-
-                                )
+                            )
                             Text(
                                 text = stringResource(R.string.btn_sign_up),
                                 modifier = Modifier
