@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,7 +24,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
 import com.acteam.vocago.domain.model.AppLanguage
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
@@ -31,9 +31,8 @@ import com.acteam.vocago.presentation.screen.welcome.data.ChooseLanguageData
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.LanguageUtils
 import com.acteam.vocago.utils.getDeviceType
-import com.acteam.vocago.utils.responsiveFontSize
-import com.acteam.vocago.utils.responsivePadding
-import com.acteam.vocago.utils.responsiveSpacing
+import com.acteam.vocago.utils.responsiveDP
+import com.acteam.vocago.utils.responsiveSP
 
 @Composable
 fun ChooseLanguagePage(
@@ -56,16 +55,14 @@ fun ChooseLanguagePage(
         }
     }
 
-    // Responsive font sizes, paddings, and spacing
-    val titleFontSize = responsiveFontSize(mobile = 18, tablet = 24)
-    val horizontalPadding = responsivePadding(mobile = 24, tablet = 40)
-    val topPadding = responsivePadding(mobile = 16, tablet = 24)
-    val verticalSpacing = responsiveSpacing(mobile = 12, tablet = 20)
+    val titleFontSize = responsiveSP(mobile = 18, tabletPortrait = 24, tabletLandscape = 28)
+    val horizontalPadding = responsiveDP(mobile = 24, tabletPortrait = 40, tabletLandscape = 48)
+    val topPadding = responsiveDP(mobile = 16, tabletPortrait = 24, tabletLandscape = 32)
+    val verticalSpacing = responsiveDP(mobile = 12, tabletPortrait = 20, tabletLandscape = 24)
 
     val deviceType = getDeviceType()
 
-    // Mobile layout: full column
-    if (deviceType == DeviceType.Mobile) {
+    if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -74,7 +71,8 @@ fun ChooseLanguagePage(
             verticalArrangement = Arrangement.spacedBy(space = verticalSpacing)
         ) {
             Spacer(modifier = Modifier.height(verticalSpacing))
-            OnBoardingImageCard(image, 0.9f, 0.5f)
+
+            OnBoardingImageCard(image, 0.9f, if (deviceType == DeviceType.Mobile) 0.5f else 0.6f)
 
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -88,10 +86,7 @@ fun ChooseLanguagePage(
             LazyColumn(
                 modifier = Modifier.padding(horizontal = horizontalPadding),
                 verticalArrangement = Arrangement.spacedBy(
-                    space = responsiveSpacing(
-                        mobile = 12,
-                        tablet = 24
-                    )
+                    space = verticalSpacing
                 )
             ) {
                 items(languages.size) { index ->
@@ -109,19 +104,16 @@ fun ChooseLanguagePage(
             }
         }
     } else {
-        // Tablet layout: Row with image and language list
         Row(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(top = topPadding)
-                .padding(horizontal = 12.dp),
+                .padding(horizontal = horizontalPadding),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Image card on the left
             OnBoardingImageCard(image, 0.5f, 0.8f)
 
-            // Column for text and LazyColumn on the right
             Column(
                 modifier = Modifier
                     .fillMaxHeight()

@@ -27,8 +27,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.acteam.vocago.R
-import com.acteam.vocago.utils.responsiveFontSize
-import com.acteam.vocago.utils.responsivePadding
+import com.acteam.vocago.utils.responsiveDP
+import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.responsiveValue
 
 @Composable
@@ -36,12 +36,10 @@ fun ChangeLanguageDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ) {
-    val paddingHorizontal = responsivePadding(20, 40)
-    val textSize =
-        responsiveFontSize(
-            MaterialTheme.typography.bodyMedium.fontSize.value.toInt(),
-            MaterialTheme.typography.titleMedium.fontSize.value.toInt()
-        )
+    val horizontalPadding = responsiveDP(mobile = 24, tabletPortrait = 40, tabletLandscape = 48)
+    val titleFontSize = responsiveSP(mobile = 18, tabletPortrait = 24, tabletLandscape = 28)
+    val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 18, tabletLandscape = 20)
+
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
@@ -57,6 +55,7 @@ fun ChangeLanguageDialog(
                         .height(
                             responsiveValue(
                                 260,
+                                360,
                                 400
                             ).dp
                         )
@@ -73,7 +72,7 @@ fun ChangeLanguageDialog(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(id = R.string.txt_screen_may_be_flicker),
-                    fontSize = textSize,
+                    fontSize = titleFontSize,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.primary
@@ -82,10 +81,10 @@ fun ChangeLanguageDialog(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = paddingHorizontal)
+                        .padding(horizontal = horizontalPadding)
                         .padding(top = 20.dp),
                     text = stringResource(id = R.string.txt_screen_may_be_flicker_detail),
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontSize = descFontSize,
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center
                 )
