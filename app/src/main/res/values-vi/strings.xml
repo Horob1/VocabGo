@@ -40,6 +40,7 @@
     <string name="text_already_have_account">Đã có tài khoản?</string>
 
     <string name="text_forgot_password">Quên Mật Khẩu</string>
+    <string name="text_type_your_email">Nhập email của bạn</string>"
     <string name="btn_send_email">Gửi Email</string>
     <string name="btn_save_change">Lưu Thay Đổi</string>
     <string name="text_resend_email">Gửi lại email</string>

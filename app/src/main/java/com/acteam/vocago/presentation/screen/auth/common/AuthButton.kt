@@ -35,7 +35,7 @@ fun BackButton(
             Icons.AutoMirrored.Filled.KeyboardArrowLeft,
             contentDescription = "Back btn",
             modifier = Modifier.size(
-                30.dp
+                40.dp
             )
         )
     }

@@ -3,11 +3,15 @@ package com.acteam.vocago.presentation.screen.auth.resetpassword
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -22,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.acteam.vocago.R
@@ -47,34 +52,44 @@ fun ResetPasswordScreen(
         timerKey += 1
         onResendOtp()
     }
+    val scrollState = rememberScrollState()
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
-                .fillMaxSize(),
+                .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
+                .fillMaxSize()
+                .verticalScroll(
+                    scrollState
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 BackButton(
                     onClick = onBackClick,
                 )
+
+                Text(
+                    text = stringResource(R.string.text_reset_password),
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 30.sp,
+                        textAlign = TextAlign.Center
+                    ),
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .weight(1f)
+                )
+
+                Spacer(modifier = Modifier.width(40.dp))
             }
-            Text(
-                text = stringResource(R.string.text_reset_password),
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp
-                ),
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .padding(4.dp)
-            )
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center

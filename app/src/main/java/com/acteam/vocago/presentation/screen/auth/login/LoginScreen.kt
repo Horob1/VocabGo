@@ -1,5 +1,6 @@
 package com.acteam.vocago.presentation.screen.auth.login
 
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -17,7 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
@@ -31,21 +37,41 @@ fun LoginScreen(
     onSignUpClick: () -> Unit,
     onForgotPasswordClick: () -> Unit
 ) {
+    val scrollState = rememberScrollState()
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
-                .fillMaxSize(),
+                .padding(bottom = 12.dp, start = 12.dp, end = 12.dp)
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+            ,
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 BackButton(
                     onClick = onBackClick,
+                )
+
+                Text(
+                    text = stringResource(R.string.btn_login),
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 30.sp,
+                        textAlign = TextAlign.Center
+                    ),
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .weight(1f)
+                )
+
+                Spacer(
+                    modifier = Modifier.width(40.dp)
                 )
             }
 
@@ -53,13 +79,17 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                AuthImageCard(R.drawable.login, width = 0.8f)
+                AuthImageCard(R.drawable.login, width = 1f)
             }
+
+            Spacer(modifier = Modifier.weight(1f))
 
             LoginForm(
                 onLoginClick = {},
                 onForgotPasswordClick = onForgotPasswordClick
             )
+
+            Spacer(modifier = Modifier.height(24.dp))
 
             Row(
                 modifier = Modifier
@@ -85,21 +115,19 @@ fun LoginScreen(
 
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(8.dp)
             ) {
                 PlatFormSignUpButton(R.drawable.google) {}
                 PlatFormSignUpButton(R.drawable.facebook) {}
                 PlatFormSignUpButton(R.drawable.github) {}
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = stringResource(R.string.text_dont_have_account),
-                    modifier = Modifier.padding(horizontal = 8.dp),
+                    modifier = Modifier.padding(8.dp),
                 )
                 Text(
                     text = stringResource(R.string.btn_sign_up),

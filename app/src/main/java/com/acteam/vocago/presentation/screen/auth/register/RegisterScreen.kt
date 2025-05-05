@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
 import com.acteam.vocago.presentation.screen.auth.register.component.RegisterForm
@@ -42,41 +43,48 @@ fun RegisterScreen(
                 .padding(innerPadding)
                 .padding()
                 .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(bottom = 24.dp, start = 24.dp, end = 24.dp),
+                .padding(bottom = 12.dp, start = 12.dp, end = 12.dp)
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 BackButton(
                     onClick = onBackClick,
                 )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    "Register to",
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center,
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    "VocabGo",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        color = MaterialTheme.colorScheme.primary
-                    ),
-                    textAlign = TextAlign.Center,
-                )
 
+                Row(
+                    modifier = Modifier
+                        .weight(1f),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "Register to",
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        "VocabGo",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        textAlign = TextAlign.Center,
+                    )
+
+                }
+
+                Spacer(
+                    modifier = Modifier.width(40.dp)
+                )
             }
+
             Spacer(modifier = Modifier.weight(1f))
             RegisterForm()
+            Spacer(modifier = Modifier.height(12.dp))
             Button(
                 onClick = onRegisterClick,
                 modifier = Modifier
@@ -120,13 +128,4 @@ fun RegisterScreen(
 
         }
     }
-}
-
-@Preview
-@Composable
-fun RegisterScreenPreview() {
-    RegisterScreen(
-        onBackClick = {},
-        onRegisterClick = {}
-    )
 }

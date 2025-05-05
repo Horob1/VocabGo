@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
@@ -38,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.acteam.vocago.R
@@ -52,21 +55,41 @@ fun ForgotPasswordScreen(
 ) {
     var email by remember { mutableStateOf("") }
     val emailFocusRequester = remember { FocusRequester() }
+    val scrollState = rememberScrollState()
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
-                .fillMaxSize(),
+                .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
+                .fillMaxSize()
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 BackButton(
                     onClick = onBackClick,
                 )
+
+                Text(
+                    text = stringResource(R.string.text_forgot_password),
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 30.sp,
+                        textAlign = TextAlign.Center
+                    ),
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .weight(1f)
+                )
+
+                Spacer(
+                    modifier = Modifier.width(40.dp)
+                )
+
             }
 
             Row(
@@ -79,10 +102,11 @@ fun ForgotPasswordScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = stringResource(R.string.text_forgot_password),
+                text = stringResource(R.string.text_type_your_email),
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp
+                    fontSize = 30.sp,
+                    textAlign = TextAlign.Center
                 ),
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
