@@ -54,9 +54,12 @@ dependencies {
     implementation(libs.androidx.foundation)
     // DataStore
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.security.crypto)
     // Coin
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
+    // Credentials
+    implementation(libs.androidx.credentials)
     // Ktor client
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)

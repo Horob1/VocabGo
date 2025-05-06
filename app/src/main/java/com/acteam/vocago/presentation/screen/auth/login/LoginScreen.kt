@@ -51,6 +51,7 @@ fun LoginScreen(
 ) {
     val uiState by viewModel.loginUIState.collectAsState()
     val focusManager = LocalFocusManager.current
+
     val deviceType = getDeviceType()
     val titleFontSize = responsiveSP(mobile = 30, tabletPortrait = 36, tabletLandscape = 42)
     val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)

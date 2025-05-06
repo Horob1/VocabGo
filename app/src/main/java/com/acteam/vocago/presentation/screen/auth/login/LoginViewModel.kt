@@ -2,13 +2,15 @@ package com.acteam.vocago.presentation.screen.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.acteam.vocago.domain.remote.AuthRemoteDataSource
 import com.acteam.vocago.presentation.screen.auth.login.data.LoginFormState
 import com.acteam.vocago.presentation.screen.common.data.UIState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(
+    private val authRemoteDataSource: AuthRemoteDataSource
+) : ViewModel() {
     private val _loginFormState = MutableStateFlow(LoginFormState())
     val loginFormState = _loginFormState
 
@@ -39,7 +41,10 @@ class LoginViewModel : ViewModel() {
     fun login() {
         viewModelScope.launch {
             _loginUIState.value = UIState.UILoading
-            delay(2000)
+            authRemoteDataSource.login(
+                _loginFormState.value.username,
+                _loginFormState.value.password
+            )
             _loginUIState.value = UIState.UISuccess
         }
     }

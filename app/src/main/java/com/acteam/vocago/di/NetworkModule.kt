@@ -1,12 +1,88 @@
 package com.acteam.vocago.di
 
-import com.acteam.vocago.network.VOCAB_GO_BE_QUALIFIER
-import com.acteam.vocago.network.vocabGoBeNetwork
+import com.acteam.vocago.BuildConfig
+import com.acteam.vocago.domain.local.AuthEncryptedPreferences
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.header
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val networkModule = module {
     single(named(VOCAB_GO_BE_QUALIFIER)) {
-        vocabGoBeNetwork
+        val authPreferences: AuthEncryptedPreferences =
+            get()
+////        var isRefreshing = false
+        val client = OkHttpClient.Builder()
+            .addInterceptor(Interceptor { chain ->
+                val accessToken =
+                    authPreferences.getAccessToken() // Get the access token from the preferences
+                val request = chain.request().newBuilder().apply {
+                    accessToken?.let {
+                        header(
+                            "Authorization",
+                            "Bearer $it"
+                        )
+                    }
+                }.build()
+                chain.proceed(request)
+            })
+//            .addInterceptor { chain ->
+//                // Second interceptor: Handle token refresh on 403 error
+//                var response: Response = chain.proceed(chain.request())
+//
+//                if (response.code == 403 && !isRefreshing) {
+//                    isRefreshing = true
+//                    try {
+//                        // Call your API to refresh the token
+//                        val refreshToken = authPreferences.getRefreshToken()
+//                        val newTokens = refreshAccessToken(refreshToken) // Replace with actual refresh logic
+//
+//                        // Save the new tokens
+//                        authPreferences.refreshToken(newTokens.first, newTokens.second)
+//
+//                        // Retry the original request with the new access token
+//                        response.close() // Close the old response
+//                        val newRequest = chain.request().newBuilder().apply {
+//                            header("Authorization", "Bearer ${newTokens.first}")
+//                        }.build()
+//                        response = chain.proceed(newRequest)
+//                    } catch (e: Exception) {
+//                        // Handle the exception if the refresh fails (optional)
+//                        response = chain.proceed(chain.request()) // Or handle the error appropriately
+//                    } finally {
+//                        isRefreshing = false
+//                    }
+//                }
+//
+//                response
+//            }
+            .build()
+
+        HttpClient(OkHttp) {
+            engine {
+                preconfigured = client
+            }
+            defaultRequest {
+                url(BuildConfig.BASE_URL)
+                header("X-Platform", "WEB")
+            }
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
+            install(Logging) {
+                level = LogLevel.ALL
+            }
+        }
     }
 }
+
+const val VOCAB_GO_BE_QUALIFIER = "VOCAB_GO_BE_QUALIFIER"

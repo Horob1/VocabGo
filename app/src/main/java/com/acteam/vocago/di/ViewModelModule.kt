@@ -10,6 +10,8 @@ val viewModelModule = module {
         WelcomeViewModel(get(), get(), get())
     }
     viewModel {
-        LoginViewModel()
+        LoginViewModel(
+            get()
+        )
     }
 }
