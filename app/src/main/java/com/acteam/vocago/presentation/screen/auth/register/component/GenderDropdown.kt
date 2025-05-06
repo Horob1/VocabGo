@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.responsiveValue
 
 @Composable
@@ -38,6 +39,7 @@ fun GenderDropdown() {
     val genderOptions = listOf("Nam", "Nữ", "Khác")
     var selectedGender by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
+    val textFieldFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
 
     Box(
         modifier = Modifier
@@ -86,7 +88,8 @@ fun GenderDropdown() {
                 Text(
                     text = if (selectedGender.isNotEmpty()) selectedGender else "Chọn giới tính",
                     color = if (selectedGender.isNotEmpty()) MaterialTheme.colorScheme.onSurface else Color.Gray,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = textFieldFontSize
                 )
 
                 Icon(

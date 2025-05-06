@@ -85,17 +85,8 @@ fun RegisterScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                "Register to",
+                                stringResource(R.string.btn_sign_up),
                                 style = MaterialTheme.typography.titleLarge.copy(
-                                    fontSize = titleFontSize
-                                ),
-                                textAlign = TextAlign.Center,
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                "VocabGo",
-                                style = MaterialTheme.typography.titleLarge.copy(
-                                    color = MaterialTheme.colorScheme.primary,
                                     fontSize = titleFontSize
                                 ),
                                 textAlign = TextAlign.Center,
@@ -168,18 +159,10 @@ fun RegisterScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                "Register to",
+                                stringResource(R.string.btn_sign_up),
                                 style = MaterialTheme.typography.titleLarge.copy(
-                                    fontSize = titleFontSize
-                                ),
-                                textAlign = TextAlign.Center,
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                "VocabGo",
-                                style = MaterialTheme.typography.titleLarge.copy(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontSize = titleFontSize
+                                    fontSize = titleFontSize,
+                                    color = MaterialTheme.colorScheme.primary
                                 ),
                                 textAlign = TextAlign.Center,
                             )

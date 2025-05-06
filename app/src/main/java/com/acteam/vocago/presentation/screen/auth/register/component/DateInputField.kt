@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
+import com.acteam.vocago.utils.responsiveSP
 import java.util.Calendar
 
 @Composable
@@ -40,6 +41,7 @@ fun DateInputField() {
 
     var selectedDate by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
+    val textFieldFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
 
     if (showDialog) {
         DatePickerDialog(
@@ -102,7 +104,8 @@ fun DateInputField() {
                 Text(
                     text = if (selectedDate.isNotEmpty()) selectedDate else stringResource(R.string.input_enter_dob),
                     color = if (selectedDate.isNotEmpty()) MaterialTheme.colorScheme.onSurface else Color.Gray,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = textFieldFontSize
                 )
             }
         }

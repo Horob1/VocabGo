@@ -19,11 +19,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -37,14 +35,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
 import com.acteam.vocago.utils.DeviceType
@@ -165,397 +159,55 @@ fun RegisterForm() {
                     )
                 }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(
-                            MaterialTheme.colorScheme.surfaceVariant,
-                            RoundedCornerShape(12.dp)
-                        )
-                        .border(
-                            1.dp, MaterialTheme.colorScheme.primary.copy(
-                                alpha = 0.5f
-                            ), RoundedCornerShape(12.dp)
-                        )
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(48.dp)
-                            .fillMaxHeight()
-                            .background(
-                                MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
+                CommonTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    placeholder = stringResource(R.string.input_enter_username),
+                    icon = Icons.Default.Person
+                )
 
-                    OutlinedTextField(
-                        value = text,
-                        onValueChange = {
-                            text = it
-                        },
-                        placeholder = { Text(stringResource(R.string.input_enter_username)) },
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = textFieldFontSize
-                        ),
-                        singleLine = true,
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                        keyboardActions = KeyboardActions(onNext = {
-                        }),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            disabledBorderColor = Color.Transparent
-                        )
-                    )
-                }
+                CommonTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    placeholder = stringResource(R.string.input_enter_email),
+                    icon = Icons.Default.Email,
+                    keyboardType = KeyboardType.Email
+                )
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(
-                            MaterialTheme.colorScheme.surfaceVariant,
-                            RoundedCornerShape(12.dp)
-                        )
-                        .border(
-                            1.dp, MaterialTheme.colorScheme.primary.copy(
-                                alpha = 0.5f
-                            ), RoundedCornerShape(12.dp)
-                        )
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(48.dp)
-                            .fillMaxHeight()
-                            .background(
-                                MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Email,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
+                CommonTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    placeholder = stringResource(R.string.input_enter_phone),
+                    icon = Icons.Default.Phone,
+                    keyboardType = KeyboardType.Phone
+                )
 
-                    OutlinedTextField(
-                        value = text,
-                        onValueChange = {
-                            text = it
-                        },
-                        placeholder = { Text(stringResource(R.string.input_enter_email)) },
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = textFieldFontSize
-                        ),
-                        singleLine = true,
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Next,
-                            keyboardType = KeyboardType.Email
-                        ),
-                        keyboardActions = KeyboardActions(onNext = {
-                        }),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            disabledBorderColor = Color.Transparent
-                        )
-                    )
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(
-                            MaterialTheme.colorScheme.surfaceVariant,
-                            RoundedCornerShape(12.dp)
-                        )
-                        .border(
-                            1.dp, MaterialTheme.colorScheme.primary.copy(
-                                alpha = 0.5f
-                            ), RoundedCornerShape(12.dp)
-                        )
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(48.dp)
-                            .fillMaxHeight()
-                            .background(
-                                MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Phone,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-
-                    OutlinedTextField(
-                        value = text,
-                        onValueChange = {
-                            text = it
-                        },
-                        placeholder = { Text(stringResource(R.string.input_enter_phone)) },
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = textFieldFontSize
-                        ),
-                        singleLine = true,
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Next,
-                            keyboardType = KeyboardType.Phone
-                        ),
-                        keyboardActions = KeyboardActions(onNext = {
-                        }),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            disabledBorderColor = Color.Transparent
-                        )
-                    )
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(
-                            MaterialTheme.colorScheme.surfaceVariant,
-                            RoundedCornerShape(12.dp)
-                        )
-                        .border(
-                            1.dp, MaterialTheme.colorScheme.primary.copy(
-                                alpha = 0.5f
-                            ), RoundedCornerShape(12.dp)
-                        )
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(48.dp)
-                            .fillMaxHeight()
-                            .background(
-                                MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.LocationOn,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-
-                    OutlinedTextField(
-                        value = text,
-                        onValueChange = {
-                            text = it
-                        },
-                        placeholder = { Text(stringResource(R.string.input_enter_address)) },
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = textFieldFontSize
-                        ),
-                        singleLine = true,
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Next,
-                            keyboardType = KeyboardType.Phone
-                        ),
-                        keyboardActions = KeyboardActions(onNext = {
-                        }),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            disabledBorderColor = Color.Transparent
-                        )
-                    )
-                }
-
+                CommonTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    placeholder = stringResource(R.string.input_enter_address),
+                    icon = Icons.Default.LocationOn,
+                    keyboardType = KeyboardType.Text
+                )
                 DateInputField()
 
                 GenderDropdown()
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(
-                            MaterialTheme.colorScheme.surfaceVariant,
-                            RoundedCornerShape(12.dp)
-                        )
-                        .border(
-                            1.dp, MaterialTheme.colorScheme.primary.copy(
-                                alpha = 0.5f
-                            ), RoundedCornerShape(12.dp)
-                        )
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(48.dp)
-                            .fillMaxHeight()
-                            .background(
-                                MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-
-                    OutlinedTextField(
-                        value = text,
-                        onValueChange = {
-                            text = it
-                        },
-                        placeholder = {
-                            Text(stringResource(R.string.input_enter_password))
-                        },
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = textFieldFontSize
-                        ),
-                        singleLine = true,
-                        modifier = Modifier
-                            .weight(1f)
-                            .focusRequester(passwordFocusRequester)
-                            .fillMaxHeight(),
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            disabledBorderColor = Color.Transparent
-                        ),
-                        trailingIcon = {
-                            val image =
-                                if (passwordVisible) R.drawable.hidden else R.drawable.view
-                            val description =
-                                if (passwordVisible) "Hidden password" else "Show password"
-
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    painter = painterResource(id = image),
-                                    contentDescription = description,
-                                    modifier = Modifier
-                                        .height(24.dp)
-                                        .width(24.dp)
-                                )
-                            }
-                        },
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Password
-                        ),
-                        keyboardActions = KeyboardActions(onDone = {
-                        }),
-                    )
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(
-                            MaterialTheme.colorScheme.surfaceVariant,
-                            RoundedCornerShape(12.dp)
-                        )
-                        .border(
-                            1.dp, MaterialTheme.colorScheme.primary.copy(
-                                alpha = 0.5f
-                            ), RoundedCornerShape(12.dp)
-                        )
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(48.dp)
-                            .fillMaxHeight()
-                            .background(
-                                MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-
-                    OutlinedTextField(
-                        value = text,
-                        onValueChange = {
-                            text = it
-                        },
-                        placeholder = {
-                            Text(stringResource(R.string.input_confirm_password))
-                        },
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = textFieldFontSize
-                        ),
-                        singleLine = true,
-                        modifier = Modifier
-                            .weight(1f)
-                            .focusRequester(passwordFocusRequester)
-                            .fillMaxHeight(),
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            disabledBorderColor = Color.Transparent
-                        ),
-                        trailingIcon = {
-                            val image =
-                                if (confirmPasswordVisible) R.drawable.hidden else R.drawable.view
-                            val description =
-                                if (confirmPasswordVisible) "Hidden password" else "Show password"
-
-                            IconButton(onClick = {
-                                confirmPasswordVisible = !confirmPasswordVisible
-                            }) {
-                                Icon(
-                                    painter = painterResource(id = image),
-                                    contentDescription = description,
-                                    modifier = Modifier
-                                        .height(24.dp)
-                                        .width(24.dp)
-                                )
-                            }
-                        },
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Password
-                        ),
-                        keyboardActions = KeyboardActions(onDone = {
-                        }),
-                    )
-                }
-
+                PasswordTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    placeholder = stringResource(R.string.input_enter_password),
+                    isPasswordVisible = passwordVisible,
+                    onVisibilityChange = { passwordVisible = !passwordVisible },
+                    focusRequester = passwordFocusRequester
+                )
+                PasswordTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    placeholder = stringResource(R.string.input_confirm_password),
+                    isPasswordVisible = confirmPasswordVisible,
+                    onVisibilityChange = { confirmPasswordVisible = !confirmPasswordVisible },
+                    focusRequester = passwordFocusRequester
+                )
             }
         } else {
             Row(
@@ -574,304 +226,43 @@ fun RegisterForm() {
                         )
                     )
                 ) {
+                    CommonTextField(
+                        value = text,
+                        onValueChange = { text = it },
+                        placeholder = stringResource(R.string.input_first_name),
+                        icon = Icons.Default.Face
+                    )
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .background(
-                                MaterialTheme.colorScheme.surfaceVariant,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .border(
-                                1.dp, MaterialTheme.colorScheme.primary.copy(
-                                    alpha = 0.5f
-                                ), RoundedCornerShape(12.dp)
-                            )
-                    ) {
+                    CommonTextField(
+                        value = text,
+                        onValueChange = { text = it },
+                        placeholder = stringResource(R.string.input_last_name),
+                        icon = Icons.Default.Face
+                    )
 
-                        Box(
-                            modifier = Modifier
-                                .width(48.dp)
-                                .fillMaxHeight()
-                                .background(
-                                    MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(
-                                        topStart = 12.dp,
-                                        bottomStart = 12.dp
-                                    )
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Face,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
+                    CommonTextField(
+                        value = text,
+                        onValueChange = { text = it },
+                        placeholder = stringResource(R.string.input_enter_username),
+                        icon = Icons.Default.Person
+                    )
 
-                        OutlinedTextField(
-                            value = text,
-                            onValueChange = {
-                                text = it
-                            },
-                            placeholder = { Text(stringResource(R.string.input_first_name)) },
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = textFieldFontSize
-                            ),
-                            singleLine = true,
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight(),
-                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                            keyboardActions = KeyboardActions(onNext = {
+                    CommonTextField(
+                        value = text,
+                        onValueChange = { text = it },
+                        placeholder = stringResource(R.string.input_enter_email),
+                        icon = Icons.Default.Email,
+                        keyboardType = KeyboardType.Email
+                    )
 
-                            }),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                disabledBorderColor = Color.Transparent
-                            )
-                        )
-                    }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .background(
-                                MaterialTheme.colorScheme.surfaceVariant,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .border(
-                                1.dp, MaterialTheme.colorScheme.primary.copy(
-                                    alpha = 0.5f
-                                ), RoundedCornerShape(12.dp)
-                            )
-                    ) {
+                    CommonTextField(
+                        value = text,
+                        onValueChange = { text = it },
+                        placeholder = stringResource(R.string.input_enter_phone),
+                        icon = Icons.Default.Phone,
+                        keyboardType = KeyboardType.Phone
+                    )
 
-                        Box(
-                            modifier = Modifier
-                                .width(48.dp)
-                                .fillMaxHeight()
-                                .background(
-                                    MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(
-                                        topStart = 12.dp,
-                                        bottomStart = 12.dp
-                                    )
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Face,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-                        OutlinedTextField(
-                            value = text,
-                            onValueChange = {
-                                text = it
-                            },
-                            placeholder = { Text(stringResource(R.string.input_last_name)) },
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = textFieldFontSize
-                            ),
-                            singleLine = true,
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight(),
-                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                            keyboardActions = KeyboardActions(onNext = {
-
-                            }),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                disabledBorderColor = Color.Transparent
-                            )
-                        )
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .background(
-                                MaterialTheme.colorScheme.surfaceVariant,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .border(
-                                1.dp, MaterialTheme.colorScheme.primary.copy(
-                                    alpha = 0.5f
-                                ), RoundedCornerShape(12.dp)
-                            )
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .width(48.dp)
-                                .fillMaxHeight()
-                                .background(
-                                    MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(
-                                        topStart = 12.dp,
-                                        bottomStart = 12.dp
-                                    )
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-
-                        OutlinedTextField(
-                            value = text,
-                            onValueChange = {
-                                text = it
-                            },
-                            placeholder = { Text(stringResource(R.string.input_enter_username)) },
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = textFieldFontSize
-                            ),
-                            singleLine = true,
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight(),
-                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                            keyboardActions = KeyboardActions(onNext = {
-                            }),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                disabledBorderColor = Color.Transparent
-                            )
-                        )
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .background(
-                                MaterialTheme.colorScheme.surfaceVariant,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .border(
-                                1.dp, MaterialTheme.colorScheme.primary.copy(
-                                    alpha = 0.5f
-                                ), RoundedCornerShape(12.dp)
-                            )
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .width(48.dp)
-                                .fillMaxHeight()
-                                .background(
-                                    MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(
-                                        topStart = 12.dp,
-                                        bottomStart = 12.dp
-                                    )
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Email,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-
-                        OutlinedTextField(
-                            value = text,
-                            onValueChange = {
-                                text = it
-                            },
-                            placeholder = { Text(stringResource(R.string.input_enter_email)) },
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = textFieldFontSize
-                            ),
-                            singleLine = true,
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight(),
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Next,
-                                keyboardType = KeyboardType.Email
-                            ),
-                            keyboardActions = KeyboardActions(onNext = {
-                            }),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                disabledBorderColor = Color.Transparent
-                            )
-                        )
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .background(
-                                MaterialTheme.colorScheme.surfaceVariant,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .border(
-                                1.dp, MaterialTheme.colorScheme.primary.copy(
-                                    alpha = 0.5f
-                                ), RoundedCornerShape(12.dp)
-                            )
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .width(48.dp)
-                                .fillMaxHeight()
-                                .background(
-                                    MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(
-                                        topStart = 12.dp,
-                                        bottomStart = 12.dp
-                                    )
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Phone,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-
-                        OutlinedTextField(
-                            value = text,
-                            onValueChange = {
-                                text = it
-                            },
-                            placeholder = { Text(stringResource(R.string.input_enter_phone)) },
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = textFieldFontSize
-                            ),
-                            singleLine = true,
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight(),
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Next,
-                                keyboardType = KeyboardType.Phone
-                            ),
-                            keyboardActions = KeyboardActions(onNext = {
-                            }),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                disabledBorderColor = Color.Transparent
-                            )
-                        )
-                    }
                 }
                 VerticalDivider(
                     modifier = Modifier
@@ -890,234 +281,33 @@ fun RegisterForm() {
                         )
                     )
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .background(
-                                MaterialTheme.colorScheme.surfaceVariant,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .border(
-                                1.dp, MaterialTheme.colorScheme.primary.copy(
-                                    alpha = 0.5f
-                                ), RoundedCornerShape(12.dp)
-                            )
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .width(48.dp)
-                                .fillMaxHeight()
-                                .background(
-                                    MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(
-                                        topStart = 12.dp,
-                                        bottomStart = 12.dp
-                                    )
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.LocationOn,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-
-                        OutlinedTextField(
-                            value = text,
-                            onValueChange = {
-                                text = it
-                            },
-                            placeholder = { Text(stringResource(R.string.input_enter_address)) },
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = textFieldFontSize
-                            ),
-                            singleLine = true,
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight(),
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Next,
-                                keyboardType = KeyboardType.Phone
-                            ),
-                            keyboardActions = KeyboardActions(onNext = {
-                            }),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                disabledBorderColor = Color.Transparent
-                            )
-                        )
-                    }
-
+                    CommonTextField(
+                        value = text,
+                        onValueChange = { text = it },
+                        placeholder = stringResource(R.string.input_enter_address),
+                        icon = Icons.Default.LocationOn,
+                        keyboardType = KeyboardType.Text
+                    )
                     DateInputField()
 
                     GenderDropdown()
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .background(
-                                MaterialTheme.colorScheme.surfaceVariant,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .border(
-                                1.dp, MaterialTheme.colorScheme.primary.copy(
-                                    alpha = 0.5f
-                                ), RoundedCornerShape(12.dp)
-                            )
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .width(48.dp)
-                                .fillMaxHeight()
-                                .background(
-                                    MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(
-                                        topStart = 12.dp,
-                                        bottomStart = 12.dp
-                                    )
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-
-                        OutlinedTextField(
-                            value = text,
-                            onValueChange = {
-                                text = it
-                            },
-                            placeholder = {
-                                Text(stringResource(R.string.input_enter_password))
-                            },
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = textFieldFontSize
-                            ),
-                            singleLine = true,
-                            modifier = Modifier
-                                .weight(1f)
-                                .focusRequester(passwordFocusRequester)
-                                .fillMaxHeight(),
-                            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                disabledBorderColor = Color.Transparent
-                            ),
-                            trailingIcon = {
-                                val image =
-                                    if (passwordVisible) R.drawable.hidden else R.drawable.view
-                                val description =
-                                    if (passwordVisible) "Hidden password" else "Show password"
-
-                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                    Icon(
-                                        painter = painterResource(id = image),
-                                        contentDescription = description,
-                                        modifier = Modifier
-                                            .height(24.dp)
-                                            .width(24.dp)
-                                    )
-                                }
-                            },
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Done,
-                                keyboardType = KeyboardType.Password
-                            ),
-                            keyboardActions = KeyboardActions(onDone = {
-                            }),
-                        )
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .background(
-                                MaterialTheme.colorScheme.surfaceVariant,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .border(
-                                1.dp, MaterialTheme.colorScheme.primary.copy(
-                                    alpha = 0.5f
-                                ), RoundedCornerShape(12.dp)
-                            )
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .width(48.dp)
-                                .fillMaxHeight()
-                                .background(
-                                    MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(
-                                        topStart = 12.dp,
-                                        bottomStart = 12.dp
-                                    )
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-
-                        OutlinedTextField(
-                            value = text,
-                            onValueChange = {
-                                text = it
-                            },
-                            placeholder = {
-                                Text(stringResource(R.string.input_confirm_password))
-                            },
-                            singleLine = true,
-                            modifier = Modifier
-                                .weight(1f)
-                                .focusRequester(passwordFocusRequester)
-                                .fillMaxHeight(),
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = textFieldFontSize
-                            ),
-                            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                disabledBorderColor = Color.Transparent
-                            ),
-                            trailingIcon = {
-                                val image =
-                                    if (confirmPasswordVisible) R.drawable.hidden else R.drawable.view
-                                val description =
-                                    if (confirmPasswordVisible) "Hidden password" else "Show password"
-
-                                IconButton(onClick = {
-                                    confirmPasswordVisible = !confirmPasswordVisible
-                                }) {
-                                    Icon(
-                                        painter = painterResource(id = image),
-                                        contentDescription = description,
-                                        modifier = Modifier
-                                            .height(24.dp)
-                                            .width(24.dp)
-                                    )
-                                }
-                            },
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Done,
-                                keyboardType = KeyboardType.Password
-                            ),
-                            keyboardActions = KeyboardActions(onDone = {
-                            }),
-                        )
-                    }
+                    PasswordTextField(
+                        value = text,
+                        onValueChange = { text = it },
+                        placeholder = stringResource(R.string.input_enter_password),
+                        isPasswordVisible = passwordVisible,
+                        onVisibilityChange = { passwordVisible = !passwordVisible },
+                        focusRequester = passwordFocusRequester
+                    )
+                    PasswordTextField(
+                        value = text,
+                        onValueChange = { text = it },
+                        placeholder = stringResource(R.string.input_confirm_password),
+                        isPasswordVisible = confirmPasswordVisible,
+                        onVisibilityChange = { confirmPasswordVisible = !confirmPasswordVisible },
+                        focusRequester = passwordFocusRequester
+                    )
                 }
             }
         }

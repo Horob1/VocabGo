@@ -43,7 +43,7 @@
     <string name="btn_send_email">Gửi Email</string>
     <string name="btn_save_change">Lưu Thay Đổi</string>
     <string name="text_resend_email">Gửi lại email</string>
-    <string name="text_reset_password">Đặt Lại Mật Khẩu</string>
+    <string name="text_reset_password">Mật Khẩu Mới</string>
     <string name="text_send_otp">Mã OTP gửi tới</string>
     <string name="input_enter_otp">Nhập OTP</string>
     <string name="text_verify_email">Xác thực Email</string>

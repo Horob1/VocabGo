@@ -176,7 +176,6 @@ fun LoginScreen(
                                 color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight.Medium,
                                 fontSize = descFontSize
-
                             )
                         )
                     }
