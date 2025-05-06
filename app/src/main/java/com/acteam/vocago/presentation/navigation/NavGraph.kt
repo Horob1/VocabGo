@@ -73,6 +73,9 @@ fun SetupNavGraph(
                     {
                         navController.navigate(NavScreen.ForgotPasswordNavScreen)
                     },
+                    {
+                        navController.navigate(NavScreen.VerifyEmailNavScreen)
+                    }
                 )
             }
             composable<NavScreen.RegisterNavScreen> {

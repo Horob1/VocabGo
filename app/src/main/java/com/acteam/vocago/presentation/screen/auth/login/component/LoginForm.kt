@@ -1,5 +1,6 @@
 package com.acteam.vocago.presentation.screen.auth.login.component
 
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -33,18 +35,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.autofill.AutofillNode
-import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.boundsInWindow
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalAutofill
-import androidx.compose.ui.platform.LocalAutofillTree
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -54,6 +50,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.GetPasswordOption
+import androidx.credentials.PasswordCredential
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.screen.auth.login.LoginViewModel
 import com.acteam.vocago.presentation.screen.common.data.UIState
@@ -69,26 +69,18 @@ fun LoginForm(
     onLoginClick: () -> Unit,
     onForgotPasswordClick: () -> Unit
 ) {
+    val context = LocalContext.current
     val formState by viewModel.loginFormState.collectAsState()
     val uiState by viewModel.loginUIState.collectAsState()
-    LocalContext.current
     val scope = rememberCoroutineScope()
+
 
     val usernameFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        usernameFocusRequester.requestFocus()
+    }
     val textFieldFontSize = responsiveSP(14, 20, 20)
-
-    val usernameAutofillNode = AutofillNode(
-        autofillTypes = listOf(AutofillType.EmailAddress),
-        onFill = { viewModel.setUsername(it) }
-    )
-    val passwordAutofillNode = AutofillNode(
-        autofillTypes = listOf(AutofillType.Password),
-        onFill = { viewModel.setPassword(it) }
-    )
-    val autofill = LocalAutofill.current
-    LocalAutofillTree.current += usernameAutofillNode
-    LocalAutofillTree.current += passwordAutofillNode
 
     Column {
         Column(
@@ -142,18 +134,40 @@ fun LoginForm(
                     modifier = Modifier
                         .weight(1f)
                         .focusRequester(usernameFocusRequester)
-                        .fillMaxHeight()
-                        .onGloballyPositioned {
-                            usernameAutofillNode.boundingBox = it.boundsInWindow()
-                        }
-                        .onFocusChanged { focusState ->
-                            autofill?.run {
-                                if (focusState.isFocused) requestAutofillForNode(
-                                    usernameAutofillNode
-                                )
-                                else cancelAutofillForNode(usernameAutofillNode)
+                        .onFocusChanged(
+                            onFocusChanged = {
+                                if (it.isFocused && formState.username == "") {
+                                    scope.launch {
+                                        try {
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                                                val credentialManager =
+                                                    CredentialManager.create(context)
+
+                                                val request = GetCredentialRequest(
+                                                    listOf(
+                                                        GetPasswordOption()
+                                                    )
+                                                )
+
+                                                val result = credentialManager.getCredential(
+                                                    request = request,
+                                                    context = context
+                                                )
+
+                                                val credential = result.credential
+                                                if (credential is PasswordCredential) {
+                                                    viewModel.setUsername(credential.id)
+                                                    viewModel.setPassword(credential.password)
+                                                    onLoginClick()
+                                                }
+                                            }
+                                        } catch (_: Exception) {
+                                        }
+                                    }
+                                }
                             }
-                        },
+                        )
+                        .fillMaxHeight(),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Next,
                         keyboardType = KeyboardType.Email
@@ -212,18 +226,7 @@ fun LoginForm(
                     modifier = Modifier
                         .weight(1f)
                         .focusRequester(passwordFocusRequester)
-                        .fillMaxHeight()
-                        .onGloballyPositioned {
-                            passwordAutofillNode.boundingBox = it.boundsInWindow()
-                        }
-                        .onFocusChanged { focusState ->
-                            autofill?.run {
-                                if (focusState.isFocused) requestAutofillForNode(
-                                    passwordAutofillNode
-                                )
-                                else cancelAutofillForNode(passwordAutofillNode)
-                            }
-                        },
+                        .fillMaxHeight(),
                     visualTransformation = if (formState.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = Color.Transparent,
@@ -294,10 +297,6 @@ fun LoginForm(
             onClick = {
                 if (formState.isLoginButtonEnabled && uiState !is UIState.UILoading) {
                     onLoginClick()
-                    // Save credentials after login
-                    scope.launch {
-//                        viewModel.saveCredentials(context, formState.username, formState.password)
-                    }
                 }
             }
         ) {

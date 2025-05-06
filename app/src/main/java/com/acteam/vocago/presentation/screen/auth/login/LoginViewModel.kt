@@ -2,14 +2,16 @@ package com.acteam.vocago.presentation.screen.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.acteam.vocago.domain.remote.AuthRemoteDataSource
+import com.acteam.vocago.data.model.ApiException
+import com.acteam.vocago.domain.usecase.LoginUseCase
 import com.acteam.vocago.presentation.screen.auth.login.data.LoginFormState
+import com.acteam.vocago.presentation.screen.common.data.UIErrorType
 import com.acteam.vocago.presentation.screen.common.data.UIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val authRemoteDataSource: AuthRemoteDataSource
+    private val loginUseCase: LoginUseCase
 ) : ViewModel() {
     private val _loginFormState = MutableStateFlow(LoginFormState())
     val loginFormState = _loginFormState
@@ -38,15 +40,45 @@ class LoginViewModel(
             _loginFormState.value.copy(passwordVisible = !_loginFormState.value.passwordVisible)
     }
 
-    fun login() {
+    fun login(afterLoginSuccess: suspend () -> Unit) {
+        if (!_loginFormState.value.isLoginButtonEnabled) return
+
         viewModelScope.launch {
             _loginUIState.value = UIState.UILoading
-            authRemoteDataSource.login(
-                _loginFormState.value.username,
-                _loginFormState.value.password
-            )
-            _loginUIState.value = UIState.UISuccess
+            try {
+                loginUseCase(
+                    username = _loginFormState.value.username,
+                    password = _loginFormState.value.password
+                )
+                afterLoginSuccess()
+                _loginUIState.value = UIState.UISuccess
+            } catch (e: Exception) {
+                if (e is ApiException) {
+                    when (e.code) {
+                        // truyền lên sai định dạng
+                        422 -> _loginUIState.value =
+                            UIState.UIError(UIErrorType.UnexpectedEntityError)
+                        // Tài khoản chưa verify
+                        400 -> _loginUIState.value =
+                            UIState.UIError(UIErrorType.BadRequestError)
+                        // Sai mật khẩu
+                        401 -> _loginUIState.value =
+                            UIState.UIError(UIErrorType.UnauthorizedError)
+                        // Tài khoản or mật khẩu ko tồn tại :V
+                        404 -> _loginUIState.value =
+                            UIState.UIError(UIErrorType.NotFoundError)
+                        // User bị ban rồi
+                        403 -> _loginUIState.value = UIState.UIError(UIErrorType.ForbiddenError)
+
+                        else -> _loginUIState.value = UIState.UIError(UIErrorType.UnknownError)
+                    }
+                } else
+                    _loginUIState.value = UIState.UIError(UIErrorType.UnknownError)
+            }
         }
     }
 
+    fun clearUIState() {
+        _loginUIState.value = UIState.UISuccess
+    }
 }

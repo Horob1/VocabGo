@@ -73,7 +73,7 @@ val networkModule = module {
             }
             defaultRequest {
                 url(BuildConfig.BASE_URL)
-                header("X-Platform", "WEB")
+                header("X-Platform", "MOBILE")
             }
             install(ContentNegotiation) {
                 json(Json { ignoreUnknownKeys = true })

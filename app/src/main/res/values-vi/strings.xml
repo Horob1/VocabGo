@@ -29,6 +29,13 @@
     <string name="btn_sign_up">Đăng ký</string>
     <string name="text_or">Hoặc</string>
     <string name="text_dont_have_account">Chưa có tài khoản?</string>
+
+    <string name="text_network_error">Lỗi mạng. Vui lòng kiểm tra kết nối internet của bạn!</string>
+    <string name="text_server_error">Lỗi máy chủ. Vui lòng thử lại sau!</string>
+    <string name="text_unknown_error">Lỗi không xác định. Vui lòng thử lại sau!</string>
+    <string name="text_usernamer_or_password_incorrect">Tên đăng nhập hoặc mật khẩu không đúng!</string>
+    <string name="text_user_was_banned">Tài khoản của bạn đã bị khóa!</string>
+
     <!--Register-->
     <string name="input_first_name">Họ</string>
     <string name="input_last_name">Tên</string>

@@ -1,28 +1,37 @@
 package com.acteam.vocago.data.remote
 
-import android.util.Log
+import com.acteam.vocago.data.model.ApiException
 import com.acteam.vocago.data.model.LoginRequest
+import com.acteam.vocago.data.model.LoginResponse
+import com.acteam.vocago.data.model.SuccessResponse
 import com.acteam.vocago.domain.remote.AuthRemoteDataSource
+import com.acteam.vocago.utils.VocaGoRoutes
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 
 
 class AuthRemoteDataSourceImpl(
     val client: HttpClient,
 ) : AuthRemoteDataSource {
-    override suspend fun login(username: String, password: String) {
-        try {
-            val response = client.post("/api/v1/user/login") {
-                contentType(ContentType.Application.Json)
-                setBody(LoginRequest(usernameOrEmail = username, password = password))
+    override suspend fun login(username: String, password: String): LoginResponse {
+        val response = client.post(VocaGoRoutes.Login.path) {
+            contentType(ContentType.Application.Json)
+            setBody(LoginRequest(usernameOrEmail = username, password = password))
+        }
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                val data = response.body<SuccessResponse<LoginResponse>>()
+                return data.data
             }
 
-            Log.d("AuthRemoteDataSourceImpl", response.toString())
-        } catch (e: Exception) {
-            Log.e("AuthRemoteDataSourceImpl", e.toString())
+            else -> {
+                throw ApiException(response.status.value)
+            }
         }
     }
 }
