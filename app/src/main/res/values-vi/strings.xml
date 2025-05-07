@@ -38,6 +38,11 @@
     <string name="text_please_type_username_and_password">Hãy điền đủ tài khoản và mật khẩu!</string>
     <string name="text_error_on_save_credential">Lỗi khi lưu thông tin đăng nhập</string>
     <string name="text_try_again_with_email">Thử đăng nhập lại với email</string>
+    <string name="text_email_incorrect">Email không đúng!</string>
+    <string name="text_too_many_requests">Bạn đã thao tác quá nhiều lần. Vui lòng thử lại sau!</string>
+    <string name="text_email_has_not_been_register">Email chưa được đăng ký với người dùng</string>
+    <string name="text_please_type_email">Hãy điền email!</string>
+
     <!--Register-->
     <string name="input_first_name">Họ</string>
     <string name="input_last_name">Tên</string>

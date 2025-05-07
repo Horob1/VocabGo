@@ -1,6 +1,7 @@
 package com.acteam.vocago.data.remote
 
 import com.acteam.vocago.data.model.ApiException
+import com.acteam.vocago.data.model.ForgotPasswordRequest
 import com.acteam.vocago.data.model.LoginRequest
 import com.acteam.vocago.data.model.LoginResponse
 import com.acteam.vocago.data.model.SuccessResponse
@@ -27,6 +28,21 @@ class AuthRemoteDataSourceImpl(
             HttpStatusCode.OK -> {
                 val data = response.body<SuccessResponse<LoginResponse>>()
                 return data.data
+            }
+
+            else -> {
+                throw ApiException(response.status.value)
+            }
+        }
+    }
+    override suspend fun forgotPassword(email: String) {
+        val response = client.post(VocaGoRoutes.ForgotPassword.path) {
+            contentType(ContentType.Application.Json)
+            setBody(ForgotPasswordRequest(email = email))
+        }
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                return
             }
 
             else -> {

@@ -1,5 +1,6 @@
 package com.acteam.vocago.di
 
+import com.acteam.vocago.presentation.screen.auth.forgotpassword.ForgotPasswordViewModel
 import com.acteam.vocago.presentation.screen.auth.login.LoginViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import org.koin.core.module.dsl.viewModel
@@ -11,6 +12,11 @@ val viewModelModule = module {
     }
     viewModel {
         LoginViewModel(
+            get()
+        )
+    }
+    viewModel {
+        ForgotPasswordViewModel(
             get()
         )
     }

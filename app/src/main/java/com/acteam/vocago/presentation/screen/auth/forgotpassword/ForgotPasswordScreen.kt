@@ -1,5 +1,6 @@
 package com.acteam.vocago.presentation.screen.auth.forgotpassword
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -21,43 +22,62 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import com.acteam.vocago.utils.responsiveValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
+import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
+import com.acteam.vocago.presentation.screen.common.data.UIErrorType
+import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
+import com.acteam.vocago.utils.autofill
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ForgotPasswordScreen(
-    onBackClick: () -> Unit, onResetPasswordClick: () -> Unit
+    onBackClick: () -> Unit, onResetPasswordClick: () -> Unit,
+    viewModel: ForgotPasswordViewModel,
+    navigateToVerifyEmail: (String) -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
+
+    val formState by viewModel.forgotPasswordFormState.collectAsState()
+    val uiState by viewModel.forgotPasswordUIState.collectAsState()
     val emailFocusRequester = remember { FocusRequester() }
+    val context = LocalContext.current
+
     val buttonHeight = responsiveDP(48, 56, 60)
     val focusManager = LocalFocusManager.current
     val deviceType = getDeviceType()
@@ -67,6 +87,36 @@ fun ForgotPasswordScreen(
     val horizontalPadding = responsiveDP(mobile = 24, tabletPortrait = 40, tabletLandscape = 48)
     val verticalSpacing = responsiveDP(mobile = 12, tabletPortrait = 20, tabletLandscape = 24)
     val topPadding = responsiveDP(mobile = 16, tabletPortrait = 24, tabletLandscape = 28)
+
+    LaunchedEffect(uiState) {
+        val error = uiState
+        if (error is UIState.UIError) {
+            val email = viewModel.forgotPasswordFormState.value.email
+            if (error.errorType == UIErrorType.BadRequestError && email.isNotBlank()) {
+                navigateToVerifyEmail(email)
+                return@LaunchedEffect
+            }
+
+            val messageRes = when (error.errorType) {
+                UIErrorType.NotFoundError -> R.string.text_email_has_not_been_register
+                UIErrorType.UnauthorizedError -> R.string.text_email_incorrect
+
+                UIErrorType.TooManyRequestsError -> R.string.text_too_many_requests
+                UIErrorType.UnexpectedEntityError -> R.string.text_unknown_error
+                UIErrorType.ForbiddenError -> R.string.text_user_was_banned
+                else -> R.string.text_unknown_error
+            }
+            Toast.makeText(context, context.getString(messageRes), Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(
+                context,
+                context.getString(R.string.text_unknown_error),
+                Toast.LENGTH_SHORT
+            )
+                .show()
+            viewModel.clearUIState()
+        }
+    }
     Scaffold { innerPadding ->
         Box(
             modifier = Modifier
@@ -164,9 +214,9 @@ fun ForgotPasswordScreen(
                         }
 
                         OutlinedTextField(
-                            value = email,
+                            value = formState.email,
                             onValueChange = {
-                                email = it
+                                viewModel.setEmail(it)
                             },
                             placeholder = { Text(stringResource(R.string.input_enter_email)) },
                             textStyle = MaterialTheme.typography.bodyMedium.copy(
@@ -179,10 +229,24 @@ fun ForgotPasswordScreen(
                             singleLine = true,
                             modifier = Modifier
                                 .weight(1f)
-                                .fillMaxHeight(),
-                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                            keyboardActions = KeyboardActions(onNext = {
-                                emailFocusRequester.requestFocus()
+                                .fillMaxHeight()
+                                .autofill(
+                                    autofillType = listOf(AutofillType.EmailAddress),
+                                    onFill = {
+                                        viewModel.setEmail(it)
+                                    }
+                                )
+                                .focusRequester(emailFocusRequester),
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                imeAction = ImeAction.Done,
+                                keyboardType = KeyboardType.Email
+                            ),
+                            keyboardActions = KeyboardActions(onDone = {
+                                if (formState.isForgotPasswordButtonEnabled && uiState !is UIState.UILoading) {
+                                    viewModel.forgotPassword {
+                                        onResetPasswordClick()
+                                    }
+                                }
                             }),
                             colors = OutlinedTextFieldDefaults.colors(
                                 unfocusedBorderColor = Color.Transparent,
@@ -199,7 +263,19 @@ fun ForgotPasswordScreen(
                             .fillMaxWidth()
                             .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
                         onClick = {
-                            onResetPasswordClick()
+                            if (formState.isForgotPasswordButtonEnabled && uiState !is UIState.UILoading) {
+                                viewModel.forgotPassword {
+                                    focusManager.clearFocus()
+                                    onResetPasswordClick()
+                                }
+                            } else if (!viewModel.forgotPasswordFormState.value.isForgotPasswordButtonEnabled) {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.text_please_type_email),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
                         },
                     ) {
                         Text(
@@ -304,9 +380,9 @@ fun ForgotPasswordScreen(
                             }
 
                             OutlinedTextField(
-                                value = email,
+                                value = formState.email,
                                 onValueChange = {
-                                    email = it
+                                    viewModel.setEmail(it)
                                 },
                                 placeholder = { Text(stringResource(R.string.input_enter_email)) },
                                 textStyle = MaterialTheme.typography.bodyMedium.copy(
@@ -319,10 +395,18 @@ fun ForgotPasswordScreen(
                                 singleLine = true,
                                 modifier = Modifier
                                     .weight(1f)
-                                    .fillMaxHeight(),
-                                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                                keyboardActions = KeyboardActions(onNext = {
-                                    emailFocusRequester.requestFocus()
+                                    .fillMaxHeight()
+                                    .focusRequester(emailFocusRequester),
+                                keyboardOptions = KeyboardOptions.Default.copy(
+                                    imeAction = ImeAction.Done,
+                                    keyboardType = KeyboardType.Email
+                                ),
+                                keyboardActions = KeyboardActions(onDone = {
+                                    if (formState.isForgotPasswordButtonEnabled && uiState !is UIState.UILoading) {
+                                        viewModel.forgotPassword {
+                                            onResetPasswordClick()
+                                        }
+                                    }
                                 }),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     unfocusedBorderColor = Color.Transparent,
@@ -338,7 +422,19 @@ fun ForgotPasswordScreen(
                                 .fillMaxWidth()
                                 .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
                             onClick = {
-                                onResetPasswordClick()
+                                if (formState.isForgotPasswordButtonEnabled && uiState !is UIState.UILoading) {
+                                    viewModel.forgotPassword {
+                                        focusManager.clearFocus()
+                                        onResetPasswordClick()
+                                    }
+                                } else if (!viewModel.forgotPasswordFormState.value.isForgotPasswordButtonEnabled) {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.text_please_type_email),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
                             },
                         ) {
                             Text(
@@ -350,6 +446,10 @@ fun ForgotPasswordScreen(
                 }
             }
         }
-
+        if (uiState is UIState.UILoading) {
+            LoadingSurface(
+                picSize = responsiveValue(180, 360, 360)
+            )
+        }
     }
 }

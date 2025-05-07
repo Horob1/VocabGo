@@ -39,7 +39,10 @@
     <string name="text_user_was_banned">Your account was banned!</string>
     <string name="text_please_type_username_and_password">Please type username and password!</string>
     <string name="text_error_on_save_credential">Error on saving credential</string>
-
+    <string name="text_email_incorrect">Email is incorrect!</string>
+    <string name="text_too_many_requests">You have made too many attempts. Please try again later!</string>
+    <string name="text_email_has_not_been_register">The email has not been registered with any user</string>
+    <string name="text_please_type_email">Please type email!</string>
 
     <!--Register-->
     <string name="input_first_name">First Name</string>

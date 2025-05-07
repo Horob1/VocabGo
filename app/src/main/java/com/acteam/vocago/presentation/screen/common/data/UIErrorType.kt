@@ -9,4 +9,6 @@ sealed class UIErrorType {
     object UnauthorizedError : UIErrorType()
     object ForbiddenError : UIErrorType()
     object BadRequestError : UIErrorType()
+    object TooManyRequestsError : UIErrorType()
+
 }

@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
 import com.acteam.vocago.presentation.screen.auth.forgotpassword.ForgotPasswordScreen
+import com.acteam.vocago.presentation.screen.auth.forgotpassword.ForgotPasswordViewModel
 import com.acteam.vocago.presentation.screen.auth.login.LoginScreen
 import com.acteam.vocago.presentation.screen.auth.login.LoginViewModel
 import com.acteam.vocago.presentation.screen.auth.register.RegisterScreen
@@ -90,6 +91,7 @@ fun SetupNavGraph(
                 )
             }
             composable<NavScreen.ForgotPasswordNavScreen> {
+                val forgotPasswordViewModel = koinViewModel<ForgotPasswordViewModel>()
                 ForgotPasswordScreen(
                     {
                         navController.popBackStack()
@@ -97,6 +99,9 @@ fun SetupNavGraph(
                     {
                         navController.navigate(NavScreen.ResetPasswordNavScreen)
                     },
+                    forgotPasswordViewModel,
+                    {
+                    }
                 )
             }
             composable<NavScreen.ResetPasswordNavScreen> {
