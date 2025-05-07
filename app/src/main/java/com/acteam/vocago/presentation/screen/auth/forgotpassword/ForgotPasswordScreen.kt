@@ -14,11 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
@@ -58,7 +56,6 @@ import com.acteam.vocago.utils.responsiveSP
 fun ForgotPasswordScreen(
     onBackClick: () -> Unit, onResetPasswordClick: () -> Unit
 ) {
-    val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
     val emailFocusRequester = remember { FocusRequester() }
     val buttonHeight = responsiveDP(48, 56, 60)
@@ -84,7 +81,6 @@ fun ForgotPasswordScreen(
                 Column(
                     modifier = Modifier
                         .padding(horizontal = horizontalPadding)
-                        .verticalScroll(scrollState)
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(verticalSpacing)
@@ -118,7 +114,13 @@ fun ForgotPasswordScreen(
                         AuthImageCard(R.drawable.forgotpassword, width = 0.8f)
                     }
 
-                    Spacer(modifier = Modifier.height(verticalSpacing * 3))
+                    Spacer(
+                        modifier = if (deviceType == DeviceType.Mobile)
+                            Modifier.weight(1f)
+                        else
+                            Modifier.height(verticalSpacing * 3)
+                    )
+
                     Text(
                         text = stringResource(R.string.text_input_your_email),
                         style = MaterialTheme.typography.bodyLarge.copy(
@@ -205,6 +207,7 @@ fun ForgotPasswordScreen(
                             style = MaterialTheme.typography.titleMedium
                         )
                     }
+                    Spacer(modifier = Modifier.height(verticalSpacing / 3))
                 }
             } else {
                 Row(

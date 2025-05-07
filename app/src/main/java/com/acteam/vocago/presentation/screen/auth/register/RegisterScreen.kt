@@ -211,6 +211,7 @@ fun RegisterScreen(
                             )
                         )
                     }
+                    Spacer(modifier = Modifier.height(verticalSpacing / 3))
                 }
             }
         }

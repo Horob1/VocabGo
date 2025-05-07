@@ -36,7 +36,7 @@
     <string name="text_unknown_error">Unknown Error. Please try again later!</string>
     <string name="text_usernamer_or_password_incorrect">Username or password is incorrect!</string>
     <string name="text_user_was_banned">Your account was banned!</string>
-
+    <string name="text_please_type_username_and_password">Please type username and password!</string>
 
     <!--Register-->
     <string name="input_first_name">First Name</string>

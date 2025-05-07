@@ -1,6 +1,6 @@
 package com.acteam.vocago.presentation.screen.auth.login
 
-import android.util.Log
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.credentials.CreatePasswordRequest
 import androidx.credentials.CredentialManager
 import com.acteam.vocago.R
-import com.acteam.vocago.presentation.screen.auth.common.AuthCardType
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
 import com.acteam.vocago.presentation.screen.auth.common.PlatFormSignUpButton
@@ -63,7 +62,6 @@ fun LoginScreen(
     val focusManager = LocalFocusManager.current
     val credentialManager = remember { CredentialManager.create(context) }
 
-
     val deviceType = getDeviceType()
     val titleFontSize = responsiveSP(mobile = 30, tabletPortrait = 36, tabletLandscape = 42)
     val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
@@ -72,10 +70,8 @@ fun LoginScreen(
     val verticalSpacing = responsiveDP(mobile = 12, tabletPortrait = 20, tabletLandscape = 24)
 
     LaunchedEffect(uiState) {
-        Log.d("LoginScreen", "Current uiState: $uiState")
         val error = uiState
         if (error is UIState.UIError) {
-            Log.e("LoginScreen", "Error: ${error.errorType}")
             val username = viewModel.loginFormState.value.username
             if (error.errorType == UIErrorType.BadRequestError && username.isNotBlank()) {
                 navigateToVerifyEmail(username)
@@ -152,7 +148,6 @@ fun LoginScreen(
                         AuthImageCard(
                             R.drawable.login,
                             width = if (deviceType == DeviceType.Mobile) 0.7f else 0.8f,
-                            type = if (deviceType == DeviceType.Mobile) AuthCardType.Circle else AuthCardType.Square
                         )
 
                     }
@@ -161,15 +156,17 @@ fun LoginScreen(
                         viewModel = viewModel,
                         onLoginClick = {
                             viewModel.login {
-                                try {
-                                    credentialManager.createCredential(
-                                        request = CreatePasswordRequest(
-                                            id = viewModel.loginFormState.value.username,
-                                            password = viewModel.loginFormState.value.password
-                                        ),
-                                        context = context
-                                    )
-                                } catch (_: Exception) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // SDK 34
+                                    try {
+                                        credentialManager.createCredential(
+                                            request = CreatePasswordRequest(
+                                                id = viewModel.loginFormState.value.username,
+                                                password = viewModel.loginFormState.value.password
+                                            ),
+                                            context = context
+                                        )
+                                    } catch (_: Exception) {
+                                    }
                                 }
                                 onBackClick()
                             }
@@ -292,15 +289,17 @@ fun LoginScreen(
                             viewModel = viewModel,
                             onLoginClick = {
                                 viewModel.login {
-                                    try {
-                                        credentialManager.createCredential(
-                                            request = CreatePasswordRequest(
-                                                id = viewModel.loginFormState.value.username,
-                                                password = viewModel.loginFormState.value.password
-                                            ),
-                                            context = context
-                                        )
-                                    } catch (_: Exception) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // SDK 34
+                                        try {
+                                            credentialManager.createCredential(
+                                                request = CreatePasswordRequest(
+                                                    id = viewModel.loginFormState.value.username,
+                                                    password = viewModel.loginFormState.value.password
+                                                ),
+                                                context = context
+                                            )
+                                        } catch (_: Exception) {
+                                        }
                                     }
                                     onBackClick()
                                 }

@@ -1,6 +1,7 @@
 package com.acteam.vocago.presentation.screen.auth.login.component
 
 import android.os.Build
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +28,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -35,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
@@ -57,6 +58,7 @@ import androidx.credentials.PasswordCredential
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.screen.auth.login.LoginViewModel
 import com.acteam.vocago.presentation.screen.common.data.UIState
+import com.acteam.vocago.utils.autofill
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.safeClickable
@@ -77,9 +79,7 @@ fun LoginForm(
 
     val usernameFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit) {
-        usernameFocusRequester.requestFocus()
-    }
+
     val textFieldFontSize = responsiveSP(14, 20, 20)
 
     Column {
@@ -167,6 +167,12 @@ fun LoginForm(
                                 }
                             }
                         )
+                        .autofill(
+                            autofillType = listOf(AutofillType.Username, AutofillType.EmailAddress),
+                            onFill = {
+                                viewModel.setUsername(it)
+                            },
+                        )
                         .fillMaxHeight(),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Next,
@@ -226,6 +232,12 @@ fun LoginForm(
                     modifier = Modifier
                         .weight(1f)
                         .focusRequester(passwordFocusRequester)
+                        .autofill(
+                            autofillType = listOf(AutofillType.Password),
+                            onFill = {
+                                viewModel.setPassword(it)
+                            }
+                        )
                         .fillMaxHeight(),
                     visualTransformation = if (formState.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -297,7 +309,14 @@ fun LoginForm(
             onClick = {
                 if (formState.isLoginButtonEnabled && uiState !is UIState.UILoading) {
                     onLoginClick()
+                } else if (!viewModel.loginFormState.value.isLoginButtonEnabled) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.text_please_type_username_and_password),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+
             }
         ) {
             Text(

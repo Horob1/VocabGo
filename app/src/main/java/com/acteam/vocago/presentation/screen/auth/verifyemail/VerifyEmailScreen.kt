@@ -114,7 +114,12 @@ fun VerifyEmailScreen(
                     ) {
                         AuthImageCard(R.drawable.verify_email, width = 0.8f)
                     }
-                    Spacer(modifier = Modifier.height(verticalSpacing))
+                    Spacer(
+                        modifier = if (deviceType == DeviceType.Mobile)
+                            Modifier.weight(1f)
+                        else
+                            Modifier.height(verticalSpacing / 3)
+                    )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
@@ -181,6 +186,7 @@ fun VerifyEmailScreen(
                             style = MaterialTheme.typography.titleMedium
                         )
                     }
+                    Spacer(modifier = Modifier.height(verticalSpacing / 3))
                 }
             } else {
                 Row(

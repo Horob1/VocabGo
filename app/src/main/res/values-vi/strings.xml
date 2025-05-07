@@ -35,7 +35,7 @@
     <string name="text_unknown_error">Lỗi không xác định. Vui lòng thử lại sau!</string>
     <string name="text_usernamer_or_password_incorrect">Tên đăng nhập hoặc mật khẩu không đúng!</string>
     <string name="text_user_was_banned">Tài khoản của bạn đã bị khóa!</string>
-
+    <string name="text_please_type_username_and_password">Hãy điền đủ tài khoản và mật khẩu!</string>
     <!--Register-->
     <string name="input_first_name">Họ</string>
     <string name="input_last_name">Tên</string>

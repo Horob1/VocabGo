@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -60,12 +61,12 @@ fun ResetPasswordScreen(
         timerKey += 1
         onResendOtp()
     }
-    val scrollState = rememberScrollState()
 
     val buttonHeight = responsiveDP(48, 56, 60)
     val focusManager = LocalFocusManager.current
     val deviceType = getDeviceType()
 
+    val scrollState = rememberScrollState()
     val titleFontSize = responsiveSP(mobile = 30, tabletPortrait = 36, tabletLandscape = 42)
     val textFontSize = responsiveSP(mobile = 20, tabletPortrait = 24, tabletLandscape = 24)
     val horizontalPadding = responsiveDP(mobile = 24, tabletPortrait = 40, tabletLandscape = 48)
@@ -85,14 +86,18 @@ fun ResetPasswordScreen(
                 }) {
             if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
                 Column(
-                    modifier = Modifier
-                        .padding(horizontal = horizontalPadding)
-                        .verticalScroll(scrollState)
-                        .fillMaxSize(),
+                    modifier = if (LocalConfiguration.current.screenHeightDp < 800)
+                        Modifier
+                            .padding(horizontal = horizontalPadding)
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                    else
+                        Modifier
+                            .padding(horizontal = horizontalPadding)
+                            .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(verticalSpacing)
                 ) {
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
@@ -172,6 +177,12 @@ fun ResetPasswordScreen(
                             .padding(8.dp)
                             .align(Alignment.End)
                     )
+                    Spacer(
+                        modifier = if (deviceType == DeviceType.Mobile)
+                            Modifier.weight(1f)
+                        else
+                            Modifier.height(verticalSpacing / 3)
+                    )
                     Button(
                         modifier = Modifier
                             .height(buttonHeight)
@@ -186,6 +197,8 @@ fun ResetPasswordScreen(
                             style = MaterialTheme.typography.titleMedium
                         )
                     }
+
+                    Spacer(modifier = Modifier.height(verticalSpacing / 3))
                 }
             } else {
                 Row(
@@ -216,7 +229,7 @@ fun ResetPasswordScreen(
                                 BackButton(onClick = onBackClick)
                             }
                         }
-                        Spacer(modifier = Modifier.height(verticalSpacing))
+                        Spacer(modifier = Modifier.height(verticalSpacing * 3))
                         AuthImageCard(R.drawable.resetpassword, 0.8f)
                     }
                     Column(
@@ -291,6 +304,7 @@ fun ResetPasswordScreen(
                                 .padding(8.dp)
                                 .align(Alignment.End)
                         )
+
                         Button(
                             modifier = Modifier
                                 .height(buttonHeight)
@@ -309,6 +323,5 @@ fun ResetPasswordScreen(
                 }
             }
         }
-
     }
 }
