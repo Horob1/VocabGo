@@ -77,7 +77,6 @@ fun LoadingSurface(
                     .graphicsLayer {
                         scaleX = scale.value
                         scaleY = scale.value
-                        shadowElevation = 16f
                         shape = CircleShape
                         clip = true
                     }
@@ -105,6 +104,7 @@ fun LoadingSurface(
                     strokeWidth = 8.dp,
                 )
             }
+
         }
     }
 }

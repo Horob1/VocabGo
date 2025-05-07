@@ -1,6 +1,5 @@
 package com.acteam.vocago.presentation.screen.auth.login
 
-import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -32,8 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.credentials.CreatePasswordRequest
-import androidx.credentials.CredentialManager
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
@@ -42,12 +38,14 @@ import com.acteam.vocago.presentation.screen.auth.login.component.LoginForm
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.common.data.UIErrorType
 import com.acteam.vocago.presentation.screen.common.data.UIState
+import com.acteam.vocago.utils.CredentialHelper
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.responsiveValue
 import com.acteam.vocago.utils.safeClickable
+import com.acteam.vocago.utils.validators.AuthValidators
 
 @Composable
 fun LoginScreen(
@@ -55,13 +53,11 @@ fun LoginScreen(
     onBackClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
-    navigateToVerifyEmail: (String) -> Unit
+    navigateToVerifyEmail: (String) -> Unit,
 ) {
     val context = LocalContext.current
     val uiState by viewModel.loginUIState.collectAsState()
     val focusManager = LocalFocusManager.current
-    val credentialManager = remember { CredentialManager.create(context) }
-
     val deviceType = getDeviceType()
     val titleFontSize = responsiveSP(mobile = 30, tabletPortrait = 36, tabletLandscape = 42)
     val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
@@ -74,13 +70,20 @@ fun LoginScreen(
         if (error is UIState.UIError) {
             val username = viewModel.loginFormState.value.username
             if (error.errorType == UIErrorType.BadRequestError && username.isNotBlank()) {
-                navigateToVerifyEmail(username)
+                if (AuthValidators.isValidEmail(username)) navigateToVerifyEmail(username)
+                else Toast.makeText(
+                    context,
+                    context.getString(R.string.text_try_again_with_email),
+                    Toast.LENGTH_SHORT
+                ).show()
+                viewModel.clearUIState()
                 return@LaunchedEffect
             }
 
             val messageRes = when (error.errorType) {
                 UIErrorType.NotFoundError,
-                UIErrorType.UnauthorizedError -> R.string.text_usernamer_or_password_incorrect
+                UIErrorType.UnauthorizedError,
+                    -> R.string.text_username_or_password_incorrect
 
                 UIErrorType.UnexpectedEntityError -> R.string.text_unknown_error
                 UIErrorType.ForbiddenError -> R.string.text_user_was_banned
@@ -156,18 +159,12 @@ fun LoginScreen(
                         viewModel = viewModel,
                         onLoginClick = {
                             viewModel.login {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // SDK 34
-                                    try {
-                                        credentialManager.createCredential(
-                                            request = CreatePasswordRequest(
-                                                id = viewModel.loginFormState.value.username,
-                                                password = viewModel.loginFormState.value.password
-                                            ),
-                                            context = context
-                                        )
-                                    } catch (_: Exception) {
-                                    }
-                                }
+                                CredentialHelper.saveCredential(
+                                    context,
+                                    viewModel.loginFormState.value.username,
+                                    viewModel.loginFormState.value.password
+                                )
+                                focusManager.clearFocus()
                                 onBackClick()
                             }
                         },
@@ -289,18 +286,12 @@ fun LoginScreen(
                             viewModel = viewModel,
                             onLoginClick = {
                                 viewModel.login {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // SDK 34
-                                        try {
-                                            credentialManager.createCredential(
-                                                request = CreatePasswordRequest(
-                                                    id = viewModel.loginFormState.value.username,
-                                                    password = viewModel.loginFormState.value.password
-                                                ),
-                                                context = context
-                                            )
-                                        } catch (_: Exception) {
-                                        }
-                                    }
+                                    CredentialHelper.saveCredential(
+                                        context,
+                                        viewModel.loginFormState.value.username,
+                                        viewModel.loginFormState.value.password
+                                    )
+                                    focusManager.clearFocus()
                                     onBackClick()
                                 }
                             },

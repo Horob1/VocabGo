@@ -12,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.toRoute
 import com.acteam.vocago.presentation.screen.auth.forgotpassword.ForgotPasswordScreen
 import com.acteam.vocago.presentation.screen.auth.login.LoginScreen
 import com.acteam.vocago.presentation.screen.auth.login.LoginViewModel
@@ -27,7 +28,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
-    startDestination: NavScreen
+    startDestination: NavScreen,
 ) {
     NavHost(
         navController = navController,
@@ -108,13 +109,13 @@ fun SetupNavGraph(
                 )
             }
             composable<NavScreen.VerifyEmailNavScreen> {
+                val args = it.toRoute<NavScreen.VerifyEmailNavScreen>()
                 VerifyEmailScreen(
+                    email = args.email,
                     {
                         navController.popBackStack()
                     },
-                    {
-
-                    })
+                )
             }
         }
         composable<NavScreen.HomeNavScreen> {

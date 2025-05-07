@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,18 +47,16 @@ import com.acteam.vocago.utils.safeClickable
 
 @Composable
 fun VerifyEmailScreen(
+    email: String,
     onBackClick: () -> Unit,
-    onResendOtp: () -> Unit,
 ) {
     var otp by remember { mutableStateOf("") }
     var isTimerReset by remember { mutableStateOf(false) }
-    var timerKey by remember { mutableStateOf(0) }
+    var timerKey by remember { mutableIntStateOf(0) }
     val resetTimer = {
         isTimerReset = !isTimerReset
         timerKey += 1
-        onResendOtp()
     }
-    var email by remember { mutableStateOf("vancong@gmail.com") }
 
     val buttonHeight = responsiveDP(48, 56, 60)
     val focusManager = LocalFocusManager.current

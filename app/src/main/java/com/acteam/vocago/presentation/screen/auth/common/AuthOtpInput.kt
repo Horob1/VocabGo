@@ -1,11 +1,15 @@
 package com.acteam.vocago.presentation.screen.auth.common
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,7 +36,7 @@ fun OTPInputField(
     otp: String,
     onOtpChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onOtpCompleted: (String) -> Unit = {}
+    onOtpCompleted: (String) -> Unit = {},
 ) {
     val focusRequesters = List(6) { FocusRequester() }
     val localFocusManager = LocalFocusManager.current
@@ -80,7 +84,7 @@ fun OTPInputField(
 fun OTPDigitField(
     value: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val colorScheme = MaterialTheme.colorScheme
 
@@ -116,6 +120,7 @@ fun OTPDigitField(
     )
 }
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun CountdownTimer(
     initialTime: Int,

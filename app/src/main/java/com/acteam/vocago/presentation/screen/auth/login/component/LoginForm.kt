@@ -1,6 +1,5 @@
 package com.acteam.vocago.presentation.screen.auth.login.component
 
-import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -51,13 +50,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.credentials.CredentialManager
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.GetPasswordOption
-import androidx.credentials.PasswordCredential
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.screen.auth.login.LoginViewModel
 import com.acteam.vocago.presentation.screen.common.data.UIState
+import com.acteam.vocago.utils.CredentialHelper
 import com.acteam.vocago.utils.autofill
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
@@ -69,7 +65,7 @@ import kotlinx.coroutines.launch
 fun LoginForm(
     viewModel: LoginViewModel,
     onLoginClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit
+    onForgotPasswordClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val formState by viewModel.loginFormState.collectAsState()
@@ -138,30 +134,11 @@ fun LoginForm(
                             onFocusChanged = {
                                 if (it.isFocused && formState.username == "") {
                                     scope.launch {
-                                        try {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                                                val credentialManager =
-                                                    CredentialManager.create(context)
-
-                                                val request = GetCredentialRequest(
-                                                    listOf(
-                                                        GetPasswordOption()
-                                                    )
-                                                )
-
-                                                val result = credentialManager.getCredential(
-                                                    request = request,
-                                                    context = context
-                                                )
-
-                                                val credential = result.credential
-                                                if (credential is PasswordCredential) {
-                                                    viewModel.setUsername(credential.id)
-                                                    viewModel.setPassword(credential.password)
-                                                    onLoginClick()
-                                                }
-                                            }
-                                        } catch (_: Exception) {
+                                        CredentialHelper.getCredential(context) { username, password ->
+                                            viewModel.setUsername(username)
+                                            viewModel.setPassword(password)
+                                            passwordFocusRequester.requestFocus()
+                                            onLoginClick()
                                         }
                                     }
                                 }
