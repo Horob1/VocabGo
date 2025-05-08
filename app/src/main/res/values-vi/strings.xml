@@ -42,6 +42,8 @@
     <string name="text_too_many_requests">Bạn đã thao tác quá nhiều lần. Vui lòng thử lại sau!</string>
     <string name="text_email_has_not_been_register">Email chưa được đăng ký với người dùng</string>
     <string name="text_please_type_email">Hãy điền email!</string>
+    <string name="text_please_all_required">Please enter all required information!</string>
+    <string name="text_otp_expired_and_invalid">Mã OTP đã hết hạn hoặc không hợp lệ</string>
 
     <!--Register-->
     <string name="input_first_name">Họ</string>

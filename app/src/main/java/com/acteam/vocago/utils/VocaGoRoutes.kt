@@ -4,4 +4,5 @@ sealed class VocaGoRoutes(val path: String) {
     object Login : VocaGoRoutes("api/v1/user/login")
     object Register : VocaGoRoutes("api/v1/user/register")
     object ForgotPassword : VocaGoRoutes("api/v1/user/forgot-password")
+    object ResetPassword : VocaGoRoutes("api/v1/user/reset-password")
 }

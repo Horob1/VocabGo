@@ -19,6 +19,7 @@ import com.acteam.vocago.presentation.screen.auth.login.LoginScreen
 import com.acteam.vocago.presentation.screen.auth.login.LoginViewModel
 import com.acteam.vocago.presentation.screen.auth.register.RegisterScreen
 import com.acteam.vocago.presentation.screen.auth.resetpassword.ResetPasswordScreen
+import com.acteam.vocago.presentation.screen.auth.resetpassword.ResetPasswordViewModel
 import com.acteam.vocago.presentation.screen.auth.verifyemail.VerifyEmailScreen
 import com.acteam.vocago.presentation.screen.home.Home
 import com.acteam.vocago.presentation.screen.welcome.WelcomeScreen
@@ -105,7 +106,9 @@ fun SetupNavGraph(
                 )
             }
             composable<NavScreen.ResetPasswordNavScreen> {
+                val ResetPasswordViewModel = koinViewModel<ResetPasswordViewModel>()
                 ResetPasswordScreen(
+                    ResetPasswordViewModel,
                     {
                         navController.popBackStack()
                     }, {}, {

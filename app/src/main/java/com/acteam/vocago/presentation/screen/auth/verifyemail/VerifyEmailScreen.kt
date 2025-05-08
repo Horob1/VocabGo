@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
-import com.acteam.vocago.presentation.screen.auth.common.CountdownTimer
 import com.acteam.vocago.presentation.screen.auth.common.OTPInputField
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
@@ -123,10 +122,10 @@ fun VerifyEmailScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        CountdownTimer(
-                            initialTime = 60,
-                            key = timerKey,
-                        )
+//                        CountdownTimer(
+//                            initialTime = 60,
+//                            key = timerKey,
+//                        )
                     }
 
                     Spacer(modifier = Modifier.height(verticalSpacing))
@@ -246,10 +245,10 @@ fun VerifyEmailScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            CountdownTimer(
-                                initialTime = 60,
-                                key = timerKey,
-                            )
+//                            CountdownTimer(
+//                                initialTime = 60,
+//                                key = timerKey,
+//                            )
                         }
                         Text(
                             text = "${stringResource(R.string.text_send_otp)} $email",

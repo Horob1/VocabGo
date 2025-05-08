@@ -6,6 +6,7 @@ import com.acteam.vocago.domain.usecase.GetLanguageUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
 import com.acteam.vocago.domain.usecase.LoginUseCase
+import com.acteam.vocago.domain.usecase.ResetPasswordUseCase
 import com.acteam.vocago.domain.usecase.SaveOnBoardingStateUseCase
 import org.koin.dsl.module
 
@@ -27,5 +28,8 @@ val useCaseModule = module {
 
     factory {
         ForgotPasswordUseCase(get())
+    }
+    factory {
+        ResetPasswordUseCase(get())
     }
 }

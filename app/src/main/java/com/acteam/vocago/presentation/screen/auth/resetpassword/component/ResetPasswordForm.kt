@@ -22,10 +22,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -40,16 +39,19 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
+import com.acteam.vocago.presentation.screen.auth.resetpassword.ResetPasswordViewModel
+import com.acteam.vocago.presentation.screen.common.data.UIState
 
 @Composable
-fun ResetPasswordForm() {
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var confirmPasswordVisible by remember { mutableStateOf(false) }
-
+fun ResetPasswordForm(
+    viewModel: ResetPasswordViewModel,
+    onSaveChangeClick: () -> Unit
+) {
     val passwordFocusRequester = remember { FocusRequester() }
     val confirmPasswordFocusRequester = remember { FocusRequester() }
+
+    val uiState by viewModel.resetPasswordUIState.collectAsState()
+    val formState by viewModel.resetPasswordFormState.collectAsState()
     Column {
         Column(
             modifier = Modifier
@@ -92,9 +94,9 @@ fun ResetPasswordForm() {
                 }
 
                 OutlinedTextField(
-                    value = password,
+                    value = formState.password,
                     onValueChange = {
-                        password = it
+                       viewModel.setPassword(it)
                     },
                     placeholder = {
                         Text(stringResource(R.string.input_enter_password))
@@ -104,7 +106,7 @@ fun ResetPasswordForm() {
                         .weight(1f)
                         .focusRequester(passwordFocusRequester)
                         .fillMaxHeight(),
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    visualTransformation = if (formState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = Color.Transparent,
                         focusedBorderColor = Color.Transparent,
@@ -112,11 +114,11 @@ fun ResetPasswordForm() {
                     ),
                     trailingIcon = {
                         val image =
-                            if (passwordVisible) R.drawable.hidden else R.drawable.view
+                            if (formState.isPasswordVisible) R.drawable.hidden else R.drawable.view
                         val description =
-                            if (passwordVisible) "Hidden password" else "Show password"
+                            if (formState.isPasswordVisible) "Hidden password" else "Show password"
 
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
                             Icon(
                                 painter = painterResource(id = image),
                                 contentDescription = description,
@@ -127,11 +129,11 @@ fun ResetPasswordForm() {
                         }
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done,
+                        imeAction = ImeAction.Next,
                         keyboardType = KeyboardType.Password
                     ),
-                    keyboardActions = KeyboardActions(onDone = {
-
+                    keyboardActions = KeyboardActions(onNext = {
+                        confirmPasswordFocusRequester.requestFocus()
                     }),
                 )
             }
@@ -167,9 +169,9 @@ fun ResetPasswordForm() {
                 }
 
                 OutlinedTextField(
-                    value = confirmPassword,
+                    value = formState.confirmPassword,
                     onValueChange = {
-                        confirmPassword = it
+                        viewModel.setConfirmPassword(it)
                     },
                     placeholder = {
                         Text(stringResource(R.string.input_confirm_password))
@@ -179,7 +181,7 @@ fun ResetPasswordForm() {
                         .weight(1f)
                         .focusRequester(confirmPasswordFocusRequester)
                         .fillMaxHeight(),
-                    visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    visualTransformation = if (formState.isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = Color.Transparent,
                         focusedBorderColor = Color.Transparent,
@@ -187,11 +189,11 @@ fun ResetPasswordForm() {
                     ),
                     trailingIcon = {
                         val image =
-                            if (confirmPasswordVisible) R.drawable.hidden else R.drawable.view
+                            if (formState.isConfirmPasswordVisible) R.drawable.hidden else R.drawable.view
                         val description =
-                            if (confirmPasswordVisible) "Hidden password" else "Show password"
+                            if (formState.isConfirmPasswordVisible) "Hidden password" else "Show password"
 
-                        IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                        IconButton(onClick = { viewModel.toggleConfirmPasswordVisibility() }) {
                             Icon(
                                 painter = painterResource(id = image),
                                 contentDescription = description,
@@ -201,12 +203,15 @@ fun ResetPasswordForm() {
                             )
                         }
                     },
+                    readOnly = uiState is UIState.UILoading,
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done,
                         keyboardType = KeyboardType.Password
                     ),
                     keyboardActions = KeyboardActions(onDone = {
-
+                        if (formState.isResetPasswordButtonEnabled && uiState !is UIState.UILoading) {
+                            onSaveChangeClick()
+                        }
                     }),
                 )
             }

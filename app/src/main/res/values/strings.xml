@@ -43,6 +43,8 @@
     <string name="text_too_many_requests">You have made too many attempts. Please try again later!</string>
     <string name="text_email_has_not_been_register">The email has not been registered with any user</string>
     <string name="text_please_type_email">Please type email!</string>
+    <string name="text_please_all_required">Please enter all required information!</string>
+    <string name="text_otp_expired_and_invalid">The OTP has expired or is invalid</string>
 
     <!--Register-->
     <string name="input_first_name">First Name</string>

@@ -119,32 +119,6 @@ fun OTPDigitField(
         }
     )
 }
-
-@SuppressLint("DefaultLocale")
-@Composable
-fun CountdownTimer(
-    initialTime: Int,
-    key: Int,
-) {
-    var timeLeft by remember { mutableIntStateOf(initialTime) }
-    var isTimerRunning by remember { mutableStateOf(true) }
-
-    LaunchedEffect(key) {
-        timeLeft = initialTime
-        isTimerRunning = true
-        while (timeLeft > 0) {
-            delay(1000L)
-            if (isTimerRunning) {
-                timeLeft -= 1
-            }
-        }
-    }
-    val minutes = timeLeft / 60
-    val seconds = timeLeft % 60
-    val formattedTime = String.format("%02d:%02d", minutes, seconds)
-    CountdownDisplay(formattedTime)
-}
-
 @Composable
 fun CountdownDisplay(timerText: String) {
     Text(
@@ -155,4 +129,3 @@ fun CountdownDisplay(timerText: String) {
         )
     )
 }
-

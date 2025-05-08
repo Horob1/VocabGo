@@ -1,5 +1,6 @@
 package com.acteam.vocago.presentation.screen.auth.resetpassword
 
+import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,15 +21,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,35 +38,36 @@ import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
-import com.acteam.vocago.presentation.screen.auth.common.CountdownTimer
+import com.acteam.vocago.presentation.screen.auth.common.CountdownDisplay
 import com.acteam.vocago.presentation.screen.auth.common.OTPInputField
 import com.acteam.vocago.presentation.screen.auth.resetpassword.component.ResetPasswordForm
+import com.acteam.vocago.presentation.screen.common.LoadingSurface
+import com.acteam.vocago.presentation.screen.common.data.UIErrorType
+import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
+import com.acteam.vocago.utils.responsiveValue
 import com.acteam.vocago.utils.safeClickable
 
 @Composable
 fun ResetPasswordScreen(
+    viewModel: ResetPasswordViewModel,
     onBackClick: () -> Unit,
     onResendOtp: () -> Unit,
-    onChangeClick: () -> Unit
+    onSaveChangeClick: () -> Unit
 ) {
-    var email by remember { mutableStateOf("vancong@gmail.com") }
-    var otp by remember { mutableStateOf("") }
-    var isTimerReset by remember { mutableStateOf(false) }
-    var timerKey by remember { mutableStateOf(0) }
-    val resetTimer = {
-        isTimerReset = !isTimerReset
-        timerKey += 1
-        onResendOtp()
-    }
+
+    val uiState by viewModel.resetPasswordUIState.collectAsState()
+    val formState by viewModel.resetPasswordFormState.collectAsState()
+    val otpState by viewModel.otpState.collectAsState()
+    val coutdownState by viewModel.otpCountdown.collectAsState()
 
     val buttonHeight = responsiveDP(48, 56, 60)
     val focusManager = LocalFocusManager.current
     val deviceType = getDeviceType()
-
+    val context = LocalContext.current
     val scrollState = rememberScrollState()
     val titleFontSize = responsiveSP(mobile = 30, tabletPortrait = 36, tabletLandscape = 42)
     val textFontSize = responsiveSP(mobile = 20, tabletPortrait = 24, tabletLandscape = 24)
@@ -73,7 +75,27 @@ fun ResetPasswordScreen(
     val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
     val verticalSpacing = responsiveDP(mobile = 12, tabletPortrait = 20, tabletLandscape = 24)
     val topPadding = responsiveDP(mobile = 16, tabletPortrait = 24, tabletLandscape = 28)
-
+    LaunchedEffect(uiState) {
+        viewModel.startOtpCountdown(300)
+        val error = uiState
+        if (error is UIState.UIError) {
+            val messageRes = when (error.errorType) {
+                UIErrorType.NotFoundError -> R.string.text_email_has_not_been_register
+                UIErrorType.BadRequestError -> R.string.text_otp_expired_and_invalid
+                UIErrorType.UnexpectedEntityError -> R.string.text_unknown_error
+                UIErrorType.ForbiddenError -> R.string.text_user_was_banned
+                else -> R.string.text_unknown_error
+            }
+            Toast.makeText(context, context.getString(messageRes), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.text_unknown_error),
+                Toast.LENGTH_SHORT
+            )
+                .show()
+            viewModel.clearUIState()
+        }
+    }
     Scaffold { innerPadding ->
         Box(
             modifier = Modifier
@@ -129,19 +151,16 @@ fun ResetPasswordScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        CountdownTimer(
-                            initialTime = 60,
-                            key = timerKey,
-                        )
+                        CountdownDisplay(timerText = coutdownState )
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
                         OTPInputField(
-                            otp = otp,
-                            onOtpChange = { newOtp ->
-                                otp = newOtp
+                            otp = otpState.otp,
+                            onOtpChange = { it ->
+                                viewModel.setOtpValue(it)
                             },
                             onOtpCompleted = { otp ->
 
@@ -150,7 +169,7 @@ fun ResetPasswordScreen(
                     }
                     Spacer(modifier = Modifier.height(verticalSpacing / 3))
                     Text(
-                        text = "${stringResource(R.string.text_send_otp)} $email",
+                        text = "${stringResource(R.string.text_send_otp)} ${formState.email}",
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.Bold,
                             fontSize = textFontSize,
@@ -158,7 +177,10 @@ fun ResetPasswordScreen(
                         ),
                         color = MaterialTheme.colorScheme.primary
                     )
-                    ResetPasswordForm()
+                    ResetPasswordForm(
+                        viewModel = viewModel,
+                        onSaveChangeClick = onSaveChangeClick
+                    )
                     Text(
                         text = stringResource(R.string.text_resend_email),
                         style = MaterialTheme.typography.bodyLarge.copy(
@@ -167,11 +189,10 @@ fun ResetPasswordScreen(
                         ),
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
-
                             .safeClickable(
                                 key = "btn_resend_email_forgot_password",
                                 onClick = {
-                                    resetTimer()
+                                    viewModel.resetOtpCountdown()
                                 }
                             )
                             .padding(8.dp)
@@ -189,7 +210,17 @@ fun ResetPasswordScreen(
                             .fillMaxWidth()
                             .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
                         onClick = {
-                            onChangeClick()
+                            if ( formState.isResetPasswordButtonEnabled && uiState !is UIState.UILoading){
+                                viewModel.resetPassword {
+                                    onSaveChangeClick
+                                }
+                            } else if (!viewModel.resetPasswordFormState.value.isResetPasswordButtonEnabled) {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.text_please_all_required),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         },
                     ) {
                         Text(
@@ -257,19 +288,16 @@ fun ResetPasswordScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            CountdownTimer(
-                                initialTime = 60,
-                                key = timerKey,
-                            )
+                            CountdownDisplay(timerText = coutdownState )
                         }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ) {
                             OTPInputField(
-                                otp = otp,
-                                onOtpChange = { newOtp ->
-                                    otp = newOtp
+                                otp = otpState.otp,
+                                onOtpChange = { it ->
+                                    viewModel.setOtpValue(it)
                                 },
                                 onOtpCompleted = { otp ->
 
@@ -277,7 +305,7 @@ fun ResetPasswordScreen(
                             )
                         }
                         Text(
-                            text = "${stringResource(R.string.text_send_otp)} $email",
+                            text = "${stringResource(R.string.text_send_otp)} ${formState.email}",
                             style = MaterialTheme.typography.bodyLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = textFontSize,
@@ -285,7 +313,10 @@ fun ResetPasswordScreen(
                             ),
                             color = MaterialTheme.colorScheme.primary
                         )
-                        ResetPasswordForm()
+                        ResetPasswordForm(
+                            viewModel = viewModel,
+                            onSaveChangeClick = onSaveChangeClick
+                        )
                         Text(
                             text = stringResource(R.string.text_resend_email),
                             style = MaterialTheme.typography.bodyLarge.copy(
@@ -298,7 +329,7 @@ fun ResetPasswordScreen(
                                 .safeClickable(
                                     key = "btn_resend_email_forgot_password",
                                     onClick = {
-                                        resetTimer()
+                                        viewModel.resetOtpCountdown()
                                     }
                                 )
                                 .padding(8.dp)
@@ -311,7 +342,15 @@ fun ResetPasswordScreen(
                                 .fillMaxWidth()
                                 .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
                             onClick = {
-                                onChangeClick()
+                                if ( formState.isResetPasswordButtonEnabled && uiState !is UIState.UILoading){
+                                     viewModel.resetPassword(onSaveChangeClick)
+                                } else if (!viewModel.resetPasswordFormState.value.isResetPasswordButtonEnabled) {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.text_please_all_required),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             },
                         ) {
                             Text(
@@ -322,6 +361,11 @@ fun ResetPasswordScreen(
                     }
                 }
             }
+        }
+        if (uiState is UIState.UILoading) {
+            LoadingSurface(
+                picSize = responsiveValue(180, 360, 360)
+            )
         }
     }
 }
