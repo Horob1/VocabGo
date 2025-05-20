@@ -11,6 +11,7 @@
     <string name="btn_prev">Prev</string>
     <string name="btn_next">Next</string>
     <string name="btn_login">Sign In</string>
+    <string name="btn_home">Home</string>
     <string name="btn_skip">Skip</string>
     <string name="onboarding_title_4">Choose your language</string>
     <string name="english">English</string>

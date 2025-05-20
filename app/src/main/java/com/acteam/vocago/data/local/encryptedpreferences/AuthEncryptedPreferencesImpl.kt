@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.acteam.vocago.data.local.encryptedpreferences
 
 import android.content.Context
@@ -16,11 +18,11 @@ class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences 
         private const val KEY_CREDENTIAL_ID = "key_credential_id"
     }
 
-    val masterKey: MasterKey = MasterKey.Builder(context)
+    private val masterKey: MasterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
 
-    val prefs: SharedPreferences = EncryptedSharedPreferences.create(
+    private val prefs: SharedPreferences = EncryptedSharedPreferences.create(
         context,
         PREF_NAME,
         masterKey,
@@ -35,7 +37,7 @@ class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences 
     override fun saveCredentials(
         accessToken: String,
         refreshToken: String,
-        credentialId: String
+        credentialId: String,
     ) {
         prefs.edit {
             putString(KEY_ACCESS_TOKEN, accessToken)

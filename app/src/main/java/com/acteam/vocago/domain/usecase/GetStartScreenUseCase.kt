@@ -4,11 +4,11 @@ import com.acteam.vocago.domain.repository.WelcomeRepository
 import com.acteam.vocago.presentation.navigation.NavScreen
 
 class GetStartScreenUseCase(
-    private val welcomeRepository: WelcomeRepository
+    private val welcomeRepository: WelcomeRepository,
 ) {
     operator fun invoke(): NavScreen {
         return if (welcomeRepository.getOnBoardingState()) {
-            NavScreen.HomeNavScreen
+            NavScreen.MainNavScreen
         } else {
             NavScreen.WelcomeNavScreen
         }

@@ -24,7 +24,7 @@ fun Modifier.safeClickable(
     key: String,
     threshold: Long = 800L,
     enabled: Boolean = true,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ): Modifier = composed {
     this.then(
         Modifier.clickable(enabled = enabled) {
@@ -40,7 +40,7 @@ fun Modifier.safeClickable(
 fun Modifier.autofill(
     autofillType: List<AutofillType>,
     onFill: (String) -> Unit,
-    onReady: () -> Unit = {}
+    onReady: () -> Unit = {},
 ): Modifier {
     val autofill = LocalAutofill.current
     val autofillTree = LocalAutofillTree.current
@@ -74,3 +74,4 @@ fun Modifier.autofill(
             }
         }
 }
+

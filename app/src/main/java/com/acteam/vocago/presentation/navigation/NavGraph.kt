@@ -1,7 +1,5 @@
 package com.acteam.vocago.presentation.navigation
 
-import android.os.Handler
-import android.os.Looper
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -11,17 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import androidx.navigation.toRoute
-import com.acteam.vocago.presentation.screen.auth.forgotpassword.ForgotPasswordScreen
-import com.acteam.vocago.presentation.screen.auth.forgotpassword.ForgotPasswordViewModel
-import com.acteam.vocago.presentation.screen.auth.login.LoginScreen
-import com.acteam.vocago.presentation.screen.auth.login.LoginViewModel
-import com.acteam.vocago.presentation.screen.auth.register.RegisterScreen
-import com.acteam.vocago.presentation.screen.auth.resetpassword.ResetPasswordScreen
-import com.acteam.vocago.presentation.screen.auth.resetpassword.ResetPasswordViewModel
-import com.acteam.vocago.presentation.screen.auth.verifyemail.VerifyEmailScreen
-import com.acteam.vocago.presentation.screen.home.Home
+import com.acteam.vocago.presentation.screen.auth.SetupAuthNavGraph
+import com.acteam.vocago.presentation.screen.main.SetupMainNavGraph
 import com.acteam.vocago.presentation.screen.welcome.WelcomeScreen
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -42,96 +31,18 @@ fun SetupNavGraph(
             val welcomeViewModel = koinViewModel<WelcomeViewModel>()
             WelcomeScreen(
                 viewModel = welcomeViewModel,
-                onClickToHome = {
-                    navController.popBackStack()
-                    navController.navigate(NavScreen.HomeNavScreen) {
-                        launchSingleTop = true
-                    }
-                },
-                onClickToLogin = {
-                    navController.popBackStack()
-                    navController.navigate(NavScreen.HomeNavScreen) {
-                        launchSingleTop = true
-                    }
-                    // Delay nhỏ để đảm bảo Home được render và thêm vào stack
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        navController.navigate(NavScreen.AuthNavScreen)
-                    }, 100)
-                }
+                navController = navController
             )
         }
-        navigation<NavScreen.AuthNavScreen>(
-            startDestination = NavScreen.LoginNavScreen
-        ) {
-            composable<NavScreen.LoginNavScreen> {
-                val loginViewModel = koinViewModel<LoginViewModel>()
-                LoginScreen(
-                    loginViewModel,
-                    {
-                        navController.popBackStack()
-                    },
-                    {
-                        navController.navigate(NavScreen.RegisterNavScreen)
-                    },
-                    {
-                        navController.navigate(NavScreen.ForgotPasswordNavScreen)
-                    },
-                    {
-                        navController.navigate(NavScreen.VerifyEmailNavScreen)
-                    }
-                )
-            }
-            composable<NavScreen.RegisterNavScreen> {
-                RegisterScreen(
-                    {
-                        navController.popBackStack()
-                    },
-                    {
-                        navController.navigate(NavScreen.VerifyEmailNavScreen)
-                    }
-                )
-            }
-            composable<NavScreen.ForgotPasswordNavScreen> {
-                val forgotPasswordViewModel = koinViewModel<ForgotPasswordViewModel>()
-                ForgotPasswordScreen(
-                    {
-                        navController.popBackStack()
-                    },
-                    {
-                        navController.navigate(NavScreen.ResetPasswordNavScreen(it))
-                    },
-                    forgotPasswordViewModel,
-                    {
-                    }
-                )
-            }
-            composable<NavScreen.ResetPasswordNavScreen> {
-                val resetPasswordViewModel = koinViewModel<ResetPasswordViewModel>()
-                val args = it.toRoute<NavScreen.ResetPasswordNavScreen>()
-                ResetPasswordScreen(
-                    email = args.email,
-                    resetPasswordViewModel,
-                    {
-                        navController.popBackStack()
-                    }, {
-                        navController.navigate(NavScreen.LoginNavScreen)
-                    }
-                )
-            }
-            composable<NavScreen.VerifyEmailNavScreen> {
-                val args = it.toRoute<NavScreen.VerifyEmailNavScreen>()
-                VerifyEmailScreen(
-                    email = args.email,
-                    {
-                        navController.popBackStack()
-                    },
-                )
-            }
+        composable<NavScreen.AuthNavScreen> {
+            SetupAuthNavGraph(
+                rootNavController = navController
+            )
         }
-        composable<NavScreen.HomeNavScreen> {
-            Home {
-                navController.navigate(NavScreen.AuthNavScreen)
-            }
+        composable<NavScreen.MainNavScreen> {
+            SetupMainNavGraph(
+                rootNavController = navController
+            )
         }
     }
 }

@@ -27,8 +27,7 @@ fun PageController(
     current: Int,
     onNext: () -> Unit,
     onPrev: () -> Unit,
-    onSkip: () -> Unit,
-    onClickLogin: () -> Unit
+    onCompleteOnBoarding: () -> Unit,
 ) {
     val buttonModifier = Modifier.width(
         140.dp
@@ -40,7 +39,6 @@ fun PageController(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         AnimatedVisibility(
             visible = current > 0,
         ) {
@@ -49,20 +47,16 @@ fun PageController(
                 onClick = {
                     if (current == 0)
                         return@Button
-                    else if (current == pageSize - 1)
-                        onSkip()
-                    else
+                    else if (current <= pageSize - 1)
                         onPrev()
+
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Text(
-                    if (current == pageSize - 1)
-                        stringResource(R.string.btn_skip)
-                    else
-                        stringResource(R.string.btn_prev)
+                    stringResource(R.string.btn_prev)
                 )
             }
         }
@@ -77,7 +71,7 @@ fun PageController(
             modifier = buttonModifier,
             onClick = {
                 if (current == pageSize - 1)
-                    onClickLogin()
+                    onCompleteOnBoarding()
                 else
                     onNext()
             },
@@ -87,7 +81,7 @@ fun PageController(
         ) {
             Text(
                 if (current == pageSize - 1)
-                    stringResource(R.string.btn_login)
+                    stringResource(R.string.btn_home)
                 else
                     stringResource(R.string.btn_next)
             )

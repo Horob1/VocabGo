@@ -1,6 +1,5 @@
 package com.acteam.vocago.presentation.screen.welcome
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +14,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.welcome.component.ChooseLanguagePage
 import com.acteam.vocago.presentation.screen.welcome.component.PageController
 import com.acteam.vocago.presentation.screen.welcome.component.PagerIndicator
@@ -23,13 +24,10 @@ import com.acteam.vocago.presentation.screen.welcome.data.OnBoardingPageData
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun WelcomeScreen(
     viewModel: WelcomeViewModel,
-    onClickToLogin: () -> Unit,
-    onClickToHome: () -> Unit
-
+    navController: NavController,
 ) {
     val pages = listOf(
         OnBoardingPageData.First,
@@ -85,13 +83,14 @@ fun WelcomeScreen(
                         pagerState.animateScrollToPage(pagerState.currentPage - 1)
                     }
                 },
-                onSkip = {
+                onCompleteOnBoarding = {
                     viewModel.completeOnBoarding()
-                    onClickToHome()
-                },
-                onClickLogin = {
-                    viewModel.completeOnBoarding()
-                    onClickToLogin()
+                    navController.navigate(NavScreen.MainNavScreen) {
+                        popUpTo(NavScreen.WelcomeNavScreen) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 },
             )
         }
