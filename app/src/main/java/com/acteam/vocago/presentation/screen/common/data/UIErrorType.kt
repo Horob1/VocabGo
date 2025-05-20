@@ -10,5 +10,5 @@ sealed class UIErrorType {
     object ForbiddenError : UIErrorType()
     object BadRequestError : UIErrorType()
     object TooManyRequestsError : UIErrorType()
-
+    object PreconditionFailedError : UIErrorType()
 }

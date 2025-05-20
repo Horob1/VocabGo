@@ -53,9 +53,9 @@ import com.acteam.vocago.utils.safeClickable
 
 @Composable
 fun ResetPasswordScreen(
+    email: String,
     viewModel: ResetPasswordViewModel,
     onBackClick: () -> Unit,
-    onResendOtp: () -> Unit,
     onSaveChangeClick: () -> Unit
 ) {
 
@@ -151,7 +151,7 @@ fun ResetPasswordScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        CountdownDisplay(timerText = coutdownState )
+                        CountdownDisplay(timerText = coutdownState)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -169,7 +169,7 @@ fun ResetPasswordScreen(
                     }
                     Spacer(modifier = Modifier.height(verticalSpacing / 3))
                     Text(
-                        text = "${stringResource(R.string.text_send_otp)} ${formState.email}",
+                        text = "${stringResource(R.string.text_send_otp)} $email",
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.Bold,
                             fontSize = textFontSize,
@@ -193,6 +193,7 @@ fun ResetPasswordScreen(
                                 key = "btn_resend_email_forgot_password",
                                 onClick = {
                                     viewModel.resetOtpCountdown()
+                                    viewModel.forgotPassword(email)
                                 }
                             )
                             .padding(8.dp)
@@ -210,7 +211,7 @@ fun ResetPasswordScreen(
                             .fillMaxWidth()
                             .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
                         onClick = {
-                            if ( formState.isResetPasswordButtonEnabled && uiState !is UIState.UILoading){
+                            if (formState.isResetPasswordButtonEnabled && uiState !is UIState.UILoading) {
                                 viewModel.resetPassword {
                                     onSaveChangeClick
                                 }
@@ -288,7 +289,7 @@ fun ResetPasswordScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            CountdownDisplay(timerText = coutdownState )
+                            CountdownDisplay(timerText = coutdownState)
                         }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -305,7 +306,7 @@ fun ResetPasswordScreen(
                             )
                         }
                         Text(
-                            text = "${stringResource(R.string.text_send_otp)} ${formState.email}",
+                            text = "${stringResource(R.string.text_send_otp)} $email",
                             style = MaterialTheme.typography.bodyLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = textFontSize,
@@ -330,6 +331,7 @@ fun ResetPasswordScreen(
                                     key = "btn_resend_email_forgot_password",
                                     onClick = {
                                         viewModel.resetOtpCountdown()
+                                        viewModel.forgotPassword(email)
                                     }
                                 )
                                 .padding(8.dp)
@@ -342,8 +344,8 @@ fun ResetPasswordScreen(
                                 .fillMaxWidth()
                                 .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
                             onClick = {
-                                if ( formState.isResetPasswordButtonEnabled && uiState !is UIState.UILoading){
-                                     viewModel.resetPassword(onSaveChangeClick)
+                                if (formState.isResetPasswordButtonEnabled && uiState !is UIState.UILoading) {
+                                    viewModel.resetPassword(onSaveChangeClick)
                                 } else if (!viewModel.resetPasswordFormState.value.isResetPasswordButtonEnabled) {
                                     Toast.makeText(
                                         context,

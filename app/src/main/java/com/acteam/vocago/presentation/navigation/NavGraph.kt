@@ -98,7 +98,7 @@ fun SetupNavGraph(
                         navController.popBackStack()
                     },
                     {
-                        navController.navigate(NavScreen.ResetPasswordNavScreen)
+                        navController.navigate(NavScreen.ResetPasswordNavScreen(it))
                     },
                     forgotPasswordViewModel,
                     {
@@ -106,12 +106,14 @@ fun SetupNavGraph(
                 )
             }
             composable<NavScreen.ResetPasswordNavScreen> {
-                val ResetPasswordViewModel = koinViewModel<ResetPasswordViewModel>()
+                val resetPasswordViewModel = koinViewModel<ResetPasswordViewModel>()
+                val args = it.toRoute<NavScreen.ResetPasswordNavScreen>()
                 ResetPasswordScreen(
-                    ResetPasswordViewModel,
+                    email = args.email,
+                    resetPasswordViewModel,
                     {
                         navController.popBackStack()
-                    }, {}, {
+                    }, {
                         navController.navigate(NavScreen.LoginNavScreen)
                     }
                 )

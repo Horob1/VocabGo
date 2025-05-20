@@ -22,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import com.acteam.vocago.utils.responsiveValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -32,9 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -53,22 +50,24 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
-import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
+import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.common.data.UIErrorType
 import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.utils.DeviceType
+import com.acteam.vocago.utils.autofill
 import com.acteam.vocago.utils.getDeviceType
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
-import com.acteam.vocago.utils.autofill
+import com.acteam.vocago.utils.responsiveValue
 
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ForgotPasswordScreen(
-    onBackClick: () -> Unit, onResetPasswordClick: () -> Unit,
+    onBackClick: () -> Unit,
+    onResetPasswordClick: (email: String) -> Unit,
     viewModel: ForgotPasswordViewModel,
     navigateToVerifyEmail: (String) -> Unit
 ) {
@@ -244,7 +243,7 @@ fun ForgotPasswordScreen(
                             keyboardActions = KeyboardActions(onDone = {
                                 if (formState.isForgotPasswordButtonEnabled && uiState !is UIState.UILoading) {
                                     viewModel.forgotPassword {
-                                        onResetPasswordClick()
+                                        onResetPasswordClick(formState.email)
                                     }
                                 }
                             }),
@@ -266,7 +265,7 @@ fun ForgotPasswordScreen(
                             if (formState.isForgotPasswordButtonEnabled && uiState !is UIState.UILoading) {
                                 viewModel.forgotPassword {
                                     focusManager.clearFocus()
-                                    onResetPasswordClick()
+                                    onResetPasswordClick(formState.email)
                                 }
                             } else if (!viewModel.forgotPasswordFormState.value.isForgotPasswordButtonEnabled) {
                                 Toast.makeText(
@@ -404,7 +403,7 @@ fun ForgotPasswordScreen(
                                 keyboardActions = KeyboardActions(onDone = {
                                     if (formState.isForgotPasswordButtonEnabled && uiState !is UIState.UILoading) {
                                         viewModel.forgotPassword {
-                                            onResetPasswordClick()
+                                            onResetPasswordClick(formState.email)
                                         }
                                     }
                                 }),
@@ -425,7 +424,7 @@ fun ForgotPasswordScreen(
                                 if (formState.isForgotPasswordButtonEnabled && uiState !is UIState.UILoading) {
                                     viewModel.forgotPassword {
                                         focusManager.clearFocus()
-                                        onResetPasswordClick()
+                                        onResetPasswordClick(formState.email)
                                     }
                                 } else if (!viewModel.forgotPasswordFormState.value.isForgotPasswordButtonEnabled) {
                                     Toast.makeText(

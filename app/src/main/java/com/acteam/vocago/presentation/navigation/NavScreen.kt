@@ -5,25 +5,25 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class NavScreen() {
     @Serializable
-    object WelcomeNavScreen : NavScreen()
+    data object WelcomeNavScreen : NavScreen()
 
     @Serializable
-    object AuthNavScreen : NavScreen()
+    data object AuthNavScreen : NavScreen()
 
     @Serializable
-    object LoginNavScreen : NavScreen()
+    data object LoginNavScreen : NavScreen()
 
     @Serializable
-    object RegisterNavScreen : NavScreen()
+    data object RegisterNavScreen : NavScreen()
 
     @Serializable
-    object HomeNavScreen : NavScreen()
+    data object HomeNavScreen : NavScreen()
 
     @Serializable
-    object ForgotPasswordNavScreen : NavScreen()
+    data object ForgotPasswordNavScreen : NavScreen()
 
     @Serializable
-    object ResetPasswordNavScreen : NavScreen()
+    data class ResetPasswordNavScreen(val email: String) : NavScreen()
 
     @Serializable
     data class VerifyEmailNavScreen(val email: String) : NavScreen()

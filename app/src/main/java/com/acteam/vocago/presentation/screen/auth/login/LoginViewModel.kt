@@ -53,6 +53,7 @@ class LoginViewModel(
                 afterLoginSuccess()
                 _loginUIState.value = UIState.UISuccess
             } catch (e: Exception) {
+                e.printStackTrace()
                 if (e is ApiException) {
                     when (e.code) {
                         // truyền lên sai định dạng
@@ -69,6 +70,9 @@ class LoginViewModel(
                             UIState.UIError(UIErrorType.NotFoundError)
                         // User bị ban rồi
                         403 -> _loginUIState.value = UIState.UIError(UIErrorType.ForbiddenError)
+                        // Xac thuc 2 buoc
+                        428 -> _loginUIState.value =
+                            UIState.UIError(UIErrorType.PreconditionFailedError)
 
                         else -> _loginUIState.value = UIState.UIError(UIErrorType.UnknownError)
                     }

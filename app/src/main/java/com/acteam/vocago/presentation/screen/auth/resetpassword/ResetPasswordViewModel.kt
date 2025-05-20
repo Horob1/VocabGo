@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.acteam.vocago.data.model.ApiException
+import com.acteam.vocago.domain.usecase.ForgotPasswordUseCase
 import com.acteam.vocago.domain.usecase.ResetPasswordUseCase
 import com.acteam.vocago.presentation.screen.auth.common.data.OtpState
 import com.acteam.vocago.presentation.screen.auth.resetpassword.data.ResetPasswordFormState
@@ -19,9 +20,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ResetPasswordViewModel(
-//    private val email: String,
-    private val resetPasswordUseCase: ResetPasswordUseCase
-):ViewModel() {
+    private val resetPasswordUseCase: ResetPasswordUseCase,
+    private val forgotPasswordUseCase: ForgotPasswordUseCase
+) : ViewModel() {
 
     private val _resetPasswordFormState = MutableStateFlow(ResetPasswordFormState())
     val resetPasswordFormState = _resetPasswordFormState
@@ -61,6 +62,7 @@ class ResetPasswordViewModel(
         _otpState.value = _otpState.value.copy(timeLeft = initialTime)
         startOtpCountdown(initialTime)
     }
+
     fun setOtpValue(otp: String) {
         _otpState.value = _otpState.value.copy(otp = otp)
     }
@@ -72,21 +74,25 @@ class ResetPasswordViewModel(
             isResetPasswordButtonEnabled = password.isNotBlank()
         )
     }
+
     fun togglePasswordVisibility() {
         _resetPasswordFormState.value =
             _resetPasswordFormState.value.copy(isPasswordVisible = !_resetPasswordFormState.value.isPasswordVisible)
     }
+
     fun setConfirmPassword(confirmPassword: String) {
         _resetPasswordFormState.value = _resetPasswordFormState.value.copy(
             confirmPassword = confirmPassword,
             isResetPasswordButtonEnabled = confirmPassword.isNotBlank()
         )
     }
+
     fun toggleConfirmPasswordVisibility() {
         _resetPasswordFormState.value =
             _resetPasswordFormState.value.copy(isConfirmPasswordVisible = !_resetPasswordFormState.value.isConfirmPasswordVisible)
     }
-    fun resetPassword(afterResetPasswordSuccess:() -> Unit) {
+
+    fun resetPassword(afterResetPasswordSuccess: () -> Unit) {
         if (!_resetPasswordFormState.value.isResetPasswordButtonEnabled) return
         viewModelScope.launch {
             _resetPasswordUIState.value = UIState.UILoading
@@ -94,7 +100,8 @@ class ResetPasswordViewModel(
                 resetPasswordUseCase(
                     email = _resetPasswordFormState.value.email,
                     password = _resetPasswordFormState.value.password,
-                    otp = _otpState.value.otp)
+                    otp = _otpState.value.otp
+                )
                 afterResetPasswordSuccess()
                 _resetPasswordUIState.value = UIState.UISuccess
             } catch (e: Exception) {
@@ -107,17 +114,43 @@ class ResetPasswordViewModel(
                         400 -> _resetPasswordUIState.value =
                             UIState.UIError(UIErrorType.BadRequestError)
                         // User bị ban rồi
-                        403 -> _resetPasswordUIState.value = UIState.UIError(UIErrorType.ForbiddenError)
+                        403 -> _resetPasswordUIState.value =
+                            UIState.UIError(UIErrorType.ForbiddenError)
                         // Email ko tồn tại :V
                         404 -> _resetPasswordUIState.value =
                             UIState.UIError(UIErrorType.NotFoundError)
                     }
-                }
-                else
+                } else
                     _resetPasswordUIState.value = UIState.UIError(UIErrorType.UnknownError)
             }
         }
     }
+
+    fun forgotPassword(email: String) {
+        viewModelScope.launch {
+            try {
+                forgotPasswordUseCase(
+                    email = email
+                )
+                _resetPasswordUIState.value = UIState.UISuccess
+            } catch (e: Exception) {
+                if (e is ApiException) {
+                    _resetPasswordUIState.value = UIState.UIError(
+                        when (e.code) {
+                            404 -> UIErrorType.NotFoundError
+                            403 -> UIErrorType.ForbiddenError
+                            429 -> UIErrorType.TooManyRequestsError
+                            else -> UIErrorType.UnknownError
+                        }
+                    )
+                } else {
+                    _resetPasswordUIState.value = UIState.UIError(UIErrorType.UnknownError)
+                }
+            }
+        }
+
+    }
+
     fun clearUIState() {
         _resetPasswordUIState.value = UIState.UISuccess
     }

@@ -1,6 +1,5 @@
 package com.acteam.vocago.presentation.screen.auth.login
 
-import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,6 +33,7 @@ import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
 import com.acteam.vocago.presentation.screen.auth.common.PlatFormSignUpButton
 import com.acteam.vocago.presentation.screen.auth.login.component.LoginForm
+import com.acteam.vocago.presentation.screen.common.ErrorBannerWithTimer
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.common.data.UIErrorType
 import com.acteam.vocago.presentation.screen.common.data.UIState
@@ -57,6 +56,8 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.loginUIState.collectAsState()
+    val loginFormState by viewModel.loginFormState.collectAsState()
+
     val focusManager = LocalFocusManager.current
     val deviceType = getDeviceType()
     val titleFontSize = responsiveSP(mobile = 30, tabletPortrait = 36, tabletLandscape = 42)
@@ -65,44 +66,7 @@ fun LoginScreen(
     val topPadding = responsiveDP(mobile = 16, tabletPortrait = 24, tabletLandscape = 28)
     val verticalSpacing = responsiveDP(mobile = 12, tabletPortrait = 20, tabletLandscape = 24)
 
-    LaunchedEffect(uiState) {
-        val error = uiState
-        if (error is UIState.UIError) {
-            val username = viewModel.loginFormState.value.username
-            if (error.errorType == UIErrorType.BadRequestError && username.isNotBlank()) {
-                if (AuthValidators.isValidEmail(username)) navigateToVerifyEmail(username)
-                else Toast.makeText(
-                    context,
-                    context.getString(R.string.text_try_again_with_email),
-                    Toast.LENGTH_SHORT
-                ).show()
-                viewModel.clearUIState()
-                return@LaunchedEffect
-            }
-
-            val messageRes = when (error.errorType) {
-                UIErrorType.NotFoundError,
-                UIErrorType.UnauthorizedError,
-                    -> R.string.text_username_or_password_incorrect
-
-                UIErrorType.UnexpectedEntityError -> R.string.text_unknown_error
-                UIErrorType.ForbiddenError -> R.string.text_user_was_banned
-                else -> R.string.text_unknown_error
-            }
-            Toast.makeText(context, context.getString(messageRes), Toast.LENGTH_SHORT).show()
-
-            Toast.makeText(
-                context,
-                context.getString(R.string.text_unknown_error),
-                Toast.LENGTH_SHORT
-            )
-                .show()
-            viewModel.clearUIState()
-        }
-    }
-
     Scaffold { innerPadding ->
-
         Box(
             modifier = Modifier
                 .padding(innerPadding)
@@ -168,7 +132,7 @@ fun LoginScreen(
                                 onBackClick()
                             }
                         },
-                        onForgotPasswordClick = onForgotPasswordClick
+                        onForgotPasswordClick = onForgotPasswordClick,
                     )
 
                     Row(
@@ -295,7 +259,7 @@ fun LoginScreen(
                                     onBackClick()
                                 }
                             },
-                            onForgotPasswordClick = onForgotPasswordClick
+                            onForgotPasswordClick = onForgotPasswordClick,
                         )
 
                         Row(
@@ -345,6 +309,53 @@ fun LoginScreen(
                         }
                     }
 
+                }
+            }
+            if (uiState is UIState.UIError) {
+                val username = loginFormState.username
+                val errorType = (uiState as UIState.UIError).errorType
+                if (errorType == UIErrorType.BadRequestError && username.isNotBlank()) {
+                    if (AuthValidators.isValidEmail(username)) {
+                        navigateToVerifyEmail(username)
+                    } else {
+                        ErrorBannerWithTimer(
+                            title = stringResource(R.string.text_error),
+                            message = stringResource(R.string.text_try_again_with_email),
+                            iconResId = R.drawable.capybara_avatar,
+                            onTimeout = { viewModel.clearUIState() },
+                            onDismiss = { viewModel.clearUIState() },
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .padding(horizontal = 16.dp)
+                        )
+                    }
+                    viewModel.clearUIState()
+                } else if (errorType == UIErrorType.PreconditionFailedError) {
+                    //navigate to 2FA
+                } else {
+                    val message = when (errorType) {
+                        UIErrorType.NotFoundError,
+                        UIErrorType.UnauthorizedError ->
+                            R.string.text_username_or_password_incorrect
+
+                        UIErrorType.UnexpectedEntityError ->
+                            R.string.text_unknown_error
+
+                        UIErrorType.ForbiddenError ->
+                            R.string.text_user_was_banned
+
+                        else -> R.string.text_unknown_error
+                    }
+                    ErrorBannerWithTimer(
+                        title = stringResource(R.string.text_error),
+                        message = stringResource(message),
+                        iconResId = R.drawable.capybara_avatar,
+                        onTimeout = { viewModel.clearUIState() },
+                        onDismiss = { viewModel.clearUIState() },
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(horizontal = 16.dp)
+                    )
                 }
             }
         }

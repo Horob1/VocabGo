@@ -36,6 +36,7 @@ class AuthRemoteDataSourceImpl(
             }
         }
     }
+
     override suspend fun forgotPassword(email: String) {
         val response = client.post(VocaGoRoutes.ForgotPassword.path) {
             contentType(ContentType.Application.Json)
@@ -51,6 +52,7 @@ class AuthRemoteDataSourceImpl(
             }
         }
     }
+
     override suspend fun resetPassword(email: String, otp: String, password: String) {
         val response = client.post(VocaGoRoutes.ResetPassword.path) {
             contentType(ContentType.Application.Json)
@@ -60,6 +62,7 @@ class AuthRemoteDataSourceImpl(
             HttpStatusCode.OK -> {
                 return
             }
+
             else -> {
                 throw ApiException(response.status.value)
             }

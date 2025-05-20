@@ -32,9 +32,9 @@
     <string name="text_dont_have_account">Don’t have an account?</string>
     <string name="text_try_again_with_email">Try login again with email</string>
     <!--Error-->
-    <string name="text_network_error">Network Error. Please check your internet connection!</string>
+    <string name="text_network_error">Please check your internet connection!</string>
     <string name="text_server_error">Server Error. Please try again later!</string>
-    <string name="text_unknown_error">Unknown Error. Please try again later!</string>
+    <string name="text_unknown_error">Please try again later!</string>
     <string name="text_username_or_password_incorrect">Username or password is incorrect!</string>
     <string name="text_user_was_banned">Your account was banned!</string>
     <string name="text_please_type_username_and_password">Please type username and password!</string>
@@ -66,5 +66,5 @@
     <string name="text_verify_email">Verify Email</string>
 
     <string name="text_input_your_email">Please provide the email you used to verify your account!</string>
-
+    <string name="text_error">ERROR</string>
 </resources>

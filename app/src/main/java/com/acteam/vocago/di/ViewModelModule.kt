@@ -23,7 +23,7 @@ val viewModelModule = module {
     }
     viewModel {
         ResetPasswordViewModel(
-            get()
+            get(), get()
         )
     }
 }
