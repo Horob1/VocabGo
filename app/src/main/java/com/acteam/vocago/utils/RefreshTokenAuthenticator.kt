@@ -1,11 +1,13 @@
 package com.acteam.vocago.utils
 
+import android.util.Log
 import com.acteam.vocago.BuildConfig
 import com.acteam.vocago.data.model.RefreshTokenRequest
 import com.acteam.vocago.data.model.RefreshTokenResponse
 import com.acteam.vocago.domain.local.AuthEncryptedPreferences
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -33,6 +35,10 @@ class RefreshTokenAuthenticator(
     private val refreshClient = HttpClient {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
+        }
+        install(HttpTimeout) {
+            connectTimeoutMillis = 10_000
+            requestTimeoutMillis = 15_000
         }
     }
 
@@ -69,7 +75,11 @@ class RefreshTokenAuthenticator(
     }
 
     private suspend fun refreshToken(): RefreshTokenResponse? {
-        val refreshToken = authPreferences.getRefreshToken() ?: return null
+        val refreshToken = authPreferences.getRefreshToken()
+        if (refreshToken.isNullOrBlank()) {
+            authPreferences.clearCredentials()
+            return null
+        }
 
         return try {
             val response =
@@ -77,13 +87,22 @@ class RefreshTokenAuthenticator(
                     contentType(ContentType.Application.Json)
                     setBody(RefreshTokenRequest(token = refreshToken))
                 }
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    response.body<RefreshTokenResponse>()
+                }
 
-            if (response.status == HttpStatusCode.OK) {
-                response.body<RefreshTokenResponse>()
-            } else {
-                null
+                HttpStatusCode.Unauthorized -> {
+                    authPreferences.clearCredentials()
+                    null
+                }
+
+                else -> {
+                    null
+                }
             }
         } catch (e: Exception) {
+            Log.e("Authenticator", "Refresh token failed", e)
             null
         }
     }
@@ -97,4 +116,5 @@ class RefreshTokenAuthenticator(
         }
         return count
     }
+
 }
