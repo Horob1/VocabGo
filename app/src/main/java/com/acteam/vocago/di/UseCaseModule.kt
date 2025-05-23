@@ -3,6 +3,7 @@ package com.acteam.vocago.di
 import com.acteam.vocago.domain.usecase.ChooseLanguageUserCase
 import com.acteam.vocago.domain.usecase.ForgotPasswordUseCase
 import com.acteam.vocago.domain.usecase.GetLanguageUseCase
+import com.acteam.vocago.domain.usecase.GetLoginStateUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
 import com.acteam.vocago.domain.usecase.LoginUseCase
@@ -46,5 +47,9 @@ val useCaseModule = module {
     }
     factory {
         VerifyTwoFAUseCase(get(), get())
+    }
+
+    factory {
+        GetLoginStateUseCase(get())
     }
 }

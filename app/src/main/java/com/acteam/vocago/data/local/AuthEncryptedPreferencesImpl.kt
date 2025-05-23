@@ -23,7 +23,7 @@ class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences 
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
 
-    private val _isAuth = MutableStateFlow(!getCredentialId().isNullOrEmpty())
+    private val _isAuth = MutableStateFlow(false)
     override val isAuth = _isAuth
 
     private val prefs: SharedPreferences = EncryptedSharedPreferences.create(
@@ -33,6 +33,10 @@ class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences 
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
+
+    init {
+        _isAuth.value = getCredentialId() != null
+    }
 
     override fun clearCredentials() {
         prefs.edit {

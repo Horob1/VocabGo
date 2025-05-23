@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
@@ -35,6 +34,7 @@ import com.acteam.vocago.utils.safeClickable
 
 @Composable
 fun UserBar(
+    isAuth: Boolean,
     navigateToProfile: () -> Unit,
     navigateToLogin: () -> Unit,
 ) {
@@ -85,7 +85,10 @@ fun UserBar(
         UserAvatar(
             imageUrl = null,
             placeholderRes = R.drawable.capybara_avatar,
-            onClick = {}
+            onClick = {
+                if (isAuth) navigateToProfile()
+                else navigateToLogin()
+            }
         )
     }
 
@@ -142,11 +145,4 @@ fun UserAvatar(
             )
         }
     }
-}
-
-
-@Preview
-@Composable
-fun UserBarPreview() {
-    UserBar(navigateToProfile = {}, navigateToLogin = {})
 }

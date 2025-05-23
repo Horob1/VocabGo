@@ -1,6 +1,6 @@
 package com.acteam.vocago.domain.local
 
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface AuthEncryptedPreferences {
     fun clearCredentials()
@@ -9,6 +9,6 @@ interface AuthEncryptedPreferences {
     fun getAccessToken(): String?
     fun getRefreshToken(): String?
     fun getCredentialId(): String?
-    val isAuth: Flow<Boolean>
+    val isAuth: StateFlow<Boolean>
 
 }

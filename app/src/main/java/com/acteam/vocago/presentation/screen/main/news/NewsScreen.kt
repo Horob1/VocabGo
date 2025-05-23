@@ -11,6 +11,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -20,6 +21,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
 import kotlinx.coroutines.delay
@@ -27,7 +30,12 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewsScreen() {
+fun NewsScreen(
+    viewModel: NewsViewModel,
+    rootNavController: NavController,
+    navController: NavController,
+) {
+    val isAuth = viewModel.loginState.collectAsState()
     val deviceType = getDeviceType()
     val newsItems = remember {
         mutableStateListOf(
@@ -62,7 +70,9 @@ fun NewsScreen() {
         AnimatedVisibility(
             visible = showUserBar,
         ) {
-            UserBar(navigateToProfile = {}, navigateToLogin = {})
+            UserBar(isAuth = isAuth.value, navigateToProfile = {}, navigateToLogin = {
+                rootNavController.navigate(NavScreen.AuthNavScreen)
+            })
         }
         FeatureBar()
         PullToRefreshBox(

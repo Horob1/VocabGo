@@ -17,7 +17,9 @@ import androidx.navigation.compose.rememberNavController
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.main.common.NavBottomBar
 import com.acteam.vocago.presentation.screen.main.news.NewsScreen
+import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.main.novel.NovelScreen
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SetupMainNavGraph(rootNavController: NavController) {
@@ -35,7 +37,12 @@ fun SetupMainNavGraph(rootNavController: NavController) {
             exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut() },
         ) {
             composable<NavScreen.NewsNavScreen> {
-                NewsScreen()
+                val newsViewModel = koinViewModel<NewsViewModel>()
+                NewsScreen(
+                    viewModel = newsViewModel,
+                    rootNavController = rootNavController,
+                    navController = bottomNavController
+                )
             }
             composable<NavScreen.NovelNavScreen> {
                 NovelScreen()
