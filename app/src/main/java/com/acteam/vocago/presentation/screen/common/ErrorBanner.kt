@@ -118,7 +118,7 @@ fun ErrorBannerWithTimer(
                                 fontSize = 18.sp,
                                 color = MaterialTheme.colorScheme.onErrorContainer,
                                 modifier = Modifier.weight(1f),
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Start
                             )
                             IconButton(onClick = onDismiss) {
                                 Icon(
@@ -131,7 +131,8 @@ fun ErrorBannerWithTimer(
                         Text(
                             text = message,
                             fontSize = 15.sp,
-                            color = MaterialTheme.colorScheme.onErrorContainer
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
