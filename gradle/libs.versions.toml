@@ -1,10 +1,12 @@
 [versions]
+accompanistFlowlayoutVersion = "0.36.0"
 agp = "8.9.1"
 coilCompose = "2.5.0"
 coilGif = "2.5.0"
 coreSplashscreen = "1.0.1"
 credentials = "1.5.0"
 datastorePreferences = "1.0.0"
+introshowcaseview = "2.0.1"
 koinCompose = "4.1.0-Beta5"
 koinComposeViewmodel = "4.1.0-Beta5"
 koinComposeViewmodelNavigation = "4.1.0-Beta5"
@@ -22,18 +24,24 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 composeNavigation = "2.8.9"
+lottieComposeVersion = "6.4.0"
+materialIconsExtended = "1.7.8"
 securityCrypto = "1.1.0-alpha07"
 serialization = "1.6.3"
 
 [libraries]
+accompanist-flowlayout-v0360 = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayoutVersion" }
+android-lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieComposeVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation" }
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coilGif" }
+introshowcaseview = { module = "com.canopas.intro-showcase-view:introshowcaseview", version.ref = "introshowcaseview" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

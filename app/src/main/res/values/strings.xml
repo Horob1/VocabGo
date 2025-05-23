@@ -23,6 +23,11 @@
     <string name="btn_cancel">Cancel</string>
     <string name="mess_is_current_language"> is current language!</string>
     <string name="btn_back">Back</string>
+    <string name="news" translatable="false">News</string>
+    <string name="novel" translatable="false">Novel</string>
+    <string name="voca" translatable="false">Voca</string>
+    <string name="toeic" translatable="false">Toeic</string>
+    <string name="chat" translatable="false">Chat</string>"
 
     <!--Login-->
     <string name="input_enter_username">Enter Username</string>

@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class NavScreen {
+
     // Mâm 1
     @Serializable
     data object WelcomeNavScreen : NavScreen()
@@ -37,5 +38,18 @@ sealed class NavScreen {
     //Mâm 2 của Main
     @Serializable
     data object NewsNavScreen : NavScreen()
+
+    @Serializable
+    data object NovelNavScreen : NavScreen()
+
+    @Serializable
+    data object VocaNavScreen : NavScreen()
+
+    @Serializable
+    data object ToeicNavScreen : NavScreen()
+
+    @Serializable
+    data object ChatNavScreen : NavScreen()
+
     // Mâm 3
 }
