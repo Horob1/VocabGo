@@ -20,7 +20,7 @@ val networkModule = module {
     single(named(VOCAB_GO_BE_QUALIFIER)) {
         val authPreferences: AuthEncryptedPreferences =
             get()
-////        var isRefreshing = false
+        var isRefreshing = false
         val client = OkHttpClient.Builder()
             .addInterceptor(Interceptor { chain ->
                 val accessToken =
@@ -37,14 +37,16 @@ val networkModule = module {
             })
 //            .addInterceptor { chain ->
 //                // Second interceptor: Handle token refresh on 403 error
+//
 //                var response: Response = chain.proceed(chain.request())
 //
 //                if (response.code == 403 && !isRefreshing) {
 //                    isRefreshing = true
 //                    try {
-//                        // Call your API to refresh the token
+//                        // Call API to refresh the token
 //                        val refreshToken = authPreferences.getRefreshToken()
-//                        val newTokens = refreshAccessToken(refreshToken) // Replace with actual refresh logic
+//                        val newTokens =
+//                            refreshAccessToken(refreshToken) // Replace with actual refresh logic
 //
 //                        // Save the new tokens
 //                        authPreferences.refreshToken(newTokens.first, newTokens.second)
@@ -56,13 +58,15 @@ val networkModule = module {
 //                        }.build()
 //                        response = chain.proceed(newRequest)
 //                    } catch (e: Exception) {
-//                        // Handle the exception if the refresh fails (optional)
-//                        response = chain.proceed(chain.request()) // Or handle the error appropriately
+//                        // Handle token refresh failure
+//                        // logoutUser() // Replace with actual logout logic
+//                        authPreferences.clearCredentials()
+//                        response =
+//                            chain.proceed(chain.request()) // Or handle the error appropriately
 //                    } finally {
 //                        isRefreshing = false
 //                    }
 //                }
-//
 //                response
 //            }
             .build()

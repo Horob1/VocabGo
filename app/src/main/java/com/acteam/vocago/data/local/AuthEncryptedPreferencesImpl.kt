@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.acteam.vocago.data.local.encryptedpreferences
+package com.acteam.vocago.data.local
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,6 +8,7 @@ import androidx.core.content.edit
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.acteam.vocago.domain.local.AuthEncryptedPreferences
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences {
@@ -22,6 +23,9 @@ class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences 
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
 
+    private val _isAuth = MutableStateFlow(!getCredentialId().isNullOrEmpty())
+    val isAuth = _isAuth
+
     private val prefs: SharedPreferences = EncryptedSharedPreferences.create(
         context,
         PREF_NAME,
@@ -31,7 +35,10 @@ class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences 
     )
 
     override fun clearCredentials() {
-        prefs.edit { clear() }
+        prefs.edit {
+            clear()
+        }
+        _isAuth.value = false
     }
 
     override fun saveCredentials(
@@ -39,6 +46,7 @@ class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences 
         refreshToken: String,
         credentialId: String,
     ) {
+        _isAuth.value = true
         prefs.edit {
             putString(KEY_ACCESS_TOKEN, accessToken)
             putString(KEY_REFRESH_TOKEN, refreshToken)
@@ -47,6 +55,7 @@ class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences 
     }
 
     override fun refreshToken(refreshToken: String, accessToken: String) {
+        _isAuth.value = true
         prefs.edit {
             putString(KEY_REFRESH_TOKEN, refreshToken)
             putString(KEY_ACCESS_TOKEN, accessToken)

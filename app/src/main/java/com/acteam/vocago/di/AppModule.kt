@@ -1,12 +1,10 @@
 package com.acteam.vocago.di
 
-import org.koin.core.module.Module
-
-val appModules = listOf<Module>(
+val appModules = listOf(
     networkModule,
     viewModelModule,
     repositoryModule,
     useCaseModule,
-    localModule,
+    localDataModule,
     remoteModule
 )

@@ -49,7 +49,7 @@ fun ErrorBannerWithTimer(
     iconResId: Int,
     durationMillis: Long = 5_000L,
     onTimeout: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     var progress by remember { mutableFloatStateOf(1f) }
     var visible by remember { mutableStateOf(true) }
@@ -139,13 +139,13 @@ fun ErrorBannerWithTimer(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 LinearProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(4.dp)
                         .clip(RoundedCornerShape(2.dp)),
                     color = MaterialTheme.colorScheme.error,
-                    trackColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f)
+                    trackColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f),
                 )
             }
         }

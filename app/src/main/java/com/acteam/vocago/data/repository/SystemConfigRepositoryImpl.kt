@@ -18,7 +18,7 @@ class SystemConfigRepositoryImpl(context: Context) : SystemConfigRepository {
         val themeKey = stringPreferencesKey(name = THEME_KEY)
     }
 
-    val dataStore = context.systemConfigDataStore
+    private val dataStore = context.systemConfigDataStore
 
     override fun getTheme(): Flow<AppTheme> {
         return dataStore.data.map {
