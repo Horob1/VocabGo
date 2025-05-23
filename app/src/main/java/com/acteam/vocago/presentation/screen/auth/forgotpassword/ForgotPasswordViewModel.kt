@@ -28,7 +28,6 @@ class ForgotPasswordViewModel(
     }
 
     fun forgotPassword(afterForgotPasswordSuccess: () -> Unit) {
-        if (!_forgotPasswordFormState.value.isForgotPasswordButtonEnabled) return
         viewModelScope.launch {
             _forgotPasswordUIState.value = UIState.UILoading
             try {

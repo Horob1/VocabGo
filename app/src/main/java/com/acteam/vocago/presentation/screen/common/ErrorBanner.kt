@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
@@ -104,18 +105,20 @@ fun ErrorBannerWithTimer(
                     )
 
                     Column(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
                             Text(
                                 text = title,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp,
                                 color = MaterialTheme.colorScheme.onErrorContainer,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
+                                textAlign = TextAlign.Center
                             )
                             IconButton(onClick = onDismiss) {
                                 Icon(

@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,13 +32,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.acteam.vocago.presentation.screen.auth.register.RegisterViewModel
 import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.responsiveValue
 
 @Composable
-fun GenderDropdown() {
+fun GenderDropdown(
+    viewModel: RegisterViewModel
+) {
     val genderOptions = listOf("Nam", "Nữ", "Khác")
-    var selectedGender by remember { mutableStateOf("") }
+    val genderMap = mapOf(
+        "Nam" to "MALE",
+        "Nữ" to "FEMALE",
+        "Khác" to "OTHER"
+    )
+    val reverseGenderMap = genderMap.entries.associate { (k, v) -> v to k } // MALE -> Nam, ...
+
+    val formState by viewModel.registerFormState.collectAsState()
+    val selectedGender = formState.gender // MALE, FEMALE, OTHER
     var expanded by remember { mutableStateOf(false) }
     val textFieldFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
 
@@ -86,7 +98,7 @@ fun GenderDropdown() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = if (selectedGender.isNotEmpty()) selectedGender else "Chọn giới tính",
+                    text = reverseGenderMap[selectedGender] ?: "Chọn giới tính",
                     color = if (selectedGender.isNotEmpty()) MaterialTheme.colorScheme.onSurface else Color.Gray,
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = textFieldFontSize
@@ -110,7 +122,8 @@ fun GenderDropdown() {
                 DropdownMenuItem(
                     text = { Text(gender) },
                     onClick = {
-                        selectedGender = gender
+                        val genderCode = genderMap[gender] ?: "OTHER"
+                        viewModel.setGender(genderCode)
                         expanded = false
                     },
                     modifier = Modifier.fillMaxWidth()

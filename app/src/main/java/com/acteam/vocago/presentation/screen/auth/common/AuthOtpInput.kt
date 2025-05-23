@@ -1,6 +1,5 @@
 package com.acteam.vocago.presentation.screen.auth.common
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -12,11 +11,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -29,14 +23,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.delay
 
 @Composable
 fun OTPInputField(
     otp: String,
     onOtpChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onOtpCompleted: (String) -> Unit = {},
 ) {
     val focusRequesters = List(6) { FocusRequester() }
     val localFocusManager = LocalFocusManager.current
@@ -63,7 +55,6 @@ fun OTPInputField(
                             focusRequesters[index + 1].requestFocus()
                         } else if (index == 5) {
                             localFocusManager.clearFocus()
-                            onOtpCompleted(otp)
                         }
                     }
                 },
@@ -119,6 +110,7 @@ fun OTPDigitField(
         }
     )
 }
+
 @Composable
 fun CountdownDisplay(timerText: String) {
     Text(

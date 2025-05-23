@@ -3,7 +3,12 @@ package com.acteam.vocago.presentation.screen.auth.verifyemail
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.acteam.vocago.data.model.ApiException
+import com.acteam.vocago.domain.usecase.ResendVerifyEmailUseCase
+import com.acteam.vocago.domain.usecase.VerifyEmailUseCase
 import com.acteam.vocago.presentation.screen.auth.common.data.OtpState
+import com.acteam.vocago.presentation.screen.common.data.UIErrorType
+import com.acteam.vocago.presentation.screen.common.data.UIState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +18,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class VerifyEmailViewModel : ViewModel() {
+class VerifyEmailViewModel(
+    private val verifyEmailUseCase: VerifyEmailUseCase,
+    private val resendVerifyEmailUseCase: ResendVerifyEmailUseCase
+) : ViewModel() {
+    private val _verifyEmailUIState = MutableStateFlow<UIState>(UIState.UISuccess)
+    val verifyEmailUIState = _verifyEmailUIState
+
     private val _otpState = MutableStateFlow(OtpState())
     val otpState = _otpState
 
@@ -41,15 +52,74 @@ class VerifyEmailViewModel : ViewModel() {
         }
     }
 
-    fun resetOtpCountdown(initialTime: Int = 300) {
-        countdownJob?.cancel()
-        _otpState.value = _otpState.value.copy(timeLeft = initialTime)
-        startOtpCountdown(initialTime)
-    }
-
     fun setOtpValue(otp: String) {
         _otpState.value = _otpState.value.copy(otp = otp)
     }
 
+    fun verifyEmail(email: String, afterVerifySuccess: () -> Unit) {
+        viewModelScope.launch {
+            _verifyEmailUIState.value = UIState.UILoading
+            try {
+                verifyEmailUseCase(email, _otpState.value.otp)
+                afterVerifySuccess()
+                _verifyEmailUIState.value = UIState.UISuccess
+            } catch (e: Exception) {
+                if (e is ApiException) {
+                    when (e.code) {
+                        404 -> _verifyEmailUIState.value =
+                            UIState.UIError(UIErrorType.NotFoundError)
+
+                        403 -> _verifyEmailUIState.value =
+                            UIState.UIError(UIErrorType.ForbiddenError)
+
+                        400 -> _verifyEmailUIState.value =
+                            UIState.UIError(UIErrorType.BadRequestError)
+
+                        else -> _verifyEmailUIState.value =
+                            UIState.UIError(UIErrorType.UnknownError)
+                    }
+                } else {
+                    _verifyEmailUIState.value = UIState.UIError(UIErrorType.UnknownError)
+                }
+
+            }
+        }
+    }
+
+    fun resendVerifyEmail(email: String) {
+        viewModelScope.launch {
+            _verifyEmailUIState.value = UIState.UILoading
+
+            try {
+                resendVerifyEmailUseCase(email)
+                _verifyEmailUIState.value = UIState.UISuccess
+                _otpState.value = _otpState.value.copy(timeLeft = 300)
+                startOtpCountdown(_otpState.value.timeLeft)
+            } catch (e: Exception) {
+                if (e is ApiException) {
+                    when (e.code) {
+                        404 -> _verifyEmailUIState.value =
+                            UIState.UIError(UIErrorType.NotFoundError)
+
+                        403 -> _verifyEmailUIState.value =
+                            UIState.UIError(UIErrorType.ForbiddenError)
+
+                        400 -> _verifyEmailUIState.value =
+                            UIState.UIError(UIErrorType.BadRequestError)
+
+                        429 -> _verifyEmailUIState.value =
+                            UIState.UIError(UIErrorType.TooManyRequestsError)
+
+                        else -> _verifyEmailUIState.value =
+                            UIState.UIError(UIErrorType.UnknownError)
+                    }
+                }
+            }
+        }
+    }
+
+    fun clearUIState() {
+        _verifyEmailUIState.value = UIState.UISuccess
+    }
 
 }

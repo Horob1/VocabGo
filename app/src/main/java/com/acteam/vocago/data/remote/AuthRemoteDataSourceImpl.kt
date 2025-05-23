@@ -2,10 +2,19 @@ package com.acteam.vocago.data.remote
 
 import com.acteam.vocago.data.model.ApiException
 import com.acteam.vocago.data.model.ForgotPasswordRequest
+import com.acteam.vocago.data.model.LoginGoogleRequest
+import com.acteam.vocago.data.model.LoginGoogleResponse
 import com.acteam.vocago.data.model.LoginRequest
 import com.acteam.vocago.data.model.LoginResponse
+import com.acteam.vocago.data.model.RefreshTokenRequest
+import com.acteam.vocago.data.model.RefreshTokenResponse
+import com.acteam.vocago.data.model.RegisterRequest
+import com.acteam.vocago.data.model.ResendVerifyEmailRequest
 import com.acteam.vocago.data.model.ResetPasswordRequest
 import com.acteam.vocago.data.model.SuccessResponse
+import com.acteam.vocago.data.model.VerifyEmailRequest
+import com.acteam.vocago.data.model.VerifyTwoFARequest
+import com.acteam.vocago.data.model.VerifyTwoFARespose
 import com.acteam.vocago.domain.remote.AuthRemoteDataSource
 import com.acteam.vocago.utils.VocaGoRoutes
 import io.ktor.client.HttpClient
@@ -37,6 +46,77 @@ class AuthRemoteDataSourceImpl(
         }
     }
 
+    override suspend fun register(
+        username: String,
+        email: String,
+        password: String,
+        firstName: String,
+        lastName: String,
+        phoneNumber: String,
+        address: String,
+        dob: String,
+        gender: String
+    ) {
+        val response = client.post(VocaGoRoutes.Register.path) {
+            contentType(ContentType.Application.Json)
+            setBody(
+                RegisterRequest(
+                    firstName = firstName,
+                    lastName = lastName,
+                    username = username,
+                    email = email,
+                    password = password,
+                    phoneNumber = phoneNumber,
+                    dob = dob,
+                    gender = gender,
+                    address = address
+                )
+            )
+        }
+        when (response.status) {
+            HttpStatusCode.Created -> {
+                return
+            }
+
+            else -> {
+                throw ApiException(response.status.value)
+            }
+        }
+    }
+
+    override suspend fun verifyEmail(email: String, otp: String) {
+        val response = client.post(VocaGoRoutes.VerifyEmail.path) {
+            contentType(ContentType.Application.Json)
+            setBody(VerifyEmailRequest(email = email, otp = otp))
+        }
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                return
+            }
+
+            else -> {
+                throw ApiException(response.status.value)
+            }
+        }
+    }
+
+    override suspend fun resendVerifyEmail(email: String) {
+        val response = client.post(VocaGoRoutes.ResendVerifyEmail.path) {
+            contentType(ContentType.Application.Json)
+            setBody(ResendVerifyEmailRequest(email = email))
+        }
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                return
+            }
+
+            else -> {
+                throw ApiException(response.status.value)
+            }
+        }
+    }
+
+
     override suspend fun forgotPassword(email: String) {
         val response = client.post(VocaGoRoutes.ForgotPassword.path) {
             contentType(ContentType.Application.Json)
@@ -61,6 +141,57 @@ class AuthRemoteDataSourceImpl(
         when (response.status) {
             HttpStatusCode.OK -> {
                 return
+            }
+
+            else -> {
+                throw ApiException(response.status.value)
+            }
+        }
+    }
+
+    override suspend fun refreshToken(token: String): RefreshTokenResponse {
+        val response = client.post(VocaGoRoutes.RefreshToken.path) {
+            contentType(ContentType.Application.Json)
+            setBody(RefreshTokenRequest(token = token))
+        }
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                val data = response.body<SuccessResponse<RefreshTokenResponse>>()
+                return data.data
+            }
+
+            else -> {
+                throw ApiException(response.status.value)
+            }
+        }
+    }
+
+    override suspend fun verifyTwoFA(email: String, otpToken: String): VerifyTwoFARespose {
+        val response = client.post(VocaGoRoutes.VerifyTwoFA.path) {
+            contentType(ContentType.Application.Json)
+            setBody(VerifyTwoFARequest(email = email, otpToken = otpToken))
+        }
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                val data = response.body<SuccessResponse<VerifyTwoFARespose>>()
+                return data.data
+            }
+
+            else -> {
+                throw ApiException(response.status.value)
+            }
+        }
+    }
+
+    override suspend fun loginGoogle(token: String): LoginGoogleResponse? {
+        val response = client.post(VocaGoRoutes.LoginGoogle.path) {
+            contentType(ContentType.Application.Json)
+            setBody(LoginGoogleRequest(token = token))
+        }
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                val data = response.body<SuccessResponse<LoginGoogleResponse>>()
+                return data.data
             }
 
             else -> {
