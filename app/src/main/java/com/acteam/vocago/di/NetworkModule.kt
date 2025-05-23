@@ -2,6 +2,7 @@ package com.acteam.vocago.di
 
 import com.acteam.vocago.BuildConfig
 import com.acteam.vocago.domain.local.AuthEncryptedPreferences
+import com.acteam.vocago.utils.RefreshTokenAuthenticator
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -20,7 +21,6 @@ val networkModule = module {
     single(named(VOCAB_GO_BE_QUALIFIER)) {
         val authPreferences: AuthEncryptedPreferences =
             get()
-        var isRefreshing = false
         val client = OkHttpClient.Builder()
             .addInterceptor(Interceptor { chain ->
                 val accessToken =
@@ -35,40 +35,7 @@ val networkModule = module {
                 }.build()
                 chain.proceed(request)
             })
-//            .addInterceptor { chain ->
-//                // Second interceptor: Handle token refresh on 403 error
-//
-//                var response: Response = chain.proceed(chain.request())
-//
-//                if (response.code == 403 && !isRefreshing) {
-//                    isRefreshing = true
-//                    try {
-//                        // Call API to refresh the token
-//                        val refreshToken = authPreferences.getRefreshToken()
-//                        val newTokens =
-//                            refreshAccessToken(refreshToken) // Replace with actual refresh logic
-//
-//                        // Save the new tokens
-//                        authPreferences.refreshToken(newTokens.first, newTokens.second)
-//
-//                        // Retry the original request with the new access token
-//                        response.close() // Close the old response
-//                        val newRequest = chain.request().newBuilder().apply {
-//                            header("Authorization", "Bearer ${newTokens.first}")
-//                        }.build()
-//                        response = chain.proceed(newRequest)
-//                    } catch (e: Exception) {
-//                        // Handle token refresh failure
-//                        // logoutUser() // Replace with actual logout logic
-//                        authPreferences.clearCredentials()
-//                        response =
-//                            chain.proceed(chain.request()) // Or handle the error appropriately
-//                    } finally {
-//                        isRefreshing = false
-//                    }
-//                }
-//                response
-//            }
+            .authenticator(RefreshTokenAuthenticator(authPreferences))
             .build()
 
         HttpClient(OkHttp) {

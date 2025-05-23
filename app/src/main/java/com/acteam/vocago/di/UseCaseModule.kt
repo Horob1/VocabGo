@@ -47,7 +47,4 @@ val useCaseModule = module {
     factory {
         VerifyTwoFAUseCase(get(), get())
     }
-//    factory {
-//        RefreshTokenUseCase(get(), get())
-//    }
 }

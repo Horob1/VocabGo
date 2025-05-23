@@ -24,7 +24,7 @@ class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences 
         .build()
 
     private val _isAuth = MutableStateFlow(!getCredentialId().isNullOrEmpty())
-    val isAuth = _isAuth
+    override val isAuth = _isAuth
 
     private val prefs: SharedPreferences = EncryptedSharedPreferences.create(
         context,

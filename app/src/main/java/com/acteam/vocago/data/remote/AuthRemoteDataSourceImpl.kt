@@ -6,8 +6,6 @@ import com.acteam.vocago.data.model.LoginGoogleRequest
 import com.acteam.vocago.data.model.LoginGoogleResponse
 import com.acteam.vocago.data.model.LoginRequest
 import com.acteam.vocago.data.model.LoginResponse
-import com.acteam.vocago.data.model.RefreshTokenRequest
-import com.acteam.vocago.data.model.RefreshTokenResponse
 import com.acteam.vocago.data.model.RegisterRequest
 import com.acteam.vocago.data.model.ResendVerifyEmailRequest
 import com.acteam.vocago.data.model.ResetPasswordRequest
@@ -141,23 +139,6 @@ class AuthRemoteDataSourceImpl(
         when (response.status) {
             HttpStatusCode.OK -> {
                 return
-            }
-
-            else -> {
-                throw ApiException(response.status.value)
-            }
-        }
-    }
-
-    override suspend fun refreshToken(token: String): RefreshTokenResponse {
-        val response = client.post(VocaGoRoutes.RefreshToken.path) {
-            contentType(ContentType.Application.Json)
-            setBody(RefreshTokenRequest(token = token))
-        }
-        when (response.status) {
-            HttpStatusCode.OK -> {
-                val data = response.body<SuccessResponse<RefreshTokenResponse>>()
-                return data.data
             }
 
             else -> {
