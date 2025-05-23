@@ -70,6 +70,11 @@ dependencies {
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)
     implementation(libs.koin.compose.viewmodel.navigation)
+    //Lottie
+    implementation(libs.android.lottie.compose)
+    implementation(libs.introshowcaseview)
+    implementation(libs.accompanist.flowlayout.v0360)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.splashscreen)

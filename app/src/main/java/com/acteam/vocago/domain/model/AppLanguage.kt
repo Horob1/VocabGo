@@ -1,7 +1,7 @@
 package com.acteam.vocago.domain.model
 
 sealed class AppLanguage(val languageCode: String) {
-    object English : AppLanguage("en")
-    object Vietnamese : AppLanguage("vi")
-    object System : AppLanguage("sys")
+    data object English : AppLanguage("en")
+    data object Vietnamese : AppLanguage("vi")
+    data object System : AppLanguage("sys")
 }
