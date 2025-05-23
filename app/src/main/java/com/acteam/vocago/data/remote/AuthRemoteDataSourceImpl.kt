@@ -25,7 +25,7 @@ import io.ktor.http.contentType
 
 
 class AuthRemoteDataSourceImpl(
-    val client: HttpClient,
+    private val client: HttpClient,
 ) : AuthRemoteDataSource {
     override suspend fun login(username: String, password: String): LoginResponse {
         val response = client.post(VocaGoRoutes.Login.path) {
@@ -53,7 +53,7 @@ class AuthRemoteDataSourceImpl(
         phoneNumber: String,
         address: String,
         dob: String,
-        gender: String
+        gender: String,
     ) {
         val response = client.post(VocaGoRoutes.Register.path) {
             contentType(ContentType.Application.Json)
@@ -164,7 +164,7 @@ class AuthRemoteDataSourceImpl(
         }
     }
 
-    override suspend fun loginGoogle(token: String): LoginGoogleResponse? {
+    override suspend fun loginGoogle(token: String): LoginGoogleResponse {
         val response = client.post(VocaGoRoutes.LoginGoogle.path) {
             contentType(ContentType.Application.Json)
             setBody(LoginGoogleRequest(token = token))

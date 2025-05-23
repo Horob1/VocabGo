@@ -80,4 +80,9 @@
     <string name="text_2fa_authentication">Two-Factor Authentication</string>
     <string name="text_2fa_description">You need to complete two-factor authentication to continue.</string>
     <string name="text_verify_2fa_description">"Please open the Google Authenticator app, find the Vocago account, and enter the 6-digit code displayed. The code changes every 30 seconds"</string>
+
+    <string name="text_hello">Hello</string>
+    <string name="text_anonymous">Anonymous</string>
+    <string name="text_wellcome_to_vocago">Welcome to VocaGo</string>"
+
 </resources>

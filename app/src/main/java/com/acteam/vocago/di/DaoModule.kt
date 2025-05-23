@@ -1,0 +1,19 @@
+package com.acteam.vocago.di
+
+import androidx.room.Room
+import com.acteam.vocago.data.local.AppDatabase
+import org.koin.dsl.module
+
+val daoModule = module {
+    single {
+        Room.databaseBuilder(
+            get(),
+            AppDatabase::class.java,
+            "vocago_database"
+        ).build()
+    }
+
+    single {
+        get<AppDatabase>().userDao()
+    }
+}

@@ -36,6 +36,7 @@ fun NewsScreen(
     navController: NavController,
 ) {
     val isAuth = viewModel.loginState.collectAsState()
+    val userState = viewModel.userState.collectAsState()
     val deviceType = getDeviceType()
     val newsItems = remember {
         mutableStateListOf(
@@ -70,9 +71,14 @@ fun NewsScreen(
         AnimatedVisibility(
             visible = showUserBar,
         ) {
-            UserBar(isAuth = isAuth.value, navigateToProfile = {}, navigateToLogin = {
-                rootNavController.navigate(NavScreen.AuthNavScreen)
-            })
+            UserBar(
+                isAuth = isAuth.value,
+                userState = userState.value,
+                navigateToProfile = {},
+                navigateToLogin = {
+                    rootNavController.navigate(NavScreen.AuthNavScreen)
+                }
+            )
         }
         FeatureBar()
         PullToRefreshBox(

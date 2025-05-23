@@ -88,7 +88,7 @@ class RefreshTokenAuthenticator(
 
         return try {
             val response =
-                refreshClient.post(BuildConfig.BASE_URL + VocaGoRoutes.RefreshToken.path) {
+                refreshClient.post(BuildConfig.BASE_URL + "/" + VocaGoRoutes.RefreshToken.path) {
                     contentType(ContentType.Application.Json)
                     setBody(RefreshTokenRequest(token = refreshToken))
                 }

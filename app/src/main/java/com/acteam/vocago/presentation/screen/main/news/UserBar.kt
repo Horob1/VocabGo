@@ -1,7 +1,6 @@
 package com.acteam.vocago.presentation.screen.main.news
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,14 +18,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.acteam.vocago.R
+import com.acteam.vocago.data.model.UserDto
+import com.acteam.vocago.presentation.screen.common.data.Resource
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.safeClickable
@@ -35,9 +36,20 @@ import com.acteam.vocago.utils.safeClickable
 @Composable
 fun UserBar(
     isAuth: Boolean,
+    userState: Resource<UserDto>,
     navigateToProfile: () -> Unit,
     navigateToLogin: () -> Unit,
 ) {
+    val name = when {
+        !isAuth -> stringResource(R.string.text_anonymous)
+        else -> {
+            when (userState) {
+                is Resource.Success -> userState.data.firstName + " " + userState.data.lastName
+                else -> "..."
+            }
+        }
+    }
+    val titleText = "${stringResource(R.string.text_hello)}, $name"
 
     Row(
         Modifier
@@ -54,7 +66,7 @@ fun UserBar(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                "Xin chào, Horob1", style = MaterialTheme.typography.titleMedium.copy(
+                titleText, style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = responsiveSP(
                         mobile = 20,
                         tabletPortrait = 22,
@@ -74,16 +86,17 @@ fun UserBar(
                 )
             )
             Text(
-                "Chào mừng tới VocaGo", style = MaterialTheme.typography.bodySmall.copy(
+                stringResource(R.string.text_wellcome_to_vocago),
+                style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurface.copy(
                         0.7f
                     )
                 )
             )
         }
-
         UserAvatar(
-            imageUrl = null,
+            imageUrl = if (userState is Resource.Success) userState.data.avatar else null,
+            isLoadImage = userState is Resource.Loading,
             placeholderRes = R.drawable.capybara_avatar,
             onClick = {
                 if (isAuth) navigateToProfile()
@@ -99,6 +112,7 @@ fun UserBar(
 fun UserAvatar(
     imageUrl: String?,
     modifier: Modifier = Modifier,
+    isLoadImage: Boolean = true,
     placeholderRes: Int,
     onClick: () -> Unit,
 ) {
@@ -106,21 +120,23 @@ fun UserAvatar(
         modifier = modifier
             .size(responsiveDP(mobile = 40, tabletPortrait = 48, tabletLandscape = 56))
             .clip(CircleShape)
-            .background(
-                Color.White
-            )
             .safeClickable(key = "user_bar_profile") { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        if (imageUrl.isNullOrEmpty()) {
+        when {
+            isLoadImage -> CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                strokeWidth = 2.dp,
+                color = MaterialTheme.colorScheme.primary
+            )
 
-            Image(
+            imageUrl.isNullOrEmpty() -> Image(
                 painter = painterResource(id = placeholderRes),
                 contentDescription = "User Avatar Default",
                 modifier = Modifier.fillMaxSize()
             )
-        } else {
-            SubcomposeAsyncImage(
+
+            else -> SubcomposeAsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(imageUrl)
                     .crossfade(true)
@@ -143,6 +159,7 @@ fun UserAvatar(
                     )
                 }
             )
+
         }
     }
 }

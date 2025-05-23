@@ -6,6 +6,7 @@ import com.acteam.vocago.domain.usecase.GetLanguageUseCase
 import com.acteam.vocago.domain.usecase.GetLoginStateUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
+import com.acteam.vocago.domain.usecase.GetUserProfileUseCase
 import com.acteam.vocago.domain.usecase.LoginUseCase
 import com.acteam.vocago.domain.usecase.RegisterUseCase
 import com.acteam.vocago.domain.usecase.ResendVerifyEmailUseCase
@@ -17,9 +18,9 @@ import org.koin.dsl.module
 
 val useCaseModule = module {
     // Use case for welcome screen
-    factory { SaveOnBoardingStateUseCase(get()) }
+    single { SaveOnBoardingStateUseCase(get()) }
 
-    factory { GetStartScreenUseCase(get()) }
+    single { GetStartScreenUseCase(get()) }
 
     single { GetLanguageUseCase(get()) }
 
@@ -27,29 +28,34 @@ val useCaseModule = module {
 
     single { ChooseLanguageUserCase(get()) }
 
-    factory {
+    single {
         LoginUseCase(get(), get())
     }
-    factory {
+    single {
         ForgotPasswordUseCase(get())
     }
-    factory {
+    single {
         ResetPasswordUseCase(get())
     }
-    factory {
+    single {
         RegisterUseCase(get())
     }
-    factory {
+    single {
         VerifyEmailUseCase(get())
     }
-    factory {
+    single {
         ResendVerifyEmailUseCase(get())
     }
-    factory {
+    single {
         VerifyTwoFAUseCase(get(), get())
     }
 
-    factory {
+    single {
         GetLoginStateUseCase(get())
     }
+
+    single {
+        GetUserProfileUseCase(get(), get())
+    }
+
 }
