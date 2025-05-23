@@ -1,28 +1,48 @@
 package com.acteam.vocago.presentation.screen.auth.login
 
+import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -32,7 +52,6 @@ import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
-import com.acteam.vocago.presentation.screen.auth.common.PlatFormSignUpButton
 import com.acteam.vocago.presentation.screen.auth.login.component.LoginForm
 import com.acteam.vocago.presentation.screen.common.ErrorBannerWithTimer
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
@@ -56,6 +75,8 @@ fun LoginScreen(
     val context = LocalContext.current
     val uiState by viewModel.loginUIState.collectAsState()
     val loginFormState by viewModel.loginFormState.collectAsState()
+    var show2FADialog by remember { mutableStateOf(false) }
+
 
     val focusManager = LocalFocusManager.current
     val deviceType = getDeviceType()
@@ -64,7 +85,9 @@ fun LoginScreen(
     val horizontalPadding = responsiveDP(mobile = 24, tabletPortrait = 40, tabletLandscape = 48)
     val topPadding = responsiveDP(mobile = 16, tabletPortrait = 24, tabletLandscape = 28)
     val verticalSpacing = responsiveDP(mobile = 12, tabletPortrait = 20, tabletLandscape = 24)
-
+    val dialogTitleFontSize = responsiveSP(mobile = 20, tabletPortrait = 26, tabletLandscape = 28)
+    val dialogTextFontSize = responsiveSP(mobile = 14, tabletPortrait = 18, tabletLandscape = 20)
+    val dialogButtonFontSize = responsiveSP(mobile = 14, tabletPortrait = 18, tabletLandscape = 20)
 
     Box(
         modifier = Modifier
@@ -119,11 +142,24 @@ fun LoginScreen(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    AuthImageCard(
-                        R.drawable.login,
-                        width = if (deviceType == DeviceType.Mobile) 0.7f else 0.8f,
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(if (deviceType == DeviceType.Mobile) 0.7f else 0.8f)
+                            .aspectRatio(
+                                ratio = 1f
+                            )
+                            .background(MaterialTheme.colorScheme.background)
+                            .shadow(8.dp, shape = CircleShape)
+                            .clip(CircleShape)
 
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.login),
+                            contentDescription = "Auth Image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(verticalSpacing / 3))
                 LoginForm(
@@ -136,10 +172,20 @@ fun LoginScreen(
                                 viewModel.loginFormState.value.password
                             )
                             focusManager.clearFocus()
-                            onBackClick()
+                            rootNavController.navigate(NavScreen.MainNavScreen) {
+                                popUpTo(NavScreen.AuthNavScreen) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
                         }
+                        focusManager.clearFocus()
                     },
-                    onForgotPasswordClick = onForgotPasswordClick,
+                    onForgotPasswordClick = {
+                        authNavController.navigate(NavScreen.ForgotPasswordNavScreen) {
+                            launchSingleTop = true
+                        }
+                    }
                 )
 
                 Row(
@@ -168,9 +214,47 @@ fun LoginScreen(
                     horizontalArrangement = Arrangement.SpaceAround,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    PlatFormSignUpButton(R.drawable.google) {}
-                    PlatFormSignUpButton(R.drawable.facebook) {}
-                    PlatFormSignUpButton(R.drawable.github) {}
+//                    PlatFormSignUpButton(R.drawable.google) {}
+//                    PlatFormSignUpButton(R.drawable.facebook) {}
+//                    PlatFormSignUpButton(R.drawable.github) {}
+                    OutlinedButton(
+                        onClick = {
+                            // TODO: xử lý đăng nhập bằng Google
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(responsiveDP(48, 56, 60)),
+                        shape = RoundedCornerShape(36.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ),
+                        contentPadding = PaddingValues(horizontal = 16.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.google),
+                                contentDescription = "Google logo",
+                                modifier = Modifier
+                                    .size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = "Sign in with Google",
+                                fontSize = responsiveSP(
+                                    mobile = 18,
+                                    tabletPortrait = 22,
+                                    tabletLandscape = 24
+                                ),
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(verticalSpacing / 3))
@@ -189,7 +273,11 @@ fun LoginScreen(
                             .safeClickable(
                                 "btn_sign_up",
                                 onClick = {
-                                    onSignUpClick()
+                                    if (uiState !is UIState.UILoading) {
+                                        authNavController.navigate(NavScreen.RegisterNavScreen) {
+                                            launchSingleTop = true
+                                        }
+                                    }
                                 }
                             )
                             .padding(
@@ -225,7 +313,18 @@ fun LoginScreen(
                             .padding(top = topPadding, start = horizontalPadding),
                         contentAlignment = Alignment.CenterStart
                     ) {
-                        BackButton(onClick = onBackClick)
+                        BackButton(
+                            onClick = {
+                                rootNavController.navigate(
+                                    NavScreen.MainNavScreen
+                                ) {
+                                    popUpTo(NavScreen.AuthNavScreen) {
+                                        inclusive = true
+                                    }
+                                    launchSingleTop = true
+                                }
+                            },
+                        )
                     }
                     Spacer(modifier = Modifier.height(verticalSpacing))
                     AuthImageCard(R.drawable.login, 0.8f)
@@ -263,10 +362,20 @@ fun LoginScreen(
                                     viewModel.loginFormState.value.password
                                 )
                                 focusManager.clearFocus()
-                                onBackClick()
+                                rootNavController.navigate(NavScreen.MainNavScreen) {
+                                    popUpTo(NavScreen.AuthNavScreen) {
+                                        inclusive = true
+                                    }
+                                    launchSingleTop = true
+                                }
                             }
+                            focusManager.clearFocus()
                         },
-                        onForgotPasswordClick = onForgotPasswordClick,
+                        onForgotPasswordClick = {
+                            authNavController.navigate(NavScreen.ForgotPasswordNavScreen) {
+                                launchSingleTop = true
+                            }
+                        }
                     )
 
                     Row(
@@ -293,9 +402,47 @@ fun LoginScreen(
                         horizontalArrangement = Arrangement.SpaceAround,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        PlatFormSignUpButton(R.drawable.google) {}
-                        PlatFormSignUpButton(R.drawable.facebook) {}
-                        PlatFormSignUpButton(R.drawable.github) {}
+//                    PlatFormSignUpButton(R.drawable.google) {}
+//                    PlatFormSignUpButton(R.drawable.facebook) {}
+//                    PlatFormSignUpButton(R.drawable.github) {}
+                        OutlinedButton(
+                            onClick = {
+                                // TODO: xử lý đăng nhập bằng Google
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(responsiveDP(48, 56, 60)),
+                            shape = RoundedCornerShape(36.dp),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = MaterialTheme.colorScheme.surface,
+                                contentColor = MaterialTheme.colorScheme.onSurface
+                            ),
+                            contentPadding = PaddingValues(horizontal = 16.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.google),
+                                    contentDescription = "Google logo",
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Text(
+                                    text = "Sign in with Google",
+                                    fontSize = responsiveSP(
+                                        mobile = 18,
+                                        tabletPortrait = 22,
+                                        tabletLandscape = 24
+                                    ),
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                            }
+                        }
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
@@ -307,7 +454,9 @@ fun LoginScreen(
                             modifier = Modifier
                                 .safeClickable("btn_sign_up") {
                                     if (uiState !is UIState.UILoading) {
-                                        //TODO: navigate to sign up screen
+                                        authNavController.navigate(NavScreen.RegisterNavScreen) {
+                                            launchSingleTop = true
+                                        }
                                     }
                                 }
                                 .padding(horizontal = horizontalPadding / 3),
@@ -334,7 +483,7 @@ fun LoginScreen(
                     ErrorBannerWithTimer(
                         title = stringResource(R.string.text_error),
                         message = stringResource(R.string.text_try_again_with_email),
-                        iconResId = R.drawable.capybara_avatar,
+                        iconResId = R.drawable.error_banner,
                         onTimeout = { viewModel.clearUIState() },
                         onDismiss = { viewModel.clearUIState() },
                         modifier = Modifier
@@ -343,13 +492,14 @@ fun LoginScreen(
                     )
                 }
                 viewModel.clearUIState()
-            } else if (errorType == UIErrorType.PreconditionFailedError) {
-                //navigate to 2FA
+            } else if (errorType == UIErrorType.UnexpectedEntityError) {
+                show2FADialog = true
+                viewModel.clearUIState()
             } else {
                 val message = when (errorType) {
                     UIErrorType.NotFoundError,
                     UIErrorType.UnauthorizedError,
-                    UIErrorType.UnexpectedEntityError,
+                    UIErrorType.PreconditionFailedError,
                         ->
                         R.string.text_username_or_password_incorrect
 
@@ -361,7 +511,7 @@ fun LoginScreen(
                 ErrorBannerWithTimer(
                     title = stringResource(R.string.text_error),
                     message = stringResource(message),
-                    iconResId = R.drawable.capybara_avatar,
+                    iconResId = R.drawable.error_banner,
                     onTimeout = { viewModel.clearUIState() },
                     onDismiss = { viewModel.clearUIState() },
                     modifier = Modifier
@@ -375,6 +525,72 @@ fun LoginScreen(
         LoadingSurface(
             picSize = responsiveValue(180, 360, 360)
         )
+    }
+    if (show2FADialog) {
+        val titleText = stringResource(R.string.text_2fa_authentication)
+        val descriptionText = stringResource(R.string.text_2fa_description)
+        val continueText = stringResource(R.string.btn_continue)
+        val cancelText = stringResource(R.string.btn_cancel)
+        val toastText = stringResource(R.string.text_try_again_with_email)
+
+        AlertDialog(
+            modifier = Modifier.width(
+                if (deviceType == DeviceType.TabletPortrait || deviceType == DeviceType.TabletLandscape)
+                    500.dp else 300.dp
+            ),
+            onDismissRequest = { show2FADialog = false },
+            title = {
+                Text(
+                    text = titleText,
+                    fontSize = dialogTitleFontSize,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Center
+                )
+            },
+            text = {
+                Text(
+                    text = descriptionText,
+                    fontSize = dialogTextFontSize,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.Center
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        show2FADialog = false
+                        if (AuthValidators.isValidEmail(loginFormState.username)) {
+                            authNavController.navigate(
+                                NavScreen.VerifyTwoFANavScreen(loginFormState.username)
+                            ) {
+                                launchSingleTop = true
+                            }
+                        } else {
+                            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                ) {
+                    Text(
+                        text = continueText,
+                        fontSize = dialogButtonFontSize,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { show2FADialog = false }) {
+                    Text(
+                        text = cancelText,
+                        fontSize = dialogButtonFontSize,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = MaterialTheme.shapes.medium
+        )
+
     }
 
 }

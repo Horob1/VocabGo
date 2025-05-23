@@ -32,7 +32,7 @@ sealed class NavScreen {
     data class VerifyEmailNavScreen(val email: String) : NavScreen()
 
     @Serializable
-    data class TwoFACodeNavScreen(val email: String) : NavScreen()
+    data class VerifyTwoFANavScreen(val email: String) : NavScreen()
 
     //Mâm 2 của Main
     @Serializable

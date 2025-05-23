@@ -30,6 +30,8 @@
     <string name="btn_sign_up">Đăng ký</string>
     <string name="text_or">Hoặc</string>
     <string name="text_dont_have_account">Chưa có tài khoản?</string>
+    <string name="text_sign_in_with_Google">Đăng nhập bằng Google</string>
+
 
     <string name="text_network_error">Vui lòng kiểm tra kết nối internet của bạn!</string>
     <string name="text_server_error">Lỗi máy chủ. Vui lòng thử lại sau!</string>
@@ -40,11 +42,14 @@
     <string name="text_error_on_save_credential">Lỗi khi lưu thông tin đăng nhập</string>
     <string name="text_try_again_with_email">Thử đăng nhập lại với email</string>
     <string name="text_email_incorrect">Email không đúng!</string>
-    <string name="text_too_many_requests">Bạn đã thao tác quá nhiều lần. Vui lòng thử lại sau!</string>
+    <string name="text_too_many_requests">Bạn đã thao tác quá nhiều lần.</string>
     <string name="text_email_has_not_been_register">Email chưa được đăng ký với người dùng</string>
     <string name="text_please_type_email">Hãy điền email!</string>
-    <string name="text_please_all_required">Please enter all required information!</string>
+    <string name="text_please_all_required">Bạn phải điền hết các mục yêu cầu</string>
     <string name="text_otp_expired_and_invalid">Mã OTP đã hết hạn hoặc không hợp lệ</string>
+    <string name="text_email_is_not_verify">Email chưa được xác thực</string>
+    <string name="text_username_or_email_already_exists">Tên đăng nhập hoặc email đã tồn tại</string>
+    <string name="text_error_user_not_found">Người dùng không tồn tại</string>
 
     <!--Register-->
     <string name="input_first_name">Họ</string>
@@ -66,5 +71,8 @@
     <string name="text_verify_email">Xác thực Email</string>
     <string name="text_input_your_email">Vui lòng cung cấp email bạn đã dùng để xác thực tài khoản!</string>
     <string name="text_error">LỖI</string>
+    <string name="text_2fa_authentication">Xác thực 2 bước</string>
+    <string name="text_2fa_description">Bạn cần xác thực 2 bước để tiếp tục.</string>
+    <string name="text_verify_2fa_description">"Vui lòng mở ứng dụng Google Authenticator, tìm đến tài khoản Vocago và nhập mã 6 chữ số đang hiển thị. Mã sẽ thay đổi sau mỗi 30 giây"</string>
 
 </resources>

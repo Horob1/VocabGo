@@ -32,6 +32,7 @@
     <string name="text_or">or</string>
     <string name="text_dont_have_account">Don’t have an account?</string>
     <string name="text_try_again_with_email">Try login again with email</string>
+    <string name="text_sign_in_with_Google">Sign in with Google</string>
     <!--Error-->
     <string name="text_network_error">Please check your internet connection!</string>
     <string name="text_server_error">Server Error. Please try again later!</string>
@@ -46,6 +47,9 @@
     <string name="text_please_type_email">Please type email!</string>
     <string name="text_please_all_required">Please enter all required information!</string>
     <string name="text_otp_expired_and_invalid">The OTP has expired or is invalid</string>
+    <string name="text_email_is_not_verify">Email is not verify</string>
+    <string name="text_username_or_email_already_exists">Username or email already exists</string>
+    <string name="text_error_user_not_found">User does not exist</string>
 
     <!--Register-->
     <string name="input_first_name">First Name</string>
@@ -68,4 +72,7 @@
 
     <string name="text_input_your_email">Please provide the email you used to verify your account!</string>
     <string name="text_error">ERROR</string>
+    <string name="text_2fa_authentication">Two-Factor Authentication</string>
+    <string name="text_2fa_description">You need to complete two-factor authentication to continue.</string>
+    <string name="text_verify_2fa_description">"Please open the Google Authenticator app, find the Vocago account, and enter the 6-digit code displayed. The code changes every 30 seconds"</string>
 </resources>

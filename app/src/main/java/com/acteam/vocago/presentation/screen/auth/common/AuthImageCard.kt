@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -23,8 +24,8 @@ import com.acteam.vocago.utils.responsiveDP
 fun AuthImageCard(
     @DrawableRes image: Int,
     width: Float = 0.6f,
+    shape: Shape = RoundedCornerShape(responsiveDP(40, 24, 24))
 ) {
-    val shapeConner = responsiveDP(40, 24, 24)
 
     Box(
         modifier = Modifier
@@ -33,10 +34,11 @@ fun AuthImageCard(
                 ratio = 1f
             )
             .background(MaterialTheme.colorScheme.background)
-            .shadow(8.dp, shape = RoundedCornerShape(shapeConner))
-            .clip(RoundedCornerShape(shapeConner))
+            .shadow(8.dp, shape = shape)
+            .clip(shape)
             .padding(8.dp)
-            .clip(RoundedCornerShape(shapeConner))
+            .clip(shape)
+
     ) {
         Image(
             painter = painterResource(id = image),

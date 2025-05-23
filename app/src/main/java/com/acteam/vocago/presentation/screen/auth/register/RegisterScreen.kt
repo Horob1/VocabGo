@@ -16,9 +16,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -28,21 +29,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.acteam.vocago.R
+import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.BackButton
 import com.acteam.vocago.presentation.screen.auth.register.component.RegisterForm
+import com.acteam.vocago.presentation.screen.common.ErrorBannerWithTimer
+import com.acteam.vocago.presentation.screen.common.LoadingSurface
+import com.acteam.vocago.presentation.screen.common.data.UIErrorType
+import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
+import com.acteam.vocago.utils.responsiveValue
 import com.acteam.vocago.utils.safeClickable
 
 @Composable
 fun RegisterScreen(
-    onBackClick: () -> Unit,
-    onRegisterClick: () -> Unit,
+    viewModel: RegisterViewModel,
+    authNavController: NavController
 ) {
+
+    val uiState by viewModel.registerUIState.collectAsState()
+    val formState by viewModel.registerFormState.collectAsState()
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
     val titleFontSize = responsiveSP(mobile = 30, tabletPortrait = 36, tabletLandscape = 42)
@@ -51,170 +62,237 @@ fun RegisterScreen(
     val buttonHeight = responsiveDP(mobile = 48, tabletPortrait = 56, tabletLandscape = 60)
     val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
 
-    Scaffold { innerPadding ->
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = {
-                        focusManager.clearFocus()
-                    })
-                }
-        ) {
-            if (getDeviceType() == DeviceType.TabletPortrait) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = horizontalPadding)
-                        .verticalScroll(scrollState),
-                    verticalArrangement = Arrangement.spacedBy(verticalSpacing)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                })
+            }
+    ) {
+        if (getDeviceType() == DeviceType.TabletPortrait) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = horizontalPadding)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(verticalSpacing)
+            ) {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        BackButton(
-                            onClick = onBackClick,
-                        )
-                        Row(
-                            modifier = Modifier
-                                .weight(1f),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                stringResource(R.string.btn_sign_up),
-                                style = MaterialTheme.typography.titleLarge.copy(
-                                    fontSize = titleFontSize
-                                ),
-                                textAlign = TextAlign.Center,
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(40.dp))
-                    }
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        AuthImageCard(R.drawable.register, 0.5f)
-                    }
-                    RegisterForm()
-
-                    Button(
-                        onClick = onRegisterClick,
-                        modifier = Modifier
-                            .height(buttonHeight)
-                            .fillMaxWidth()
-                            .shadow(8.dp, shape = RoundedCornerShape(24.dp))
-                    ) {
-                        Text(
-                            text = stringResource(R.string.btn_sign_up).uppercase(),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = stringResource(R.string.text_already_have_account),
-                            fontSize = descFontSize
-                        )
-                        Text(
-                            text = stringResource(R.string.btn_login),
-                            modifier = Modifier
-                                .safeClickable("btn_login", onClick = onBackClick)
-                                .padding(start = 8.dp),
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = descFontSize
-                            )
-                        )
-                    }
-                }
-            } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = horizontalPadding)
-                        .verticalScroll(scrollState),
-                    verticalArrangement = Arrangement.spacedBy(verticalSpacing)
-                ) {
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        BackButton(
-                            onClick = onBackClick,
-                        )
-                        Row(
-                            modifier = Modifier
-                                .weight(1f),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                stringResource(R.string.btn_sign_up),
-                                style = MaterialTheme.typography.titleLarge.copy(
-                                    fontSize = titleFontSize,
-                                    color = MaterialTheme.colorScheme.primary
-                                ),
-                                textAlign = TextAlign.Center,
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(40.dp))
-                    }
-                    Spacer(
-                        modifier = Modifier
-                            .weight(1f)
+                    BackButton(
+                        onClick = {
+                            authNavController.navigate(NavScreen.LoginNavScreen) {
+                                popUpTo(NavScreen.AuthNavScreen) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        },
                     )
-
-                    RegisterForm()
-
-                    Spacer(modifier = Modifier.height(verticalSpacing / 3))
-
-                    Button(
-                        onClick = onRegisterClick,
-                        modifier = Modifier
-                            .height(buttonHeight)
-                            .fillMaxWidth()
-                            .shadow(8.dp, shape = RoundedCornerShape(24.dp))
-                    ) {
-                        Text(
-                            text = stringResource(R.string.btn_sign_up).uppercase(),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .weight(1f),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = stringResource(R.string.text_already_have_account),
-                            fontSize = descFontSize
-                        )
-                        Text(
-                            text = stringResource(R.string.btn_login),
-                            modifier = Modifier
-                                .safeClickable("btn_login", onClick = onBackClick)
-                                .padding(8.dp),
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = descFontSize
-                            )
+                            stringResource(R.string.btn_sign_up),
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontSize = titleFontSize
+                            ),
+                            textAlign = TextAlign.Center,
                         )
                     }
-                    Spacer(modifier = Modifier.height(verticalSpacing / 3))
+                    Spacer(modifier = Modifier.width(40.dp))
+                }
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AuthImageCard(R.drawable.register, 0.5f)
+                }
+                RegisterForm(viewModel)
+
+                Button(
+                    onClick = {
+                        viewModel.register {
+                            authNavController.navigate(
+                                NavScreen.VerifyEmailNavScreen(
+                                    email = formState.email
+                                )
+                            ) {
+                                launchSingleTop = true
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .height(buttonHeight)
+                        .fillMaxWidth()
+                        .shadow(8.dp, shape = RoundedCornerShape(24.dp))
+                ) {
+                    Text(
+                        text = stringResource(R.string.btn_sign_up).uppercase(),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.text_already_have_account),
+                        fontSize = descFontSize
+                    )
+                    Text(
+                        text = stringResource(R.string.btn_login),
+                        modifier = Modifier
+                            .safeClickable("btn_login", onClick = {
+                                authNavController.navigate(NavScreen.LoginNavScreen) {
+                                    popUpTo(NavScreen.RegisterNavScreen) {
+                                        inclusive = true
+                                    }
+                                    launchSingleTop = true
+                                }
+                            })
+                            .padding(start = 8.dp),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = descFontSize
+                        )
+                    )
                 }
             }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = horizontalPadding)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(verticalSpacing)
+            ) {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    BackButton(
+                        onClick = {
+                            authNavController.navigate(NavScreen.LoginNavScreen) {
+                                popUpTo(NavScreen.RegisterNavScreen) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        },
+                    )
+                    Row(
+                        modifier = Modifier
+                            .weight(1f),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            stringResource(R.string.btn_sign_up),
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontSize = titleFontSize,
+                                color = MaterialTheme.colorScheme.primary
+                            ),
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(40.dp))
+                }
+                Spacer(
+                    modifier = Modifier
+                        .weight(1f)
+                )
+
+                RegisterForm(viewModel)
+
+                Spacer(modifier = Modifier.height(verticalSpacing / 3))
+
+                Button(
+                    onClick = {
+                        viewModel.register {
+                            authNavController.navigate(
+                                NavScreen.VerifyEmailNavScreen(
+                                    email = formState.email
+                                )
+                            ) {
+                                launchSingleTop = true
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .height(buttonHeight)
+                        .fillMaxWidth()
+                        .shadow(8.dp, shape = RoundedCornerShape(24.dp))
+                ) {
+                    Text(
+                        text = stringResource(R.string.btn_sign_up).uppercase(),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.text_already_have_account),
+                        fontSize = descFontSize
+                    )
+                    Text(
+                        text = stringResource(R.string.btn_login),
+                        modifier = Modifier
+                            .safeClickable("btn_login", onClick = {
+                                authNavController.navigate(NavScreen.LoginNavScreen) {
+                                    popUpTo(NavScreen.RegisterNavScreen) {
+                                        inclusive = true
+                                    }
+                                    launchSingleTop = true
+                                }
+                            })
+                            .padding(8.dp),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = descFontSize
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.height(verticalSpacing / 3))
+            }
+        }
+        if (uiState is UIState.UIError) {
+            val errorType = (uiState as UIState.UIError).errorType
+            val message = when (errorType) {
+                UIErrorType.ConflictError -> R.string.text_username_or_email_already_exists
+                UIErrorType.ServerError -> R.string.text_server_error
+                else -> R.string.text_unknown_error
+            }
+            ErrorBannerWithTimer(
+                title = stringResource(R.string.text_error),
+                message = stringResource(message),
+                iconResId = R.drawable.error_banner,
+                onTimeout = { viewModel.clearUIState() },
+                onDismiss = { viewModel.clearUIState() },
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(horizontal = 16.dp)
+            )
         }
     }
-
+    if (uiState is UIState.UILoading) {
+        LoadingSurface(
+            picSize = responsiveValue(180, 360, 360)
+        )
+    }
 }

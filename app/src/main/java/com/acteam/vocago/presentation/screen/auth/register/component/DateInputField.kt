@@ -31,11 +31,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
+import com.acteam.vocago.presentation.screen.auth.register.RegisterViewModel
 import com.acteam.vocago.utils.responsiveSP
 import java.util.Calendar
 
 @Composable
-fun DateInputField() {
+fun DateInputField(
+    viewModel: RegisterViewModel
+) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
 
@@ -47,7 +50,14 @@ fun DateInputField() {
         DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
+                val calendarPicked = Calendar.getInstance().apply {
+                    set(year, month, dayOfMonth)
+                }
                 selectedDate = "%02d/%02d/%04d".format(dayOfMonth, month + 1, year)
+                val isoFormat =
+                    java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+                val isoDateString = isoFormat.format(calendarPicked.time)
+                viewModel.setDateOfBirth(isoDateString)
                 showDialog = false // Close the dialog after selection
             },
             calendar.get(Calendar.YEAR),

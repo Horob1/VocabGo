@@ -57,12 +57,6 @@ class ResetPasswordViewModel(
         }
     }
 
-    fun resetOtpCountdown(initialTime: Int = 300) {
-        countdownJob?.cancel()
-        _otpState.value = _otpState.value.copy(timeLeft = initialTime)
-        startOtpCountdown(initialTime)
-    }
-
     fun setOtpValue(otp: String) {
         _otpState.value = _otpState.value.copy(otp = otp)
     }
@@ -92,13 +86,12 @@ class ResetPasswordViewModel(
             _resetPasswordFormState.value.copy(isConfirmPasswordVisible = !_resetPasswordFormState.value.isConfirmPasswordVisible)
     }
 
-    fun resetPassword(afterResetPasswordSuccess: () -> Unit) {
-        if (!_resetPasswordFormState.value.isResetPasswordButtonEnabled) return
+    fun resetPassword(email: String, afterResetPasswordSuccess: () -> Unit) {
         viewModelScope.launch {
             _resetPasswordUIState.value = UIState.UILoading
             try {
                 resetPasswordUseCase(
-                    email = _resetPasswordFormState.value.email,
+                    email = email,
                     password = _resetPasswordFormState.value.password,
                     otp = _otpState.value.otp
                 )
@@ -126,30 +119,21 @@ class ResetPasswordViewModel(
         }
     }
 
-    fun forgotPassword(email: String) {
+    fun requestOtpAndStartCountdown(email: String) {
         viewModelScope.launch {
+            _resetPasswordUIState.value = UIState.UILoading
+
             try {
-                forgotPasswordUseCase(
-                    email = email
-                )
+                forgotPasswordUseCase(email)
                 _resetPasswordUIState.value = UIState.UISuccess
+                _otpState.value = _otpState.value.copy(timeLeft = 300)
+                startOtpCountdown(300)
             } catch (e: Exception) {
-                if (e is ApiException) {
-                    _resetPasswordUIState.value = UIState.UIError(
-                        when (e.code) {
-                            404 -> UIErrorType.NotFoundError
-                            403 -> UIErrorType.ForbiddenError
-                            429 -> UIErrorType.TooManyRequestsError
-                            else -> UIErrorType.UnknownError
-                        }
-                    )
-                } else {
-                    _resetPasswordUIState.value = UIState.UIError(UIErrorType.UnknownError)
-                }
+                _resetPasswordUIState.value = UIState.UIError(UIErrorType.TooManyRequestsError)
             }
         }
-
     }
+
 
     fun clearUIState() {
         _resetPasswordUIState.value = UIState.UISuccess

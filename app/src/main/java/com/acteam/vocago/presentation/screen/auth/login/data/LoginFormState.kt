@@ -4,5 +4,6 @@ data class LoginFormState(
     val username: String = "",
     val password: String = "",
     val passwordVisible: Boolean = false,
-    val isLoginButtonEnabled: Boolean = false
+    val isLoginButtonEnabled: Boolean = false,
+    val isNewGoogleAccount: Boolean = false
 )

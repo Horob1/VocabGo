@@ -2,7 +2,10 @@ package com.acteam.vocago.di
 
 import com.acteam.vocago.presentation.screen.auth.forgotpassword.ForgotPasswordViewModel
 import com.acteam.vocago.presentation.screen.auth.login.LoginViewModel
+import com.acteam.vocago.presentation.screen.auth.register.RegisterViewModel
 import com.acteam.vocago.presentation.screen.auth.resetpassword.ResetPasswordViewModel
+import com.acteam.vocago.presentation.screen.auth.verify2fa.VerifyTwoFAViewModel
+import com.acteam.vocago.presentation.screen.auth.verifyemail.VerifyEmailViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -17,6 +20,11 @@ val viewModelModule = module {
         )
     }
     viewModel {
+        RegisterViewModel(
+            get()
+        )
+    }
+    viewModel {
         ForgotPasswordViewModel(
             get()
         )
@@ -24,6 +32,16 @@ val viewModelModule = module {
     viewModel {
         ResetPasswordViewModel(
             get(), get()
+        )
+    }
+    viewModel {
+        VerifyEmailViewModel(
+            get(), get()
+        )
+    }
+    viewModel {
+        VerifyTwoFAViewModel(
+            get()
         )
     }
 }

@@ -11,4 +11,5 @@ sealed class UIErrorType {
     data object BadRequestError : UIErrorType()
     data object TooManyRequestsError : UIErrorType()
     data object PreconditionFailedError : UIErrorType()
+    data object ConflictError : UIErrorType()
 }
