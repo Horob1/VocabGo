@@ -10,18 +10,16 @@ import kotlinx.coroutines.launch
 
 class NewsViewModel(
     getLoginStateUseCase: GetLoginStateUseCase,
-    getUserProfileUseCase: GetUserProfileUseCase,
+    private val getUserProfileUseCase: GetUserProfileUseCase,
 ) : ViewModel() {
     val loginState = getLoginStateUseCase()
     private val _userState = MutableStateFlow<UserDto?>(null)
     val userState: MutableStateFlow<UserDto?> = _userState
 
-    init {
-        viewModelScope.launch {
+    suspend fun loadProfile(){
             if (loginState.value)
                 getUserProfileUseCase().collect {
                     _userState.value = it
                 }
-        }
     }
 }

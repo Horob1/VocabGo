@@ -78,6 +78,9 @@ fun NewsScreen(
                 navigateToProfile = {},
                 navigateToLogin = {
                     rootNavController.navigate(NavScreen.AuthNavScreen)
+                },
+                onLoadProfile = {
+                    viewModel.loadProfile()
                 }
             )
         }

@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,7 +37,13 @@ fun UserBar(
     userState: UserDto?,
     navigateToProfile: () -> Unit,
     navigateToLogin: () -> Unit,
+    onLoadProfile: suspend () -> Unit,
 ) {
+
+    LaunchedEffect(key1 = isAuth) {
+        onLoadProfile()
+    }
+
     val name = when {
         !isAuth -> stringResource(R.string.text_anonymous)
         userState == null -> "..."

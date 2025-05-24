@@ -77,10 +77,10 @@ class AuthLocalDataSourceImpl(context: Context) : AuthLocalDataSource {
     }
 
     override suspend fun saveCredential(
-        credentialId: String,
         accessToken: String,
         refreshToken: String,
-    ) = mutex.withLock {
+        credentialId: String
+        ) = mutex.withLock {
         this.credentialId = credentialId
         this.accessToken = accessToken
         this.refreshToken = refreshToken
