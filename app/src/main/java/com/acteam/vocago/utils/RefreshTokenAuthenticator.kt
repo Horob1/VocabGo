@@ -4,9 +4,8 @@ import android.util.Log
 import com.acteam.vocago.BuildConfig
 import com.acteam.vocago.data.model.RefreshTokenRequest
 import com.acteam.vocago.data.model.RefreshTokenResponse
-import com.acteam.vocago.domain.local.AuthEncryptedPreferences
+import com.acteam.vocago.domain.local.AuthLocalDataSource
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -33,7 +32,7 @@ import okhttp3.Response
 import okhttp3.Route
 
 class RefreshTokenAuthenticator(
-    private val authPreferences: AuthEncryptedPreferences,
+    private val authPreferences: AuthLocalDataSource,
 ) : Authenticator {
 
     private val refreshClient = HttpClient {
@@ -72,7 +71,7 @@ class RefreshTokenAuthenticator(
             }
 
             tokenResponse?.let {
-                authPreferences.refreshToken(it.refreshToken, it.accessToken)
+                authPreferences.refreshTokens(it.refreshToken, it.accessToken)
                 response.request.newBuilder()
                     .header("Authorization", "Bearer ${it.accessToken}")
                     .build()
@@ -84,35 +83,44 @@ class RefreshTokenAuthenticator(
     private suspend fun refreshToken(): RefreshTokenResponse? {
         val refreshToken = authPreferences.getRefreshToken()
         if (refreshToken.isNullOrBlank()) {
-            authPreferences.clearCredentials()
+            authPreferences.clearTokens()
             return null
         }
 
         return try {
-            val response = refreshClient.post(BuildConfig.BASE_URL + "/" + VocaGoRoutes.RefreshToken.path) {
-                contentType(ContentType.Application.Json)
-                setBody(RefreshTokenRequest(token = refreshToken))
-            }
+            val response =
+                refreshClient.post(BuildConfig.BASE_URL + "/" + VocaGoRoutes.RefreshToken.path) {
+                    contentType(ContentType.Application.Json)
+                    setBody(RefreshTokenRequest(token = refreshToken))
+                }
             val responseBodyString = response.bodyAsText()
             Log.d("Authenticator", "RefreshToken response body: $responseBodyString")
 
-            if (response.status == HttpStatusCode.OK) {
-                val json = Json { ignoreUnknownKeys = true }
-                val jsonObject = json.parseToJsonElement(responseBodyString).jsonObject
-                val dataElement = jsonObject["data"] ?: return null
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    val json = Json { ignoreUnknownKeys = true }
+                    val jsonObject = json.parseToJsonElement(responseBodyString).jsonObject
+                    val dataElement = jsonObject["data"] ?: return null
 
-                json.decodeFromJsonElement(
-                    RefreshTokenResponse.serializer(),
-                    dataElement
-                )
-            } else if (response.status == HttpStatusCode.Unauthorized) {
-                authPreferences.clearCredentials()
-                null
-            } else {
-                null
+                    json.decodeFromJsonElement(
+                        RefreshTokenResponse.serializer(),
+                        dataElement
+                    )
+                }
+
+                HttpStatusCode.Unauthorized -> {
+                    authPreferences.clearTokens()
+                    null
+                }
+
+                else -> {
+                    authPreferences.clearTokens()
+                    null
+                }
             }
         } catch (e: Exception) {
             Log.e("Authenticator", "Refresh token failed", e)
+            authPreferences.clearTokens()
             null
         }
     }

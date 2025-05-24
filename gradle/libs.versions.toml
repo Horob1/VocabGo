@@ -32,7 +32,6 @@ roomKtxVersion = "2.7.1"
 roomPagingVersion = "2.7.1"
 roomRuntimeVersion = "2.7.1"
 roomTestingVersion = "2.7.1"
-securityCrypto = "1.1.0-alpha07"
 serialization = "1.6.3"
 
 [libraries]
@@ -50,7 +49,6 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtxV
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "roomPagingVersion" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntimeVersion" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomTestingVersion" }
-androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coilGif" }
 introshowcaseview = { module = "com.canopas.intro-showcase-view:introshowcaseview", version.ref = "introshowcaseview" }
