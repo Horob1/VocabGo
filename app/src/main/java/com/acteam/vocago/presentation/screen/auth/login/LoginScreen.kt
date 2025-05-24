@@ -48,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
@@ -154,7 +155,7 @@ fun LoginScreen(
 
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.login),
+                            painter = rememberAsyncImagePainter(model = R.drawable.login),
                             contentDescription = "Auth Image",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
@@ -492,14 +493,14 @@ fun LoginScreen(
                     )
                 }
                 viewModel.clearUIState()
-            } else if (errorType == UIErrorType.UnexpectedEntityError) {
+            } else if (errorType == UIErrorType.PreconditionFailedError) {
                 show2FADialog = true
                 viewModel.clearUIState()
             } else {
                 val message = when (errorType) {
                     UIErrorType.NotFoundError,
                     UIErrorType.UnauthorizedError,
-                    UIErrorType.PreconditionFailedError,
+                    UIErrorType.UnexpectedEntityError,
                         ->
                         R.string.text_username_or_password_incorrect
 

@@ -13,6 +13,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
@@ -25,6 +26,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
@@ -61,7 +63,6 @@ class RefreshTokenAuthenticator(
                     }
                 }
             }
-
             val tokenResponse = try {
                 refreshingJob?.await()
             } finally {
@@ -76,6 +77,7 @@ class RefreshTokenAuthenticator(
                     .header("Authorization", "Bearer ${it.accessToken}")
                     .build()
             }
+
         }
     }
 
@@ -87,24 +89,27 @@ class RefreshTokenAuthenticator(
         }
 
         return try {
-            val response =
-                refreshClient.post(BuildConfig.BASE_URL + "/" + VocaGoRoutes.RefreshToken.path) {
-                    contentType(ContentType.Application.Json)
-                    setBody(RefreshTokenRequest(token = refreshToken))
-                }
-            when (response.status) {
-                HttpStatusCode.OK -> {
-                    response.body<RefreshTokenResponse>()
-                }
+            val response = refreshClient.post(BuildConfig.BASE_URL + "/" + VocaGoRoutes.RefreshToken.path) {
+                contentType(ContentType.Application.Json)
+                setBody(RefreshTokenRequest(token = refreshToken))
+            }
+            val responseBodyString = response.bodyAsText()
+            Log.d("Authenticator", "RefreshToken response body: $responseBodyString")
 
-                HttpStatusCode.Unauthorized -> {
-                    authPreferences.clearCredentials()
-                    null
-                }
+            if (response.status == HttpStatusCode.OK) {
+                val json = Json { ignoreUnknownKeys = true }
+                val jsonObject = json.parseToJsonElement(responseBodyString).jsonObject
+                val dataElement = jsonObject["data"] ?: return null
 
-                else -> {
-                    null
-                }
+                json.decodeFromJsonElement(
+                    RefreshTokenResponse.serializer(),
+                    dataElement
+                )
+            } else if (response.status == HttpStatusCode.Unauthorized) {
+                authPreferences.clearCredentials()
+                null
+            } else {
+                null
             }
         } catch (e: Exception) {
             Log.e("Authenticator", "Refresh token failed", e)

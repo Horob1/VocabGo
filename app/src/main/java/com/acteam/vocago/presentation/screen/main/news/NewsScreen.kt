@@ -1,5 +1,6 @@
 package com.acteam.vocago.presentation.screen.main.news
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

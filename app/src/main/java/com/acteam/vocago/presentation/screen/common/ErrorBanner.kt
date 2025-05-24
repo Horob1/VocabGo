@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.delay
 
 @Composable
@@ -95,7 +96,7 @@ fun ErrorBannerWithTimer(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Image(
-                        painter = painterResource(id = iconResId),
+                        painter =  rememberAsyncImagePainter(model = iconResId),
                         contentDescription = null,
                         modifier = Modifier
                             .size(100.dp)

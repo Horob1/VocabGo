@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import coil.compose.rememberAsyncImagePainter
 import com.acteam.vocago.R
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
@@ -62,7 +63,7 @@ fun ChangeLanguageDialog(
                         .background(MaterialTheme.colorScheme.background)
                 ) {
                     Image(
-                        painter = painterResource(R.drawable.screen_flicker),
+                        painter = rememberAsyncImagePainter(R.drawable.screen_flicker),
                         contentDescription = "Pager Image",
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier.fillMaxWidth()

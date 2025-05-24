@@ -1,5 +1,6 @@
 package com.acteam.vocago.di
 
+import android.util.Log
 import com.acteam.vocago.BuildConfig
 import com.acteam.vocago.domain.local.AuthEncryptedPreferences
 import com.acteam.vocago.utils.RefreshTokenAuthenticator

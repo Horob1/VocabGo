@@ -6,6 +6,7 @@ import com.acteam.vocago.domain.model.AppLanguage
 import com.acteam.vocago.domain.usecase.ChooseLanguageUserCase
 import com.acteam.vocago.domain.usecase.GetLanguageUseCase
 import com.acteam.vocago.domain.usecase.SaveOnBoardingStateUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -22,7 +23,7 @@ class WelcomeViewModel(
     }
 
     fun completeOnBoarding() {
-        viewModelScope.launch {
+        viewModelScope.launch() {
             saveOnBoardingStateUseCase(completed = true)
         }
     }

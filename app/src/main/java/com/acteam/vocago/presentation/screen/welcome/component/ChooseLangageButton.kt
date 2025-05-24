@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.acteam.vocago.R
 
 @Composable
@@ -59,7 +60,7 @@ fun ChooseLanguageButton(
             modifier = Modifier.fillMaxWidth()
         ) {
             Image(
-                painter = painterResource(id = flagIcon),
+                painter = rememberAsyncImagePainter(model = flagIcon),
                 contentDescription = "${stringResource(languageName)} Flag",
                 modifier = Modifier
                     .size(40.dp)

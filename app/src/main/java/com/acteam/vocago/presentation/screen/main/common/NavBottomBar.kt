@@ -37,7 +37,8 @@ fun NavBottomBar(navController: NavController) {
         items.forEach { item ->
             val selected = currentDestination?.route == item.route::class.qualifiedName
 
-            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(item.icon))
+            val composition by rememberLottieComposition(
+                LottieCompositionSpec.RawRes(item.icon))
             val progress = remember { Animatable(0f) }
 
             // Play animation when selected
@@ -69,7 +70,8 @@ fun NavBottomBar(navController: NavController) {
                     LottieAnimation(
                         composition = composition,
                         progress = { progress.value },
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
+                        enableMergePaths = true
                     )
                 },
                 label = {

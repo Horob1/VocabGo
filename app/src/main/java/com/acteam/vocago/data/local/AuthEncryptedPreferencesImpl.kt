@@ -41,6 +41,7 @@ class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences 
     override fun clearCredentials() {
         prefs.edit {
             clear()
+            commit()
         }
         _isAuth.value = false
     }
@@ -55,6 +56,7 @@ class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences 
             putString(KEY_ACCESS_TOKEN, accessToken)
             putString(KEY_REFRESH_TOKEN, refreshToken)
             putString(KEY_CREDENTIAL_ID, credentialId)
+            commit()
         }
     }
 
@@ -63,6 +65,7 @@ class AuthEncryptedPreferencesImpl(context: Context) : AuthEncryptedPreferences 
         prefs.edit {
             putString(KEY_REFRESH_TOKEN, refreshToken)
             putString(KEY_ACCESS_TOKEN, accessToken)
+            commit()
         }
     }
 
