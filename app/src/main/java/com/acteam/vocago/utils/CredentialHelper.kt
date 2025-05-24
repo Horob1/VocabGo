@@ -3,14 +3,12 @@ package com.acteam.vocago.utils
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.credentials.CreatePasswordRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetPasswordOption
 import androidx.credentials.PasswordCredential
-import com.acteam.vocago.R
 
 //import com.google.android.gms.auth.api.credentials.Credential
 //import com.google.android.gms.auth.api.credentials.CredentialRequest
@@ -45,11 +43,7 @@ object CredentialHelper {
 //                }
             }
         } catch (e: Exception) {
-            Toast.makeText(
-                context,
-                context.getString(R.string.text_error_on_save_credential),
-                Toast.LENGTH_SHORT
-            ).show()
+            e.printStackTrace()
         }
     }
 

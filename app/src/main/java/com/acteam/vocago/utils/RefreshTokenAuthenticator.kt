@@ -71,7 +71,7 @@ class RefreshTokenAuthenticator(
             }
 
             tokenResponse?.let {
-                authPreferences.refreshTokens(it.refreshToken, it.accessToken)
+                authPreferences.refreshTokens(it.accessToken, it.refreshToken)
                 response.request.newBuilder()
                     .header("Authorization", "Bearer ${it.accessToken}")
                     .build()

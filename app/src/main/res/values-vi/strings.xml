@@ -76,6 +76,6 @@
     <string name="text_verify_2fa_description">"Vui lòng mở ứng dụng Google Authenticator, tìm đến tài khoản Vocago và nhập mã 6 chữ số đang hiển thị. Mã sẽ thay đổi sau mỗi 30 giây"</string>
 
     <string name="text_hello">Xin chào</string>
-    <string name="text_anonymous">Ẩn danh</string>
+    <string name="text_anonymous">khách</string>
     <string name="text_wellcome_to_vocago">Chào mừng đến với VocaGo</string>"
 </resources>

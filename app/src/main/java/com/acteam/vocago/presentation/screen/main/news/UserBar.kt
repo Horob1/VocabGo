@@ -1,6 +1,5 @@
 package com.acteam.vocago.presentation.screen.main.news
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,12 +21,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.acteam.vocago.R
 import com.acteam.vocago.data.model.UserDto
-import com.acteam.vocago.presentation.screen.common.data.Resource
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.safeClickable
@@ -37,18 +33,14 @@ import com.acteam.vocago.utils.safeClickable
 @Composable
 fun UserBar(
     isAuth: Boolean,
-    userState: Resource<UserDto>,
+    userState: UserDto?,
     navigateToProfile: () -> Unit,
     navigateToLogin: () -> Unit,
 ) {
     val name = when {
         !isAuth -> stringResource(R.string.text_anonymous)
-        else -> {
-            when (userState) {
-                is Resource.Success -> userState.data.firstName + " " + userState.data.lastName
-                else -> "..."
-            }
-        }
+        userState == null -> "..."
+        else -> userState.firstName + " " + userState.lastName
     }
     val titleText = "${stringResource(R.string.text_hello)}, $name"
 
@@ -96,8 +88,7 @@ fun UserBar(
             )
         }
         UserAvatar(
-            imageUrl = if (userState is Resource.Success) userState.data.avatar else null,
-            isLoadImage = userState is Resource.Loading,
+            imageUrl = userState?.avatar,
             placeholderRes = R.drawable.capybara_avatar,
             onClick = {
                 if (isAuth) navigateToProfile()
@@ -113,7 +104,6 @@ fun UserBar(
 fun UserAvatar(
     imageUrl: String?,
     modifier: Modifier = Modifier,
-    isLoadImage: Boolean = true,
     placeholderRes: Int,
     onClick: () -> Unit,
 ) {
@@ -125,11 +115,6 @@ fun UserAvatar(
         contentAlignment = Alignment.Center
     ) {
         when {
-            isLoadImage -> CircularProgressIndicator(
-                modifier = Modifier.size(24.dp),
-                strokeWidth = 2.dp,
-                color = MaterialTheme.colorScheme.primary
-            )
 
             imageUrl.isNullOrEmpty() -> Image(
                 painter = painterResource(id = placeholderRes),
@@ -146,10 +131,10 @@ fun UserAvatar(
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
                 loading = {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.dp,
-                        color = MaterialTheme.colorScheme.primary
+                    Image(
+                        painter = painterResource(id = placeholderRes),
+                        contentDescription = "User Avatar Error",
+                        modifier = Modifier.fillMaxSize()
                     )
                 },
                 error = {

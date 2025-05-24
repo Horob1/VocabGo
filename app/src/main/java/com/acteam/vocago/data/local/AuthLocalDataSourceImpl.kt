@@ -86,9 +86,9 @@ class AuthLocalDataSourceImpl(context: Context) : AuthLocalDataSource {
         this.refreshToken = refreshToken
         _isAuth.value = true
         prefs.edit {
-            putString(CREDENTIAL_ID_KEY, credentialId)
             putString(ACCESS_TOKEN_KEY, accessToken)
             putString(REFRESH_TOKEN_KEY, refreshToken)
+            putString(CREDENTIAL_ID_KEY, credentialId)
         }
     }
 

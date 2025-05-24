@@ -3,7 +3,6 @@ package com.acteam.vocago.domain.usecase
 import com.acteam.vocago.data.model.UserDto
 import com.acteam.vocago.domain.local.UserLocalDataSource
 import com.acteam.vocago.domain.remote.UserRemoteDataSource
-import com.acteam.vocago.presentation.screen.common.data.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,30 +12,19 @@ class GetUserProfileUseCase(
     private val localDataSource: UserLocalDataSource,
     private val remoteDataSource: UserRemoteDataSource,
 ) {
-    operator fun invoke(): Flow<Resource<UserDto>> = flow {
-        emit(Resource.Loading)
+    operator fun invoke(): Flow<UserDto?> = flow {
+        emit(localDataSource.getUser())
 
-        val cachedUser = localDataSource.getUser()
-        if (cachedUser != null) {
-            emit(Resource.Success(cachedUser))
-        }
+        // Gọi remote
+        val remoteData = remoteDataSource.getUser()
 
-        val remoteResult = remoteDataSource.getUser()
-        if (remoteResult.isSuccess) {
-            val remoteUser = remoteResult.getOrNull()
-            if (remoteUser != null) {
-                localDataSource.saveUser(remoteUser)
-                emit(Resource.Success(remoteUser))
-            } else {
-                emit(Resource.Error("No user data from remote", cachedUser))
+        if (remoteData.isSuccess) {
+            remoteData.getOrNull().let {
+                if (it != null) {
+                    localDataSource.saveUser(it)
+                    emit(it)
+                }
             }
-        } else {
-            emit(
-                Resource.Error(
-                    remoteResult.exceptionOrNull()?.message ?: "Unknown error",
-                    cachedUser
-                )
-            )
         }
     }.flowOn(Dispatchers.IO)
 }
