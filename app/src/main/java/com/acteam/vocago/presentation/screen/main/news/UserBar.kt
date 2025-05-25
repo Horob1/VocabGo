@@ -94,6 +94,7 @@ fun UserBar(
                 )
             )
         }
+
         UserAvatar(
             imageUrl = userState?.avatar,
             placeholderRes = R.drawable.capybara_avatar,
@@ -122,7 +123,6 @@ fun UserAvatar(
         contentAlignment = Alignment.Center
     ) {
         when {
-
             imageUrl.isNullOrEmpty() -> Image(
                 painter = painterResource(id = placeholderRes),
                 contentDescription = "User Avatar Default",

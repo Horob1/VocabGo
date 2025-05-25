@@ -11,7 +11,6 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -24,9 +23,9 @@ val networkModule = module {
             get()
         val client = OkHttpClient.Builder()
             .addInterceptor(Interceptor { chain ->
-                val accessToken = runBlocking {
-                    authPreferences.getAccessToken() // suspend
-                }
+                val accessToken =
+                    authPreferences.getAccessToken()
+
                 val request = chain.request().newBuilder().apply {
                     accessToken?.let {
                         header(

@@ -5,6 +5,8 @@ import com.acteam.vocago.data.local.entity.LoggedInUser
 import com.acteam.vocago.data.model.RoleDto
 import com.acteam.vocago.data.model.UserDto
 import com.acteam.vocago.domain.local.UserLocalDataSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class UserLocalDataSourceImpl(
     private val userDao: LoggedInUserDao,
@@ -33,30 +35,28 @@ class UserLocalDataSourceImpl(
         }
     }
 
-    override suspend fun getUser(): UserDto? {
-        return try {
-            val userData = userDao.getUser() ?: return null
-
-            UserDto(
-                _id = userData._id,
-                email = userData.email,
-                username = userData.username,
-                firstName = userData.firstName,
-                lastName = userData.lastName,
-                phoneNumber = userData.phoneNumber,
-                address = userData.address,
-                dob = userData.dob,
-                avatar = userData.avatar,
-                roles = userData.roles.split(",").map { RoleDto(it) },
-                status = userData.status,
-                createdAt = userData.createdAt,
-                updatedAt = userData.updatedAt,
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+    override fun getUser(): Flow<UserDto?> {
+        return userDao.getUser().map { userData ->
+            userData?.let {
+                UserDto(
+                    _id = it._id,
+                    email = it.email,
+                    username = it.username,
+                    firstName = it.firstName,
+                    lastName = it.lastName,
+                    phoneNumber = it.phoneNumber,
+                    address = it.address,
+                    dob = it.dob,
+                    avatar = it.avatar,
+                    roles = it.roles.split(",").map { role -> RoleDto(role) },
+                    status = it.status,
+                    createdAt = it.createdAt,
+                    updatedAt = it.updatedAt,
+                )
+            }
         }
     }
+
 
     override suspend fun clear() {
         userDao.clear()

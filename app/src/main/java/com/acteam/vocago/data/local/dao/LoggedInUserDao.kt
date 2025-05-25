@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import com.acteam.vocago.data.local.entity.LoggedInUser
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LoggedInUserDao {
@@ -13,7 +14,7 @@ interface LoggedInUserDao {
     suspend fun insert(user: LoggedInUser)
 
     @Query("SELECT * FROM logged_in_user LIMIT 1")
-    suspend fun getUser(): LoggedInUser?
+    fun getUser(): Flow<LoggedInUser?>
 
     @Query("DELETE FROM logged_in_user")
     suspend fun clear()

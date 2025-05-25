@@ -7,14 +7,11 @@ import androidx.core.content.edit
 import com.acteam.vocago.domain.local.AuthLocalDataSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 class AuthLocalDataSourceImpl(context: Context) : AuthLocalDataSource {
     private val prefs: SharedPreferences =
         context.getSharedPreferences(AUTH_PREF_NAME, Context.MODE_PRIVATE)
 
-    private val mutex = Mutex()
     private var accessToken: String? = null
     private var refreshToken: String? = null
     private var credentialId: String? = null
@@ -35,15 +32,14 @@ class AuthLocalDataSourceImpl(context: Context) : AuthLocalDataSource {
         _isAuth.value = accessToken != null
     }
 
-    override suspend fun getAccessToken(): String? = mutex.withLock {
+    override fun getAccessToken(): String? =
         accessToken ?: prefs.getString(ACCESS_TOKEN_KEY, null)
-    }
 
-    override suspend fun getRefreshToken(): String? = mutex.withLock {
+    override fun getRefreshToken(): String? =
         refreshToken ?: prefs.getString(REFRESH_TOKEN_KEY, null)
-    }
 
-    override suspend fun clearTokens() = mutex.withLock {
+
+    override fun clearTokens() {
         accessToken = null
         refreshToken = null
         credentialId = null
@@ -55,19 +51,18 @@ class AuthLocalDataSourceImpl(context: Context) : AuthLocalDataSource {
         }
     }
 
-    override suspend fun getCredentialId(): String? = mutex.withLock {
+    override fun getCredentialId(): String? =
         credentialId ?: prefs.getString(CREDENTIAL_ID_KEY, null)
-    }
 
-    override suspend fun getTokens(): Pair<String?, String?> = mutex.withLock {
+
+    override fun getTokens(): Pair<String?, String?> =
         Pair(
             accessToken ?: prefs.getString(ACCESS_TOKEN_KEY, null),
             refreshToken ?: prefs.getString(REFRESH_TOKEN_KEY, null)
         )
-    }
 
 
-    override suspend fun refreshTokens(accessToken: String, refreshToken: String) = mutex.withLock {
+    override fun refreshTokens(accessToken: String, refreshToken: String) {
         this.refreshToken = refreshToken
         this.accessToken = accessToken
         prefs.edit {
@@ -76,11 +71,11 @@ class AuthLocalDataSourceImpl(context: Context) : AuthLocalDataSource {
         }
     }
 
-    override suspend fun saveCredential(
+    override fun saveCredential(
         accessToken: String,
         refreshToken: String,
-        credentialId: String
-        ) = mutex.withLock {
+        credentialId: String,
+    ) {
         this.credentialId = credentialId
         this.accessToken = accessToken
         this.refreshToken = refreshToken
