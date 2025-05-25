@@ -15,6 +15,9 @@ sealed class NavScreen {
     @Serializable
     data object MainNavScreen : NavScreen()
 
+    @Serializable
+    data object UserNavScreen : NavScreen()
+
     // Mâm 2
     // Mân 2 của Auth
     @Serializable

@@ -44,5 +44,8 @@ fun SetupNavGraph(
                 rootNavController = navController
             )
         }
+        composable<NavScreen.UserNavScreen> {
+            
+        }
     }
 }

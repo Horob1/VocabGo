@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.acteam.vocago.domain.model.AppTheme
+import com.acteam.vocago.domain.usecase.GetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
 
 // === LIGHT THEME ===
@@ -53,11 +54,12 @@ private val DarkColorScheme = darkColorScheme(
 @Composable
 fun VocaGoTheme(
     getTheme: GetThemeUseCase,
+    getDynamicColor: GetDynamicColorUseCase,
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val userTheme = getTheme().collectAsState(initial = AppTheme.SYSTEM)
+    val dynamicColorState = getDynamicColor().collectAsState(initial = false)
 
     val isDarkTheme = when (userTheme.value) {
         AppTheme.LIGHT -> false
@@ -67,7 +69,7 @@ fun VocaGoTheme(
 
     // Sử dụng dynamic color cho Android 12+ và màu sắc mặc định cho các hệ thống cũ hơn
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+        dynamicColorState.value && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
+import com.acteam.vocago.domain.usecase.GetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
 import com.acteam.vocago.presentation.navigation.SetupNavGraph
@@ -31,9 +32,11 @@ class MainActivity : AppCompatActivity(), KoinComponent {
         installSplashScreen()
         enableEdgeToEdge()
         val getThemeUseCase = get<GetThemeUseCase>()
+        val getDynamicColorUseCase = get<GetDynamicColorUseCase>()
         setContent {
             VocaGoTheme(
-                getTheme = getThemeUseCase
+                getTheme = getThemeUseCase,
+                getDynamicColor = getDynamicColorUseCase
             ) {
                 val startDestination = getOnBoardingStateUseCase()
                 val navController = rememberNavController()

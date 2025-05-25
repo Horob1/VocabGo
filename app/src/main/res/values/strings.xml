@@ -85,4 +85,21 @@
     <string name="text_anonymous">anonymous</string>
     <string name="text_wellcome_to_vocago">Welcome to VocaGo</string>"
 
+    <string name="enum_news_level_easy">Easy</string>
+    <string name="enum_news_level_medium">Medium</string>
+    <string name="enum_news_level_hard">Hard</string>
+    <string name="enum_news_level_all">All Level</string>
+
+    <string name="enum_news_category_news">News</string>
+    <string name="enum_news_category_travel">Travel</string>
+    <string name="enum_news_category_business">Business</string>
+    <string name="enum_news_category_life">Life</string>
+    <string name="enum_news_category_tech">Tech</string>
+    <string name="enum_news_category_sport">Sport</string>
+    <string name="enum_news_category_world">World</string>
+    <string name="enum_news_category_perpectives">Perpectives</string>
+
+    <string name="text_level" translatable="false">Level</string>
+    <string name="text_search">Search</string>
+    <string name="text_choose_categories">Choose categories</string>
 </resources>

@@ -1,10 +1,7 @@
 package com.acteam.vocago.presentation.screen.main.news
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,16 +10,15 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -33,9 +29,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.acteam.vocago.R
+import com.acteam.vocago.domain.model.NewsCategory
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 
@@ -43,144 +42,158 @@ import com.acteam.vocago.utils.responsiveSP
 @Composable
 fun FilterDialog(
     isVisible: Boolean,
+    chosenCategory: List<String>,
+    onUpdateChosenCategory: (List<String>) -> Unit,
     onDismiss: () -> Unit,
     onSearch: () -> Unit,
 ) {
     val responsiveDPValue = responsiveDP(56, 56, 60)
-
-    val genres = listOf(
-        "Anime", "Học tập", "Cuộc sống", "Truyện tranh",
-        "Thiếu nhi", "Giải trí", "Kinh dị", "Tình cảm"
+    val categories = listOf(
+        NewsCategory.NEWS,
+        NewsCategory.LIFE,
+        NewsCategory.TECH,
+        NewsCategory.SPORT,
+        NewsCategory.WORLD,
+        NewsCategory.BUSINESS,
+        NewsCategory.PERPECTIVES,
+        NewsCategory.TRAVEL,
     )
 
     AnimatedVisibility(
         visible = isVisible,
-        enter = fadeIn() + scaleIn(
-            initialScale = 0.3f
-        ),
-        exit = fadeOut() + scaleOut(
-            targetScale = 0.3f
-        )
     ) {
         Dialog(onDismissRequest = onDismiss) {
             Column(
                 modifier = Modifier
-                    .padding(16.dp)
                     .fillMaxWidth()
                     .background(
-                        MaterialTheme.colorScheme.surface,
-                        RoundedCornerShape(
-                            16.dp
-                        )
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = RoundedCornerShape(20.dp)
                     )
-                    .padding(16.dp)
+                    .padding(24.dp)
             ) {
+                // Search Box
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(
-                            responsiveDPValue
-                        )
-                        .clip(
-                            RoundedCornerShape(
-                                responsiveDPValue
-                            )
-                        )
+                        .height(responsiveDPValue)
+                        .clip(RoundedCornerShape(responsiveDPValue))
                         .background(
-                            MaterialTheme.colorScheme.onSurface.copy(
-                                alpha = 0.3f
-                            ),
-                            RoundedCornerShape(
-                                responsiveDPValue
-                            )
+                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
                         )
+                        .padding(horizontal = 16.dp),
                 ) {
                     OutlinedTextField(
                         value = "",
-                        onValueChange = { },
-                        placeholder = { Text("Search") },
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = responsiveSP(14, 20, 20)
-                        ),
+                        onValueChange = {},
+                        placeholder = { Text(stringResource(R.string.text_search)) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Search,
-                                contentDescription = "key_search",
-                                tint = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.padding(start = 4.dp)
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },
                         singleLine = true,
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .fillMaxWidth(),
-                        keyboardActions = KeyboardActions(onDone = {
-
-                        }),
+                        modifier = Modifier.fillMaxSize(),
                         colors = OutlinedTextFieldDefaults.colors(
                             unfocusedBorderColor = Color.Transparent,
                             focusedBorderColor = Color.Transparent,
-                            disabledBorderColor = Color.Transparent
+                            disabledBorderColor = Color.Transparent,
+                            cursorColor = MaterialTheme.colorScheme.primary
+                        ),
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = responsiveSP(
+                                16,
+                                20,
+                                20
+                            )
                         )
                     )
                 }
 
+                Spacer(modifier = Modifier.height(24.dp))
 
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // Các button thể loại
+                // Title
                 Text(
-                    text = "Chọn thể loại",
+                    text = stringResource(R.string.text_choose_categories),
                     style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary
                     ),
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 12.dp)
                 )
 
+                // Categories FlowRow
                 FlowRow(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    genres.forEach { genre ->
-                        Button(
-                            onClick = {}
+                    categories.forEach { category ->
+                        val isChosen = chosenCategory.contains(category.value)
+                        OutlinedButton(
+                            onClick = {
+                                val list = chosenCategory.toMutableList()
+                                if (isChosen) list.remove(category.value)
+                                else list.add(category.value)
+                                onUpdateChosenCategory(list)
+                            },
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (isChosen) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+                                contentColor = if (isChosen) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                            ),
+                            border = if (isChosen) BorderStroke(
+                                0.dp,
+                                Color.Transparent
+                            ) else BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                         ) {
                             Text(
-                                text = genre,
+                                text = stringResource(category.stringResId),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
-                // Nút Hủy và Tìm
+                // Buttons Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     OutlinedButton(
                         onClick = onDismiss,
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.weight(1f)
+                        shape = RoundedCornerShape(16.dp),
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.primary
+                        )
                     ) {
-                        Text("Huỷ")
+                        Text(
+                            stringResource(R.string.btn_cancel),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
-                    Spacer(modifier = Modifier.width(12.dp))
+
                     Button(
                         onClick = onSearch,
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.weight(1f)
+                        shape = RoundedCornerShape(16.dp),
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
                     ) {
-                        Text("Tìm")
+                        Text(
+                            stringResource(R.string.text_search),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
                 }
             }
         }
     }
 }
-

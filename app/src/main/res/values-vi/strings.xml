@@ -77,5 +77,22 @@
 
     <string name="text_hello">Xin chào</string>
     <string name="text_anonymous">khách</string>
-    <string name="text_wellcome_to_vocago">Chào mừng đến với VocaGo</string>"
+    <string name="text_wellcome_to_vocago">Chào mừng đến với VocaGo</string>
+
+    <string name="enum_news_level_easy">Dễ dàng</string>
+    <string name="enum_news_level_medium">Trung bình</string>
+    <string name="enum_news_level_hard">Khó</string>
+    <string name="enum_news_level_all">Tất cả</string>
+
+    <string name="enum_news_category_news">Tin tức</string>
+    <string name="enum_news_category_travel">Du lịch</string>
+    <string name="enum_news_category_business">Kinh tế</string>
+    <string name="enum_news_category_life">Đời sống</string>
+    <string name="enum_news_category_tech">Công nghệ</string>
+    <string name="enum_news_category_sport">Thể thao</string>
+    <string name="enum_news_category_world">Thế giới</string>
+    <string name="enum_news_category_perpectives">Chia sẻ kinh nghiệm</string>
+
+    <string name="text_search">Tìm kiếm</string>
+    <string name="text_choose_categories">Chọn danh mục</string>
 </resources>

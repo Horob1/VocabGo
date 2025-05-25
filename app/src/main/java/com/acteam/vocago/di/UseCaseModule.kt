@@ -2,6 +2,9 @@ package com.acteam.vocago.di
 
 import com.acteam.vocago.domain.usecase.ChooseLanguageUserCase
 import com.acteam.vocago.domain.usecase.ForgotPasswordUseCase
+import com.acteam.vocago.domain.usecase.GetChosenNewsCategoriesUseCase
+import com.acteam.vocago.domain.usecase.GetChosenNewsLevelUseCase
+import com.acteam.vocago.domain.usecase.GetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.GetLanguageUseCase
 import com.acteam.vocago.domain.usecase.GetLocalUserProfileUseCase
 import com.acteam.vocago.domain.usecase.GetLoginStateUseCase
@@ -13,6 +16,8 @@ import com.acteam.vocago.domain.usecase.ResendVerifyEmailUseCase
 import com.acteam.vocago.domain.usecase.ResetPasswordUseCase
 import com.acteam.vocago.domain.usecase.SaveOnBoardingStateUseCase
 import com.acteam.vocago.domain.usecase.SyncProfileUseCase
+import com.acteam.vocago.domain.usecase.UpdateChosenCategoriesUseCase
+import com.acteam.vocago.domain.usecase.UpdateChosenNewsLevelUseCase
 import com.acteam.vocago.domain.usecase.VerifyEmailUseCase
 import com.acteam.vocago.domain.usecase.VerifyTwoFAUseCase
 import org.koin.dsl.module
@@ -63,4 +68,23 @@ val useCaseModule = module {
         SyncProfileUseCase(get(), get())
     }
 
+    single {
+        UpdateChosenCategoriesUseCase(get())
+    }
+
+    single {
+        GetChosenNewsCategoriesUseCase(get())
+    }
+
+    single {
+        GetChosenNewsLevelUseCase(get())
+    }
+
+    single {
+        UpdateChosenNewsLevelUseCase(get())
+    }
+
+    single {
+        GetDynamicColorUseCase(get())
+    }
 }

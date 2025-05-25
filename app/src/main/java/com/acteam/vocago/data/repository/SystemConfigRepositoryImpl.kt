@@ -3,6 +3,7 @@ package com.acteam.vocago.data.repository
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.acteam.vocago.domain.model.AppTheme
@@ -16,6 +17,7 @@ val Context.systemConfigDataStore: DataStore<Preferences> by preferencesDataStor
 class SystemConfigRepositoryImpl(context: Context) : SystemConfigRepository {
     private object PreferencesKey {
         val themeKey = stringPreferencesKey(name = THEME_KEY)
+        val colorKey = booleanPreferencesKey(name = DYNAMIC_COLOR_KEY)
     }
 
     private val dataStore = context.systemConfigDataStore
@@ -31,8 +33,16 @@ class SystemConfigRepositoryImpl(context: Context) : SystemConfigRepository {
         }
     }
 
+    override fun getDynamicColor(): Flow<Boolean> {
+        return dataStore.data.map {
+            it[PreferencesKey.colorKey] ?: false
+        }
+    }
+
+
     companion object {
         const val THEME_KEY = "THEME"
+        const val DYNAMIC_COLOR_KEY = "DYNAMIC_COLOR"
         const val SYSTEM_CONFIG_DATA_STORE_NAME = "APP_CONFIG_DATA_STORE_NAME"
     }
 }

@@ -37,6 +37,9 @@ fun NewsScreen(
 ) {
     val isAuth = viewModel.loginState.collectAsState()
     val userState = viewModel.userState.collectAsState()
+    val chosenCategories = viewModel.chosenCategories.collectAsState()
+    val chosenLevel = viewModel.chosenLevel.collectAsState()
+
     val deviceType = getDeviceType()
     val newsItems = remember {
         mutableStateListOf(
@@ -104,6 +107,10 @@ fun NewsScreen(
             ) {
                 item {
                     FilterBar(
+                        level = chosenLevel.value,
+                        onLevelChange = {
+                            viewModel.updateChosenLevel(it)
+                        },
                         onFilterClick = {
                             isShowFilterDialog = true
                         }
@@ -151,6 +158,10 @@ fun NewsScreen(
     FilterDialog(
         isVisible = isShowFilterDialog,
         onDismiss = { isShowFilterDialog = false },
-        onSearch = { }
+        onSearch = {},
+        chosenCategory = chosenCategories.value,
+        onUpdateChosenCategory = {
+            viewModel.updateChosenCategories(it)
+        },
     )
 }
