@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -28,13 +27,16 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
-import com.acteam.vocago.presentation.screen.auth.common.BackButton
 import com.acteam.vocago.presentation.screen.auth.common.OTPInputField
+import com.acteam.vocago.presentation.screen.auth.common.TopBar
+import com.acteam.vocago.presentation.screen.auth.common.TopBarNoTitle
 import com.acteam.vocago.presentation.screen.common.ErrorBannerWithTimer
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.common.data.UIErrorType
@@ -54,24 +56,22 @@ fun VerifyTwoFAScreen(
 ) {
     val uiState by viewModel.verifyTwoFAUIState.collectAsState()
     val otpState by viewModel.otpState.collectAsState()
-    val buttonHeight = responsiveDP(48, 56, 60)
+
     val focusManager = LocalFocusManager.current
     val deviceType = getDeviceType()
-    val titleFontSize = responsiveSP(mobile = 30, tabletPortrait = 36, tabletLandscape = 42)
-    val horizontalPadding = responsiveDP(mobile = 24, tabletPortrait = 40, tabletLandscape = 48)
-    val verticalSpacing = responsiveDP(mobile = 12, tabletPortrait = 20, tabletLandscape = 24)
-    val topPadding = responsiveDP(mobile = 16, tabletPortrait = 24, tabletLandscape = 28)
-    val textFontSize = responsiveSP(mobile = 20, tabletPortrait = 24, tabletLandscape = 24)
+
+    val titleFontSize = responsiveSP(30, 36, 42)
+    val horizontalPadding = responsiveDP(24, 40, 48)
+    val verticalSpacing = responsiveDP(12, 20, 24)
+    val topPadding = responsiveDP(16, 24, 28)
+    val textFontSize = responsiveSP(20, 24, 24)
+    val buttonHeight = responsiveDP(48, 56, 60)
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    focusManager.clearFocus()
-                })
-            })
-    {
+            .pointerInput(Unit) { detectTapGestures { focusManager.clearFocus() } }
+    ) {
         if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
             Column(
                 modifier = Modifier
@@ -80,96 +80,36 @@ fun VerifyTwoFAScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(verticalSpacing)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    BackButton(
-                        onClick = {
-                            authNavController.popBackStack()
-                        },
-                    )
-                    Text(
-                        text = stringResource(R.string.text_2fa_authentication),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = titleFontSize,
-                            textAlign = TextAlign.Center
-                        ),
-                        modifier = Modifier
-                            .weight(1f),
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                    Spacer(modifier = Modifier.width(40.dp))
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    AuthImageCard(R.drawable.twofa, width = 0.8f)
-                }
-                Spacer(
-                    modifier = if (deviceType == DeviceType.Mobile)
-                        Modifier.weight(1f)
-                    else
-                        Modifier.height(verticalSpacing / 3)
+                TopBar(
+                    text = stringResource(R.string.text_2fa_authentication),
+                    fontSize = titleFontSize,
+                    onBackClick = { authNavController.popBackStack() }
                 )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.text_verify_2fa_description),
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.Normal,
-                            fontSize = textFontSize,
-                            textAlign = TextAlign.Center
-                        ),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = horizontalPadding)
-                    )
-                }
-                Spacer(modifier = Modifier.height(verticalSpacing))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    OTPInputField(
-                        otp = otpState.otp,
-                        onOtpChange = { it ->
-                            viewModel.setOtpValue(it)
-                        }
-                    )
-                }
+                AuthImageCard(R.drawable.twofa, width = 0.8f)
 
-                Spacer(modifier = Modifier.height(verticalSpacing))
+                Spacer(
+                    modifier = if (deviceType == DeviceType.Mobile) Modifier.weight(1f) else Modifier.height(
+                        verticalSpacing / 3
+                    )
+                )
 
-                Button(
-                    modifier = Modifier
-                        .height(buttonHeight)
-                        .fillMaxWidth()
-                        .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
-                    onClick = {
+                Verify2FABody(
+                    otp = otpState.otp,
+                    onOtpChange = viewModel::setOtpValue,
+                    onVerifyClick = {
                         viewModel.verifyTwoFA(email) {
                             rootNavController.navigate(NavScreen.MainNavScreen) {
-                                popUpTo(NavScreen.AuthNavScreen) {
-                                    inclusive = true
-                                }
+                                popUpTo(NavScreen.AuthNavScreen) { inclusive = true }
                                 launchSingleTop = true
                             }
                         }
                         focusManager.clearFocus()
                     },
-                ) {
-                    Text(
-                        stringResource(R.string.input_enter_otp).uppercase(),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
-                Spacer(modifier = Modifier.height(verticalSpacing / 3))
+                    textFontSize = textFontSize,
+                    buttonHeight = buttonHeight,
+                    verticalSpacing = verticalSpacing,
+                    horizontalPadding = horizontalPadding
+                )
             }
         } else {
             Row(
@@ -184,38 +124,24 @@ fun VerifyTwoFAScreen(
                         .weight(1f)
                         .fillMaxHeight()
                         .padding(top = topPadding),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = topPadding, start = horizontalPadding),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            BackButton(onClick = {
-                                authNavController.popBackStack()
-                            })
-                        }
+                    TopBarNoTitle {
+                        authNavController.popBackStack()
                     }
                     Spacer(modifier = Modifier.height(verticalSpacing))
-                    AuthImageCard(R.drawable.twofa, 0.8f)
+                    AuthImageCard(R.drawable.twofa, width = 0.8f)
                 }
+
                 Column(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
-                        .padding(
-                            top = topPadding,
-                        ),
+                        .padding(top = topPadding),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(space = verticalSpacing)
+                    verticalArrangement = Arrangement.spacedBy(verticalSpacing)
                 ) {
-                    Spacer(modifier = Modifier.height(verticalSpacing * 3))
+                    Spacer(modifier = Modifier.height(verticalSpacing * 2))
                     Text(
                         text = stringResource(R.string.text_2fa_authentication),
                         style = MaterialTheme.typography.bodyLarge.copy(
@@ -227,75 +153,41 @@ fun VerifyTwoFAScreen(
                             .padding(horizontal = horizontalPadding / 3)
 
                     )
-                    Spacer(modifier = Modifier.height(verticalSpacing))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = stringResource(R.string.text_verify_2fa_description),
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontWeight = FontWeight.Normal,
-                                fontSize = textFontSize,
-                                textAlign = TextAlign.Center
-                            ),
-                            color = MaterialTheme.colorScheme.onBackground,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = horizontalPadding)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(verticalSpacing))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        OTPInputField(
-                            otp = otpState.otp,
-                            onOtpChange = { newOtp ->
-                                viewModel.setOtpValue(newOtp)
-                            }
-                        )
-                    }
-                    Button(
-                        modifier = Modifier
-                            .height(buttonHeight)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(24.dp))
-                            .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
-                        onClick = {
+                    Spacer(modifier = Modifier.height(verticalSpacing * 3))
+                    Verify2FABody(
+                        otp = otpState.otp,
+                        onOtpChange = viewModel::setOtpValue,
+                        onVerifyClick = {
                             viewModel.verifyTwoFA(email) {
                                 rootNavController.navigate(NavScreen.MainNavScreen) {
-                                    popUpTo(NavScreen.AuthNavScreen) {
-                                        inclusive = true
-                                    }
+                                    popUpTo(NavScreen.AuthNavScreen) { inclusive = true }
                                     launchSingleTop = true
                                 }
                             }
                             focusManager.clearFocus()
                         },
-                    ) {
-                        Text(
-                            stringResource(R.string.input_enter_otp).uppercase(),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
+                        textFontSize = textFontSize,
+                        buttonHeight = buttonHeight,
+                        verticalSpacing = verticalSpacing,
+                        horizontalPadding = horizontalPadding
+                    )
                 }
             }
-
         }
+
+        // Error banner
         if (uiState is UIState.UIError) {
             val errorType = (uiState as UIState.UIError).errorType
-            val message = when (errorType) {
+            val messageRes = when (errorType) {
                 UIErrorType.NotFoundError -> R.string.text_error_user_not_found
                 UIErrorType.BadRequestError -> R.string.text_otp_expired_and_invalid
                 UIErrorType.ServerError -> R.string.text_server_error
                 else -> R.string.text_unknown_error
             }
+
             ErrorBannerWithTimer(
                 title = stringResource(R.string.text_error),
-                message = stringResource(message),
+                message = stringResource(messageRes),
                 iconResId = R.drawable.error_banner,
                 onTimeout = { viewModel.clearUIState() },
                 onDismiss = { viewModel.clearUIState() },
@@ -304,10 +196,68 @@ fun VerifyTwoFAScreen(
                     .padding(horizontal = 16.dp)
             )
         }
+
+        if (uiState is UIState.UILoading) {
+            LoadingSurface(picSize = responsiveValue(180, 360, 360))
+        }
     }
-    if (uiState is UIState.UILoading) {
-        LoadingSurface(
-            picSize = responsiveValue(180, 360, 360)
+}
+
+@Composable
+private fun Verify2FABody(
+    otp: String,
+    onOtpChange: (String) -> Unit,
+    onVerifyClick: () -> Unit,
+    textFontSize: TextUnit,
+    buttonHeight: Dp,
+    verticalSpacing: Dp,
+    horizontalPadding: Dp
+) {
+    val deviceType = getDeviceType()
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(verticalSpacing)
+    ) {
+        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+            Spacer(modifier = Modifier.height(verticalSpacing * 2))
+
+        }
+        Text(
+            text = stringResource(R.string.text_verify_2fa_description),
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Normal,
+                fontSize = textFontSize,
+                textAlign = TextAlign.Center
+            ),
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = horizontalPadding)
         )
+
+        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+            Spacer(modifier = Modifier.height(verticalSpacing * 2))
+
+        }
+        OTPInputField(otp = otp, onOtpChange = onOtpChange)
+
+        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+            Spacer(modifier = Modifier.height(verticalSpacing * 2))
+        } else {
+            Spacer(modifier = Modifier.height(verticalSpacing))
+        }
+        Button(
+            modifier = Modifier
+                .height(buttonHeight)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(24.dp))
+                .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
+            onClick = onVerifyClick
+        ) {
+            Text(
+                stringResource(R.string.input_enter_otp).uppercase(),
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
     }
 }

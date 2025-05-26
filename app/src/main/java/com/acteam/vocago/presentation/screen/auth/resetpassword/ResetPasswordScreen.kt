@@ -1,5 +1,6 @@
 package com.acteam.vocago.presentation.screen.auth.resetpassword
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -33,14 +34,18 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
-import com.acteam.vocago.presentation.screen.auth.common.BackButton
 import com.acteam.vocago.presentation.screen.auth.common.CountdownDisplay
 import com.acteam.vocago.presentation.screen.auth.common.OTPInputField
+import com.acteam.vocago.presentation.screen.auth.common.TopBar
+import com.acteam.vocago.presentation.screen.auth.common.TopBarNoTitle
+import com.acteam.vocago.presentation.screen.auth.common.data.OtpState
 import com.acteam.vocago.presentation.screen.auth.resetpassword.component.ResetPasswordForm
 import com.acteam.vocago.presentation.screen.common.ErrorBannerWithTimer
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
@@ -59,315 +64,129 @@ fun ResetPasswordScreen(
     viewModel: ResetPasswordViewModel,
     authNavController: NavController,
 ) {
-
     val uiState by viewModel.resetPasswordUIState.collectAsState()
     val otpState by viewModel.otpState.collectAsState()
     val countDownState by viewModel.otpCountdown.collectAsState()
 
-    val buttonHeight = responsiveDP(48, 56, 60)
     val focusManager = LocalFocusManager.current
-    val deviceType = getDeviceType()
     val context = LocalContext.current
     val scrollState = rememberScrollState()
-    val titleFontSize = responsiveSP(mobile = 30, tabletPortrait = 36, tabletLandscape = 42)
-    val textFontSize = responsiveSP(mobile = 20, tabletPortrait = 24, tabletLandscape = 24)
-    val horizontalPadding = responsiveDP(mobile = 24, tabletPortrait = 40, tabletLandscape = 48)
-    val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
-    val verticalSpacing = responsiveDP(mobile = 12, tabletPortrait = 20, tabletLandscape = 24)
-    val topPadding = responsiveDP(mobile = 16, tabletPortrait = 24, tabletLandscape = 28)
+    val deviceType = getDeviceType()
+
+    val buttonHeight = responsiveDP(48, 56, 60)
+    val titleFontSize = responsiveSP(30, 36, 42)
+    val textFontSize = responsiveSP(20, 24, 24)
+    val descFontSize = responsiveSP(14, 20, 20)
+    val verticalSpacing = responsiveDP(12, 20, 24)
+    val topPadding = responsiveDP(16, 24, 28)
+    val horizontalPadding = responsiveDP(24, 40, 48)
+
     LaunchedEffect(Unit) {
         viewModel.startOtpCountdown(300)
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    focusManager.clearFocus()
-                })
-            }) {
-        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
-            Column(
-                modifier = if (LocalConfiguration.current.screenHeightDp < 800)
-                    Modifier
+                detectTapGestures { focusManager.clearFocus() }
+            }
+    ) {
+        when (deviceType) {
+            DeviceType.Mobile, DeviceType.TabletPortrait -> {
+                Column(
+                    modifier = Modifier
                         .padding(horizontal = horizontalPadding)
                         .fillMaxSize()
-                        .verticalScroll(scrollState)
-                else
-                    Modifier
-                        .padding(horizontal = horizontalPadding)
-                        .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(verticalSpacing)
-            ) {
+                        .then(
+                            if (LocalConfiguration.current.screenHeightDp < 800)
+                                Modifier.verticalScroll(scrollState) else Modifier
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(verticalSpacing)
+                ) {
+                    TopBar(
+                        text = stringResource(R.string.text_reset_password),
+                        fontSize = titleFontSize,
+                        onBackClick = { authNavController.popBackStack() }
+                    )
+                    AuthImageCard(R.drawable.resetpassword, 0.7f)
+                    CommonContent(
+                        email = email,
+                        viewModel = viewModel,
+                        focusManager = focusManager,
+                        authNavController = authNavController,
+                        otpState = otpState,
+                        countDownState = countDownState,
+                        textFontSize = textFontSize,
+                        descFontSize = descFontSize,
+                        verticalSpacing = verticalSpacing,
+                        buttonHeight = buttonHeight,
+                        context = context
+                    )
+                }
+            }
+
+            DeviceType.TabletLandscape -> {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = horizontalPadding),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    BackButton(
-                        onClick = {
-                            authNavController.popBackStack()
-                        }
-                    )
-                    Text(
-                        text = stringResource(R.string.text_reset_password),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = titleFontSize,
-                            textAlign = TextAlign.Center
-                        ),
+                    Column(
                         modifier = Modifier
-                            .weight(1f),
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                    Spacer(modifier = Modifier.width(40.dp))
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    AuthImageCard(R.drawable.resetpassword, width = 0.7f)
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    CountdownDisplay(timerText = countDownState)
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    OTPInputField(
-                        otp = otpState.otp,
-                        onOtpChange = { it ->
-                            viewModel.setOtpValue(it)
-                        }
-                    )
-                }
-                Spacer(modifier = Modifier.height(verticalSpacing / 3))
-                Text(
-                    text = "${stringResource(R.string.text_send_otp)} $email",
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = textFontSize,
-                        textAlign = TextAlign.Center
-                    ),
-                    color = MaterialTheme.colorScheme.primary
-                )
-                ResetPasswordForm(
-                    viewModel = viewModel,
-                    onSaveChangeClick = {
-                        viewModel.resetPassword(email) {
-                            authNavController.navigate(NavScreen.LoginNavScreen) {
-                                popUpTo(0)
-                                launchSingleTop = true
-                            }
-                        }
-                        focusManager.clearFocus()
-                    }
-                )
-                Text(
-                    text = stringResource(R.string.text_resend_email),
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = descFontSize
-                    ),
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .safeClickable(
-                            key = "btn_resend_email_forgot_password",
-                            onClick = {
-                                viewModel.requestOtpAndStartCountdown(email)
-                            }
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .padding(top = topPadding),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        TopBarNoTitle(
+                            onBackClick = { authNavController.popBackStack() }
                         )
-                        .padding(8.dp)
-                        .align(Alignment.End)
-                )
-                Spacer(
-                    modifier = if (deviceType == DeviceType.Mobile)
-                        Modifier.weight(1f)
-                    else
-                        Modifier.height(verticalSpacing / 3)
-                )
-                Button(
-                    modifier = Modifier
-                        .height(buttonHeight)
-                        .fillMaxWidth()
-                        .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
-                    onClick = {
-                        if (uiState !is UIState.UILoading) {
-                            viewModel.resetPassword(email) {
-                                authNavController.navigate(NavScreen.LoginNavScreen) {
-                                    popUpTo(0)
-                                    launchSingleTop = true
-                                }
-                            }
-                            focusManager.clearFocus()
-                        } else if (!viewModel.resetPasswordFormState.value.isResetPasswordButtonEnabled) {
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.text_please_all_required),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    },
-                ) {
-                    Text(
-                        text = stringResource(R.string.btn_save_change).uppercase(),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(verticalSpacing / 3))
-            }
-        } else {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = horizontalPadding),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .padding(top = topPadding),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = topPadding, start = horizontalPadding),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            BackButton(onClick = {
-                                authNavController.popBackStack()
-                            })
-                        }
+                        Spacer(modifier = Modifier.height(verticalSpacing))
+                        AuthImageCard(R.drawable.resetpassword, 0.8f)
                     }
-                    Spacer(modifier = Modifier.height(verticalSpacing * 3))
-                    AuthImageCard(R.drawable.resetpassword, 0.8f)
-                }
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .padding(
-                            top = topPadding,
-                        ),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(space = verticalSpacing)
-                ) {
-                    Spacer(modifier = Modifier.height(verticalSpacing * 3))
-                    Text(
-                        text = stringResource(R.string.text_reset_password),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = titleFontSize
-                        ),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .padding(horizontal = horizontalPadding / 3)
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        CountdownDisplay(timerText = countDownState)
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        OTPInputField(
-                            otp = otpState.otp,
-                            onOtpChange = { it ->
-                                viewModel.setOtpValue(it)
-                            }
-                        )
-                    }
-                    Text(
-                        text = "${stringResource(R.string.text_send_otp)} $email",
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = textFontSize,
-                            textAlign = TextAlign.Center
-                        ),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    ResetPasswordForm(
-                        viewModel = viewModel,
-                        onSaveChangeClick = {
-                            viewModel.resetPassword(email) {
-                                authNavController.navigate(NavScreen.LoginNavScreen) {
-                                    popUpTo(0)
-                                    launchSingleTop = true
-                                }
-                            }
-                            focusManager.clearFocus()
-                        }
-                    )
-                    Text(
-                        text = stringResource(R.string.text_resend_email),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = descFontSize
-                        ),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
 
-                            .safeClickable(
-                                key = "btn_resend_email_forgot_password",
-                                onClick = {
-                                    viewModel.requestOtpAndStartCountdown(email)
-                                }
-                            )
-                            .padding(8.dp)
-                            .align(Alignment.End)
-                    )
-
-                    Button(
+                    Column(
                         modifier = Modifier
-                            .height(buttonHeight)
-                            .fillMaxWidth()
-                            .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
-                        onClick = {
-                            if (uiState !is UIState.UILoading) {
-                                viewModel.resetPassword(email) {
-                                    authNavController.navigate(NavScreen.LoginNavScreen) {
-                                        popUpTo(0)
-                                        launchSingleTop = true
-                                    }
-                                }
-                                focusManager.clearFocus()
-                            } else if (!viewModel.resetPasswordFormState.value.isResetPasswordButtonEnabled) {
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.text_please_all_required),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        },
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .padding(top = topPadding),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(verticalSpacing)
                     ) {
+                        Spacer(modifier = Modifier.height(verticalSpacing * 2))
                         Text(
-                            text = stringResource(R.string.btn_save_change).uppercase(),
-                            style = MaterialTheme.typography.titleMedium
+                            text = stringResource(R.string.text_reset_password),
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = titleFontSize
+                            ),
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(horizontal = horizontalPadding / 3)
+                        )
+                        CommonContent(
+                            email = email,
+                            viewModel = viewModel,
+                            focusManager = focusManager,
+                            authNavController = authNavController,
+                            otpState = otpState,
+                            countDownState = countDownState,
+                            textFontSize = textFontSize,
+                            descFontSize = descFontSize,
+                            verticalSpacing = verticalSpacing,
+                            buttonHeight = buttonHeight,
+                            context = context
                         )
                     }
                 }
             }
         }
+
         if (uiState is UIState.UIError) {
-            val errorType = (uiState as UIState.UIError).errorType
-            val message = when (errorType) {
+            val messageRes = when ((uiState as UIState.UIError).errorType) {
                 UIErrorType.NotFoundError -> R.string.text_email_has_not_been_register
                 UIErrorType.BadRequestError -> R.string.text_otp_expired_and_invalid
                 UIErrorType.UnexpectedEntityError -> R.string.text_unknown_error
@@ -377,7 +196,7 @@ fun ResetPasswordScreen(
             }
             ErrorBannerWithTimer(
                 title = stringResource(R.string.text_error),
-                message = stringResource(message),
+                message = stringResource(messageRes),
                 iconResId = R.drawable.error_banner,
                 onTimeout = { viewModel.clearUIState() },
                 onDismiss = { viewModel.clearUIState() },
@@ -386,10 +205,111 @@ fun ResetPasswordScreen(
                     .padding(horizontal = 16.dp)
             )
         }
+
+        if (uiState is UIState.UILoading) {
+            LoadingSurface(picSize = responsiveValue(180, 360, 360))
+        }
     }
-    if (uiState is UIState.UILoading) {
-        LoadingSurface(
-            picSize = responsiveValue(180, 360, 360)
+}
+
+@Composable
+private fun CommonContent(
+    email: String,
+    viewModel: ResetPasswordViewModel,
+    focusManager: FocusManager,
+    authNavController: NavController,
+    otpState: OtpState,
+    countDownState: String,
+    textFontSize: TextUnit,
+    descFontSize: TextUnit,
+    verticalSpacing: Dp,
+    buttonHeight: Dp,
+    context: Context
+) {
+    val deviceType = getDeviceType()
+    if (deviceType == DeviceType.Mobile) {
+        Spacer(modifier = Modifier.height(verticalSpacing))
+
+    }
+    CountdownDisplay(timerText = countDownState)
+    if (deviceType == DeviceType.Mobile) {
+        Spacer(modifier = Modifier.height(verticalSpacing))
+
+    }
+    OTPInputField(otp = otpState.otp, onOtpChange = viewModel::setOtpValue)
+    Spacer(modifier = Modifier.height(verticalSpacing / 3))
+
+    Text(
+        text = "${stringResource(R.string.text_send_otp)} $email",
+        style = MaterialTheme.typography.bodyLarge.copy(
+            fontWeight = FontWeight.Bold,
+            fontSize = textFontSize,
+            textAlign = TextAlign.Center
+        ),
+        color = MaterialTheme.colorScheme.primary
+    )
+
+    ResetPasswordForm(
+        viewModel = viewModel,
+        onSaveChangeClick = {
+            viewModel.resetPassword(email) {
+                authNavController.navigate(NavScreen.LoginNavScreen) {
+                    popUpTo(0)
+                    launchSingleTop = true
+                }
+            }
+            focusManager.clearFocus()
+        }
+    )
+
+    Text(
+        text = stringResource(R.string.text_resend_email),
+        style = MaterialTheme.typography.bodyLarge.copy(
+            fontWeight = FontWeight.Bold,
+            fontSize = descFontSize
+        ),
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier
+            .fillMaxWidth()
+            .safeClickable("btn_resend_email_forgot_password") {
+                viewModel.requestOtpAndStartCountdown(email)
+            }
+            .padding(8.dp),
+        textAlign = TextAlign.End
+    )
+
+    if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+        Spacer(modifier = Modifier.height(verticalSpacing * 2))
+
+    }
+
+    Button(
+        modifier = Modifier
+            .height(buttonHeight)
+            .fillMaxWidth()
+            .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
+        onClick = {
+            if (viewModel.resetPasswordFormState.value.isResetPasswordButtonEnabled) {
+                viewModel.resetPassword(email) {
+                    authNavController.navigate(NavScreen.LoginNavScreen) {
+                        popUpTo(0)
+                        launchSingleTop = true
+                    }
+                }
+                focusManager.clearFocus()
+            } else {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.text_please_all_required),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    ) {
+        Text(
+            text = stringResource(R.string.btn_save_change).uppercase(),
+            style = MaterialTheme.typography.titleMedium
         )
     }
+    Spacer(modifier = Modifier.height(verticalSpacing / 3))
 }

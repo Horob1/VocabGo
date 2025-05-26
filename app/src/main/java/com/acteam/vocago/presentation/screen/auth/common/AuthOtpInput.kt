@@ -86,8 +86,8 @@ fun OTPDigitField(
         modifier = modifier
             .shadow(8.dp, shape = RoundedCornerShape(0.dp))
             .clip(RoundedCornerShape(0.dp)),
-        textStyle = MaterialTheme.typography.bodyLarge.copy(
-            fontSize = 16.sp,
+        textStyle = MaterialTheme.typography.bodyMedium.copy(
+            fontSize = 30.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold
         ),
@@ -97,8 +97,8 @@ fun OTPDigitField(
         visualTransformation = VisualTransformation.None,
         shape = RoundedCornerShape(0.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            //focusedBorderColor = colorScheme.primary, // Viền khi được chọn có màu chính của theme
-            //unfocusedBorderColor = colorScheme.onSurfaceVariant, // Viền khi không được chọn
+            focusedBorderColor = colorScheme.primary, // Viền khi được chọn có màu chính của theme
+            unfocusedBorderColor = colorScheme.onSurfaceVariant, // Viền khi không được chọn
             focusedContainerColor = colorScheme.surfaceVariant, // Nền khi được chọn
             unfocusedContainerColor = colorScheme.surfaceVariant, // Nền khi không được chọn
             focusedTextColor = colorScheme.onSurface, // Văn bản khi được chọn

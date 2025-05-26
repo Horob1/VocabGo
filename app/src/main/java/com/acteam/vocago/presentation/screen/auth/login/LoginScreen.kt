@@ -46,13 +46,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
-import com.acteam.vocago.presentation.screen.auth.common.BackButton
+import com.acteam.vocago.presentation.screen.auth.common.TopBar
+import com.acteam.vocago.presentation.screen.auth.common.TopBarNoTitle
 import com.acteam.vocago.presentation.screen.auth.login.component.LoginForm
 import com.acteam.vocago.presentation.screen.common.ErrorBannerWithTimer
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
@@ -107,37 +110,20 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceAround
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    BackButton(
-                        onClick = {
-                            rootNavController.navigate(
-                                NavScreen.MainNavScreen
-                            ) {
-                                popUpTo(NavScreen.AuthNavScreen) {
-                                    inclusive = true
-                                }
-                                launchSingleTop = true
+                TopBar(
+                    text = stringResource(R.string.btn_login),
+                    fontSize = titleFontSize,
+                    onBackClick = {
+                        rootNavController.navigate(
+                            NavScreen.MainNavScreen
+                        ) {
+                            popUpTo(NavScreen.AuthNavScreen) {
+                                inclusive = true
                             }
-                        },
-                    )
-
-                    Text(
-                        text = stringResource(R.string.btn_login),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = titleFontSize,
-                            textAlign = TextAlign.Center
-                        ),
-                        modifier = Modifier
-                            .weight(1f),
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                    Spacer(modifier = Modifier.width(40.dp))
-                }
-
+                            launchSingleTop = true
+                        }
+                    }
+                )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -211,6 +197,7 @@ fun LoginScreen(
                     )
                 }
 
+
                 Row(
                     horizontalArrangement = Arrangement.SpaceAround,
                     modifier = Modifier.fillMaxWidth()
@@ -218,79 +205,25 @@ fun LoginScreen(
 //                    PlatFormSignUpButton(R.drawable.google) {}
 //                    PlatFormSignUpButton(R.drawable.facebook) {}
 //                    PlatFormSignUpButton(R.drawable.github) {}
-                    OutlinedButton(
+                    GoogleLoginButton(
                         onClick = {
                             // TODO: xử lý đăng nhập bằng Google
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(responsiveDP(48, 56, 60)),
-                        shape = RoundedCornerShape(36.dp),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                            contentColor = MaterialTheme.colorScheme.onSurface
-                        ),
-                        contentPadding = PaddingValues(horizontal = 16.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.google),
-                                contentDescription = "Google logo",
-                                modifier = Modifier
-                                    .size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Text(
-                                text = "Sign in with Google",
-                                fontSize = responsiveSP(
-                                    mobile = 18,
-                                    tabletPortrait = 22,
-                                    tabletLandscape = 24
-                                ),
-                                color = MaterialTheme.colorScheme.onSurface,
-                            )
                         }
-                    }
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(verticalSpacing / 3))
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(R.string.text_dont_have_account),
-                        modifier = Modifier.padding(horizontal = horizontalPadding / 3),
-                        fontSize = descFontSize
-                    )
-                    Text(
-                        text = stringResource(R.string.btn_sign_up),
-                        modifier = Modifier
-                            .safeClickable(
-                                "btn_sign_up",
-                                onClick = {
-                                    if (uiState !is UIState.UILoading) {
-                                        authNavController.navigate(NavScreen.RegisterNavScreen) {
-                                            launchSingleTop = true
-                                        }
-                                    }
-                                }
-                            )
-                            .padding(
-                                horizontalPadding / 3
-                            ),
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = descFontSize
-                        )
-                    )
-                }
+                SignUpText(
+                    descFontSize = descFontSize,
+                    horizontalPadding = horizontalPadding,
+                    uiState = uiState,
+                    onSignUpClick = {
+                        authNavController.navigate(NavScreen.RegisterNavScreen) {
+                            launchSingleTop = true
+                        }
+                    }
+                )
             }
         } else {
             Row(
@@ -308,24 +241,13 @@ fun LoginScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = topPadding, start = horizontalPadding),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        BackButton(
-                            onClick = {
-                                rootNavController.navigate(
-                                    NavScreen.MainNavScreen
-                                ) {
-                                    popUpTo(NavScreen.AuthNavScreen) {
-                                        inclusive = true
-                                    }
-                                    launchSingleTop = true
-                                }
-                            },
-                        )
+                    TopBarNoTitle {
+                        rootNavController.navigate(NavScreen.MainNavScreen) {
+                            popUpTo(NavScreen.AuthNavScreen) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
                     }
                     Spacer(modifier = Modifier.height(verticalSpacing))
                     AuthImageCard(R.drawable.login, 0.8f)
@@ -406,68 +328,22 @@ fun LoginScreen(
 //                    PlatFormSignUpButton(R.drawable.google) {}
 //                    PlatFormSignUpButton(R.drawable.facebook) {}
 //                    PlatFormSignUpButton(R.drawable.github) {}
-                        OutlinedButton(
+                        GoogleLoginButton(
                             onClick = {
                                 // TODO: xử lý đăng nhập bằng Google
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(responsiveDP(48, 56, 60)),
-                            shape = RoundedCornerShape(36.dp),
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                containerColor = MaterialTheme.colorScheme.surface,
-                                contentColor = MaterialTheme.colorScheme.onSurface
-                            ),
-                            contentPadding = PaddingValues(horizontal = 16.dp)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.google),
-                                    contentDescription = "Google logo",
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                )
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Text(
-                                    text = "Sign in with Google",
-                                    fontSize = responsiveSP(
-                                        mobile = 18,
-                                        tabletPortrait = 22,
-                                        tabletLandscape = 24
-                                    ),
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                )
+                            }
+                        )
+                    }
+                    SignUpText(
+                        descFontSize = descFontSize,
+                        horizontalPadding = horizontalPadding,
+                        uiState = uiState,
+                        onSignUpClick = {
+                            authNavController.navigate(NavScreen.RegisterNavScreen) {
+                                launchSingleTop = true
                             }
                         }
-                    }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = stringResource(R.string.text_dont_have_account),
-                            fontSize = descFontSize,
-                        )
-                        Text(
-                            text = stringResource(R.string.btn_sign_up),
-                            modifier = Modifier
-                                .safeClickable("btn_sign_up") {
-                                    if (uiState !is UIState.UILoading) {
-                                        authNavController.navigate(NavScreen.RegisterNavScreen) {
-                                            launchSingleTop = true
-                                        }
-                                    }
-                                }
-                                .padding(horizontal = horizontalPadding / 3),
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = descFontSize,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Medium
-                            )
-                        )
-                    }
+                    )
                 }
 
             }
@@ -594,4 +470,71 @@ fun LoginScreen(
 
     }
 
+}
+
+@Composable
+fun GoogleLoginButton(
+    onClick: () -> Unit
+) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(responsiveDP(48, 56, 60)),
+        shape = RoundedCornerShape(36.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+        colors = ButtonDefaults.outlinedButtonColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.google),
+                contentDescription = "Google logo",
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = stringResource(R.string.text_sign_in_with_Google),
+                fontSize = responsiveSP(18, 22, 24),
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        }
+    }
+}
+
+@Composable
+fun SignUpText(
+    descFontSize: TextUnit,
+    horizontalPadding: Dp,
+    uiState: UIState,
+    onSignUpClick: () -> Unit
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = stringResource(R.string.text_dont_have_account),
+            fontSize = descFontSize,
+            modifier = Modifier.padding(horizontal = horizontalPadding / 3)
+        )
+        Text(
+            text = stringResource(R.string.btn_sign_up),
+            modifier = Modifier
+                .safeClickable("btn_sign_up") {
+                    if (uiState !is UIState.UILoading) {
+                        onSignUpClick()
+                    }
+                }
+                .padding(horizontal = horizontalPadding / 3),
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Medium,
+                fontSize = descFontSize
+            )
+        )
+    }
 }

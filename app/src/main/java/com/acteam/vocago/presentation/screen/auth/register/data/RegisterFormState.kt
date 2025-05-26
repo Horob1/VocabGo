@@ -12,5 +12,5 @@ data class RegisterFormState(
     val dateOfBirth: String = "",
     val gender: String = "",
     val isPasswordVisible: Boolean = false,
-    val isConfirmPasswordVisible: Boolean = false
+    val isConfirmPasswordVisible: Boolean = false,
 )

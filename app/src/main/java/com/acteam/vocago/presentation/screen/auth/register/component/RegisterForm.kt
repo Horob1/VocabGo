@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -54,7 +55,7 @@ fun RegisterForm(
     viewModel: RegisterViewModel
 ) {
     val formState by viewModel.registerFormState.collectAsState()
-
+    val focusManager = LocalFocusManager.current
     var passwordVisible by remember { mutableStateOf(false) }
     val passwordFocusRequester = remember { FocusRequester() }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
@@ -246,6 +247,7 @@ fun RegisterForm(
                     onVisibilityChange = { confirmPasswordVisible = !confirmPasswordVisible },
                     keyboardActions = KeyboardActions(
                         onDone = {
+                            focusManager.clearFocus()
                         }
                     ),
                     modifier = Modifier.focusRequester(confirmPasswordFocusRequester)
@@ -349,7 +351,10 @@ fun RegisterForm(
                         icon = Icons.Default.LocationOn,
                         keyboardType = KeyboardType.Text,
                         keyboardActions = KeyboardActions(
-                            onDone = {}
+                            onNext =
+                                {
+                                    passwordFocusRequester.requestFocus()
+                                }
                         ),
                         modifier = Modifier.focusRequester(addressFocusRequester)
                     )
@@ -361,8 +366,9 @@ fun RegisterForm(
                         value = formState.password,
                         onValueChange = { viewModel.setPassword(it) },
                         placeholder = stringResource(R.string.input_enter_password),
-                        isPasswordVisible = formState.isPasswordVisible,
+                        isPasswordVisible = passwordVisible,
                         onVisibilityChange = { passwordVisible = !passwordVisible },
+                        focusRequester = passwordFocusRequester,
                         keyboardActions = KeyboardActions(
                             onNext = { confirmPasswordFocusRequester.requestFocus() }
                         ),
@@ -372,10 +378,12 @@ fun RegisterForm(
                         value = formState.confirmPassword,
                         onValueChange = { viewModel.setConfirmPassword(it) },
                         placeholder = stringResource(R.string.input_confirm_password),
-                        isPasswordVisible = formState.isConfirmPasswordVisible,
+                        isPasswordVisible = confirmPasswordVisible,
                         onVisibilityChange = { confirmPasswordVisible = !confirmPasswordVisible },
                         keyboardActions = KeyboardActions(
-                            onDone = {}
+                            onDone = {
+                                focusManager.clearFocus()
+                            }
                         ),
                         modifier = Modifier.focusRequester(confirmPasswordFocusRequester)
                     )

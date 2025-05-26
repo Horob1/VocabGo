@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -29,14 +28,17 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
-import com.acteam.vocago.presentation.screen.auth.common.BackButton
 import com.acteam.vocago.presentation.screen.auth.common.CountdownDisplay
 import com.acteam.vocago.presentation.screen.auth.common.OTPInputField
+import com.acteam.vocago.presentation.screen.auth.common.TopBar
+import com.acteam.vocago.presentation.screen.auth.common.TopBarNoTitle
 import com.acteam.vocago.presentation.screen.common.ErrorBannerWithTimer
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.common.data.UIErrorType
@@ -88,29 +90,11 @@ fun VerifyEmailScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(verticalSpacing)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    BackButton(
-                        onClick = {
-                            authNavController.popBackStack()
-                        },
-                    )
-                    Text(
-                        text = stringResource(R.string.text_verify_email),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = titleFontSize,
-                            textAlign = TextAlign.Center
-                        ),
-                        modifier = Modifier
-                            .weight(1f),
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                    Spacer(modifier = Modifier.width(40.dp))
-                }
-
+                TopBar(
+                    text = stringResource(R.string.text_verify_email),
+                    fontSize = titleFontSize,
+                    onBackClick = { authNavController.popBackStack() }
+                )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -119,63 +103,15 @@ fun VerifyEmailScreen(
                 }
                 Spacer(
                     modifier = if (deviceType == DeviceType.Mobile)
-                        Modifier.weight(1f)
+                        Modifier.height(verticalSpacing * 3)
                     else
                         Modifier.height(verticalSpacing / 3)
                 )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    CountdownDisplay(timerText = countDownState)
-                }
-
-                Spacer(modifier = Modifier.height(verticalSpacing))
-                Text(
-                    text = "${stringResource(R.string.text_send_otp)} $email",
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = textFontSize,
-                        textAlign = TextAlign.Center
-                    ),
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    OTPInputField(
-                        otp = otpState.otp,
-                        onOtpChange = { it ->
-                            viewModel.setOtpValue(it)
-                        }
-                    )
-                }
-                Text(
-                    text = stringResource(R.string.text_resend_email),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = descFontSize
-                    ),
-                    modifier = Modifier
-                        .safeClickable(
-                            "resend_verify_email",
-                        ) {
-                            viewModel.resendVerifyEmail(email)
-                        }
-                        .padding(horizontalPadding / 3)
-                        .align(Alignment.End)
-                )
-
-                Spacer(modifier = Modifier.height(verticalSpacing))
-
-                Button(
-                    modifier = Modifier
-                        .height(buttonHeight)
-                        .fillMaxWidth()
-                        .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
-                    onClick = {
+                VerifyOtpSection(
+                    otp = otpState.otp,
+                    onOtpChange = { viewModel.setOtpValue(it) },
+                    onResendClick = { viewModel.resendVerifyEmail(email) },
+                    onVerifyClick = {
                         viewModel.verifyEmail(email) {
                             authNavController.navigate(NavScreen.LoginNavScreen) {
                                 popUpTo(0)
@@ -183,13 +119,13 @@ fun VerifyEmailScreen(
                             }
                         }
                     },
-                ) {
-                    Text(
-                        stringResource(R.string.input_enter_otp).uppercase(),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
-                Spacer(modifier = Modifier.height(verticalSpacing / 3))
+                    buttonHeight = buttonHeight,
+                    horizontalPadding = horizontalPadding,
+                    textFontSize = textFontSize,
+                    descFontSize = descFontSize,
+                    verticalSpacing = verticalSpacing,
+                    countDownText = countDownState
+                )
             }
         } else {
             Row(
@@ -207,20 +143,8 @@ fun VerifyEmailScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = topPadding, start = horizontalPadding),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            BackButton(onClick = {
-                                authNavController.popBackStack()
-                            })
-                        }
+                    TopBarNoTitle {
+                        authNavController.popBackStack()
                     }
                     Spacer(modifier = Modifier.height(verticalSpacing))
                     AuthImageCard(R.drawable.verify_email, 0.8f)
@@ -248,56 +172,11 @@ fun VerifyEmailScreen(
 
                     )
                     Spacer(modifier = Modifier.height(verticalSpacing))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        CountdownDisplay(timerText = countDownState)
-                    }
-                    Text(
-                        text = "${stringResource(R.string.text_send_otp)} $email",
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = textFontSize,
-                            textAlign = TextAlign.Center
-                        ),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        OTPInputField(
-                            otp = otpState.otp,
-                            onOtpChange = { newOtp ->
-                                viewModel.setOtpValue(newOtp)
-                            }
-                        )
-                    }
-                    Text(
-                        text = stringResource(R.string.text_resend_email),
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = descFontSize
-                        ),
-                        modifier = Modifier
-                            .safeClickable(
-                                "resend_verify_email",
-                            ) {
-                                viewModel.resendVerifyEmail(email)
-                            }
-                            .padding(horizontalPadding / 3)
-                            .align(Alignment.End)
-                    )
-
-                    Button(
-                        modifier = Modifier
-                            .height(buttonHeight)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(24.dp))
-                            .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
-                        onClick = {
+                    VerifyOtpSection(
+                        otp = otpState.otp,
+                        onOtpChange = { viewModel.setOtpValue(it) },
+                        onResendClick = { viewModel.resendVerifyEmail(email) },
+                        onVerifyClick = {
                             viewModel.verifyEmail(email) {
                                 authNavController.navigate(NavScreen.LoginNavScreen) {
                                     popUpTo(0)
@@ -305,12 +184,13 @@ fun VerifyEmailScreen(
                                 }
                             }
                         },
-                    ) {
-                        Text(
-                            stringResource(R.string.input_enter_otp).uppercase(),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
+                        buttonHeight = buttonHeight,
+                        horizontalPadding = horizontalPadding,
+                        textFontSize = textFontSize,
+                        descFontSize = descFontSize,
+                        verticalSpacing = verticalSpacing,
+                        countDownText = countDownState
+                    )
                 }
             }
 
@@ -340,5 +220,88 @@ fun VerifyEmailScreen(
         LoadingSurface(
             picSize = responsiveValue(180, 360, 360)
         )
+    }
+}
+
+@Composable
+fun VerifyOtpSection(
+    otp: String,
+    onOtpChange: (String) -> Unit,
+    onResendClick: () -> Unit,
+    onVerifyClick: () -> Unit,
+    buttonHeight: Dp,
+    horizontalPadding: Dp,
+    textFontSize: TextUnit,
+    descFontSize: TextUnit,
+    verticalSpacing: Dp,
+    countDownText: String
+) {
+    val deviceType = getDeviceType()
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(responsiveDP(8, 12, 16))
+    ) {
+        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+            Spacer(modifier = Modifier.height(verticalSpacing * 3))
+
+        }
+        CountdownDisplay(timerText = countDownText)
+        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+            Spacer(modifier = Modifier.height(verticalSpacing * 3))
+
+        }
+        Text(
+            text = stringResource(R.string.text_send_otp),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = textFontSize,
+                textAlign = TextAlign.Center
+            ),
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+            Spacer(modifier = Modifier.height(verticalSpacing * 2))
+
+        }
+        OTPInputField(
+            otp = otp,
+            onOtpChange = onOtpChange
+        )
+        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+            Spacer(modifier = Modifier.height(verticalSpacing))
+
+        }
+        Text(
+            text = stringResource(R.string.text_resend_email),
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Medium,
+                fontSize = descFontSize
+            ),
+            modifier = Modifier
+                .safeClickable("resend_verify_email") {
+                    onResendClick()
+                }
+                .padding(horizontal = horizontalPadding / 3)
+                .align(Alignment.End)
+        )
+        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+            Spacer(modifier = Modifier.height(verticalSpacing * 3))
+        }
+        Button(
+            modifier = Modifier
+                .height(buttonHeight)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(24.dp))
+                .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
+            onClick = onVerifyClick
+        ) {
+            Text(
+                stringResource(R.string.input_enter_otp).uppercase(),
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
     }
 }
