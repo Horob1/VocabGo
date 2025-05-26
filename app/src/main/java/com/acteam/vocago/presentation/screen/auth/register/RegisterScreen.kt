@@ -155,7 +155,7 @@ fun RegisterHeader(navController: NavController, fontSize: TextUnit) {
         BackButton(
             onClick = {
                 navController.navigate(NavScreen.LoginNavScreen) {
-                    popUpTo(NavScreen.AuthNavScreen) { inclusive = true }
+                    popUpTo(NavScreen.RegisterNavScreen) { inclusive = true }
                     launchSingleTop = true
                 }
             }

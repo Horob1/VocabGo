@@ -23,6 +23,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.acteam.vocago.utils.DeviceType
+import com.acteam.vocago.utils.getDeviceType
 
 @Composable
 fun OTPInputField(
@@ -78,6 +80,7 @@ fun OTPDigitField(
     modifier: Modifier = Modifier,
 ) {
     val colorScheme = MaterialTheme.colorScheme
+    val deviceType = getDeviceType()
 
     OutlinedTextField(
         value = value,
@@ -87,7 +90,7 @@ fun OTPDigitField(
             .shadow(8.dp, shape = RoundedCornerShape(0.dp))
             .clip(RoundedCornerShape(0.dp)),
         textStyle = MaterialTheme.typography.bodyMedium.copy(
-            fontSize = 30.sp,
+            fontSize = if (deviceType == DeviceType.Mobile) 20.sp else 30.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold
         ),
