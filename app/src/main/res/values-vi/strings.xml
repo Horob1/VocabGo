@@ -114,7 +114,7 @@
     <string name="title_dark_mode">Chế độ tối</string>
     <string name="desc_dark_mode">Bật chế độ tối</string>
     <string name="title_follow_system_theme">Đồng bộ giao diện hệ thống</string>
-    <string name="desc_follow_system">Đồng bộ ứng dụng với giao diện hệ thống</string>
+    <string name="desc_follow_system">Đồng bộ với giao diện hệ thống</string>
     <string name="title_dynamic_color">Màu động</string>
     <string name="desc_dynamic_color">Bật màu động cho Android 12+</string>
     <string name="title_language">Ngôn ngữ</string>

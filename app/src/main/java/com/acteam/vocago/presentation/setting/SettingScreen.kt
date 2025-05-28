@@ -240,6 +240,7 @@ fun SettingScreen(
                                 style = descriptionStyle,
                             )
                         }
+
                         DarkModeSwitch(
                             checked = if (theme is AppTheme.SYSTEM) isSystemInDarkTheme() else theme is AppTheme.DARK,
                             modifier = Modifier,

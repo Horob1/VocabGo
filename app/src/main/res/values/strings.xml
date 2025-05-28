@@ -120,7 +120,7 @@
     <string name="title_dark_mode">Dark Mode</string>
     <string name="desc_dark_mode">Enable dark mode</string>
     <string name="title_follow_system_theme">Sync system theme</string>
-    <string name="desc_follow_system">Sync app theme with the device theme</string>
+    <string name="desc_follow_system">Sync with the device theme</string>
     <string name="title_dynamic_color">Dynamic Color</string>
     <string name="desc_dynamic_color">Enable dynamic color for Android 12+</string>
     <string name="title_language">Language</string>
