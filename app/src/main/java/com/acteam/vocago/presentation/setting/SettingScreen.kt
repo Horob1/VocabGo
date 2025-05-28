@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -240,7 +241,7 @@ fun SettingScreen(
                             )
                         }
                         DarkModeSwitch(
-                            checked = theme is AppTheme.DARK,
+                            checked = if (theme is AppTheme.SYSTEM) isSystemInDarkTheme() else theme is AppTheme.DARK,
                             modifier = Modifier,
                             onCheckedChanged = {
                                 when (theme) {
