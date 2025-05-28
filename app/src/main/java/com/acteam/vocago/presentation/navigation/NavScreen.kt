@@ -18,6 +18,22 @@ sealed class NavScreen {
     @Serializable
     data object UserNavScreen : NavScreen()
 
+    @Serializable
+    data class NewsHistoryNavScreen(
+        val isBookmark: Boolean,
+    ) : NavScreen()
+
+    @Serializable
+    data object DictionaryNavScreen : NavScreen()
+
+    @Serializable
+    data object SettingNavScreen : NavScreen()
+
+    @Serializable
+    data class NewsDetailNavScreen(
+        val newsId: Int,
+    ) : NavScreen()
+
     // Mâm 2
     // Mân 2 của Auth
     @Serializable

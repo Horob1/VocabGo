@@ -1,8 +1,8 @@
 package com.acteam.vocago.presentation.screen.main.news
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -14,19 +14,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.acteam.vocago.presentation.navigation.NavScreen
-import com.acteam.vocago.utils.DeviceType
-import com.acteam.vocago.utils.getDeviceType
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.acteam.vocago.presentation.screen.common.EmptySurface
+import com.acteam.vocago.presentation.screen.common.LoadingSurface
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,28 +37,12 @@ fun NewsScreen(
     val userState = viewModel.userState.collectAsState()
     val chosenCategories = viewModel.chosenCategories.collectAsState()
     val chosenLevel = viewModel.chosenLevel.collectAsState()
+    val newsPagingItems = viewModel.newsFlow.collectAsLazyPagingItems()
+    val keySearch = viewModel.keySearch.collectAsState()
 
-    val deviceType = getDeviceType()
-    val newsItems = remember {
-        mutableStateListOf(
-            0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
-        )
-    }
-    var isRefreshing by remember { mutableStateOf(false) }
-    val refreshScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
-    var isShowFilterDialog by remember {
-        mutableStateOf(false)
-    }
-
-    fun refresh() {
-        refreshScope.launch {
-            isRefreshing = true
-            delay(1500)
-            newsItems.add(0) // Thêm một mục mới vào đầu
-            isRefreshing = false
-        }
-    }
+    var isShowFilterDialog by remember { mutableStateOf(false) }
+    val isRefreshing = newsPagingItems.loadState.refresh is LoadState.Loading
 
     val showUserBar by remember {
         derivedStateOf {
@@ -68,8 +50,8 @@ fun NewsScreen(
         }
     }
 
-
     val pullRefreshState = rememberPullToRefreshState()
+
     Column {
         AnimatedVisibility(
             visible = showUserBar,
@@ -86,10 +68,14 @@ fun NewsScreen(
                 }
             )
         }
-        FeatureBar()
+
+        FeatureBar(
+            rootNavController = rootNavController
+        )
+
         PullToRefreshBox(
             state = pullRefreshState,
-            onRefresh = { refresh() },
+            onRefresh = { newsPagingItems.refresh() },
             isRefreshing = isRefreshing,
             modifier = Modifier.fillMaxSize(),
             indicator = {
@@ -100,7 +86,6 @@ fun NewsScreen(
                 )
             }
         ) {
-
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 state = lazyListState
@@ -108,49 +93,53 @@ fun NewsScreen(
                 item {
                     FilterBar(
                         level = chosenLevel.value,
-                        onLevelChange = {
-                            viewModel.updateChosenLevel(it)
-                        },
-                        onFilterClick = {
-                            isShowFilterDialog = true
-                        }
+                        onLevelChange = { viewModel.updateChosenLevel(it) },
+                        onFilterClick = { isShowFilterDialog = true }
                     )
                 }
-                if (deviceType === DeviceType.TabletLandscape) {
-                    item {
-                        Row {
-                            // index 0
-                            BigNewsCard(
-                                modifier = Modifier.weight(1f)
-                            )
-                            // index 1
-                            BigNewsCard(
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
 
-                    items(newsItems.size - 2 / 2) { _ ->
-                        Row {
-                            // odd index
-                            SmallNewsCard(
-                                modifier = Modifier.weight(1f)
-                            )
-                            // even index
-                            SmallNewsCard(
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
+
+                val isEmpty =
+                    newsPagingItems.itemCount == 0 &&
+                            newsPagingItems.loadState.append.endOfPaginationReached &&
+                            newsPagingItems.loadState.refresh is LoadState.NotLoading
+
+                if (isEmpty) item {
+                    Box(
+                        modifier = Modifier
+                            .fillParentMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        EmptySurface()
                     }
                 } else {
-                    item {
-                        BigNewsCard()
-                    }
-                    items(newsItems.size - 1) { _ ->
-                        SmallNewsCard()
+                    items(newsPagingItems.itemCount) { index ->
+                        val item = newsPagingItems[index]
+                        if (index == 0) {
+                            BigNewsCard(
+                                news = item!!,
+                                onItemClick = {
+
+                                }
+                            )
+                        } else {
+                            SmallNewsCard(
+                                news = item!!,
+                                onItemClick = {
+
+                                }
+                            )
+                        }
                     }
                 }
 
+                // Load more indicator
+                item {
+                    when (newsPagingItems.loadState.append) {
+                        is LoadState.Loading -> LoadingSurface()
+                        else -> {}
+                    }
+                }
             }
         }
     }
@@ -158,8 +147,12 @@ fun NewsScreen(
     FilterDialog(
         isVisible = isShowFilterDialog,
         onDismiss = { isShowFilterDialog = false },
-        onSearch = {},
+        onSearch = {
+            viewModel.setKeySearch(it)
+            isShowFilterDialog = false
+        },
         chosenCategory = chosenCategories.value,
+        search = keySearch.value,
         onUpdateChosenCategory = {
             viewModel.updateChosenCategories(it)
         },

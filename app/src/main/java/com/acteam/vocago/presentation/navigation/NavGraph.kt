@@ -13,6 +13,8 @@ import com.acteam.vocago.presentation.screen.auth.SetupAuthNavGraph
 import com.acteam.vocago.presentation.screen.main.SetupMainNavGraph
 import com.acteam.vocago.presentation.screen.welcome.WelcomeScreen
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
+import com.acteam.vocago.presentation.setting.SettingScreen
+import com.acteam.vocago.presentation.setting.SettingViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @ExperimentalAnimationApi
@@ -45,7 +47,23 @@ fun SetupNavGraph(
             )
         }
         composable<NavScreen.UserNavScreen> {
-            
+
+        }
+
+        composable<NavScreen.NewsHistoryNavScreen> {
+
+        }
+
+        composable<NavScreen.DictionaryNavScreen> {
+
+        }
+
+        composable<NavScreen.SettingNavScreen> {
+            val settingViewModel = koinViewModel<SettingViewModel>()
+            SettingScreen(
+                viewModel = settingViewModel,
+                rootNavController = navController
+            )
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.acteam.vocago.domain.model.AppTheme
@@ -33,9 +34,21 @@ class SystemConfigRepositoryImpl(context: Context) : SystemConfigRepository {
         }
     }
 
+    override suspend fun setTheme(theme: AppTheme) {
+        dataStore.edit {
+            it[PreferencesKey.themeKey] = theme.name
+        }
+    }
+
     override fun getDynamicColor(): Flow<Boolean> {
         return dataStore.data.map {
             it[PreferencesKey.colorKey] ?: false
+        }
+    }
+
+    override suspend fun setDynamicColor(dynamicColor: Boolean) {
+        dataStore.edit {
+            it[PreferencesKey.colorKey] = dynamicColor
         }
     }
 

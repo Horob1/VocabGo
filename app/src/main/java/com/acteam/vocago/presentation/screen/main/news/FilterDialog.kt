@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -26,6 +27,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -45,8 +52,23 @@ fun FilterDialog(
     chosenCategory: List<String>,
     onUpdateChosenCategory: (List<String>) -> Unit,
     onDismiss: () -> Unit,
-    onSearch: () -> Unit,
+    search: String,
+    onSearch: (String) -> Unit,
 ) {
+
+    val tempChosenCategory = remember { mutableStateListOf<String>() }
+    var keySearch by remember {
+        mutableStateOf("")
+    }
+
+    LaunchedEffect(isVisible) {
+        if (isVisible) {
+            tempChosenCategory.clear()
+            tempChosenCategory.addAll(chosenCategory)
+            keySearch = search
+        }
+    }
+
     val responsiveDPValue = responsiveDP(56, 56, 60)
     val categories = listOf(
         NewsCategory.NEWS,
@@ -84,8 +106,10 @@ fun FilterDialog(
                         .padding(horizontal = 16.dp),
                 ) {
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = keySearch,
+                        onValueChange = {
+                            keySearch = it
+                        },
                         placeholder = { Text(stringResource(R.string.text_search)) },
                         leadingIcon = {
                             Icon(
@@ -102,6 +126,10 @@ fun FilterDialog(
                             disabledBorderColor = Color.Transparent,
                             cursorColor = MaterialTheme.colorScheme.primary
                         ),
+                        keyboardActions = KeyboardActions(onDone = {
+                            onUpdateChosenCategory(tempChosenCategory)
+                            onSearch(keySearch)
+                        }),
                         textStyle = MaterialTheme.typography.bodyMedium.copy(
                             fontSize = responsiveSP(
                                 16,
@@ -131,13 +159,11 @@ fun FilterDialog(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     categories.forEach { category ->
-                        val isChosen = chosenCategory.contains(category.value)
+                        val isChosen = tempChosenCategory.contains(category.value)
                         OutlinedButton(
                             onClick = {
-                                val list = chosenCategory.toMutableList()
-                                if (isChosen) list.remove(category.value)
-                                else list.add(category.value)
-                                onUpdateChosenCategory(list)
+                                if (isChosen) tempChosenCategory.remove(category.value)
+                                else tempChosenCategory.add(category.value)
                             },
                             shape = RoundedCornerShape(16.dp),
                             colors = ButtonDefaults.buttonColors(
@@ -179,7 +205,10 @@ fun FilterDialog(
                     }
 
                     Button(
-                        onClick = onSearch,
+                        onClick = {
+                            onUpdateChosenCategory(tempChosenCategory)
+                            onSearch(keySearch)
+                        },
                         shape = RoundedCornerShape(16.dp),
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(

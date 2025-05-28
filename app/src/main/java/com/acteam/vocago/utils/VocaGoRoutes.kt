@@ -12,4 +12,6 @@ sealed class VocaGoRoutes(val path: String) {
     data object LoginGoogle : VocaGoRoutes("api/v1/user/login-google")
 
     data object GetProfile : VocaGoRoutes("api/v1/user/me")
+
+    data object GetNews : VocaGoRoutes("api/v1/news")
 }

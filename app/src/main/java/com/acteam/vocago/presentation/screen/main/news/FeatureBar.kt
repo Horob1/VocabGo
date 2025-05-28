@@ -17,19 +17,25 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.acteam.vocago.domain.model.FeatureBarItem
+import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.safeClickable
 
 @Composable
-fun FeatureBar() {
+fun FeatureBar(
+    rootNavController: NavController,
+) {
     val shadowColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
     val items = listOf(
         FeatureBarItem.TranslateCam(onClick = {}),
         FeatureBarItem.BookMark(onClick = {}),
         FeatureBarItem.History(onClick = {}),
         FeatureBarItem.Dictionary(onClick = {}),
-        FeatureBarItem.Setting(onClick = {}),
+        FeatureBarItem.Setting(onClick = {
+            rootNavController.navigate(NavScreen.SettingNavScreen)
+        }),
     )
     Box(
         modifier = Modifier

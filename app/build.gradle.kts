@@ -59,7 +59,11 @@ android {
 }
 
 dependencies {
+    // paging
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
     // ROOM
+    implementation(libs.gson)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     annotationProcessor(libs.androidx.room.compiler)

@@ -6,6 +6,7 @@ coilGif = "2.5.0"
 coreSplashscreen = "1.0.1"
 credentials = "1.5.0"
 datastorePreferences = "1.0.0"
+gsonVersion = "2.13.1"
 introshowcaseview = "2.0.1"
 koinCompose = "4.1.0-Beta5"
 koinComposeViewmodel = "4.1.0-Beta5"
@@ -26,6 +27,8 @@ composeBom = "2024.09.00"
 composeNavigation = "2.8.9"
 lottieComposeVersion = "6.4.0"
 materialIconsExtended = "1.7.8"
+pagingComposeVersion = "3.3.6"
+pagingRuntimeVersion = "3.3.6"
 roomCompilerVersion = "2.7.1"
 roomGuavaVersion = "2.7.1"
 roomKtxVersion = "2.7.1"
@@ -43,6 +46,8 @@ androidx-credentials = { module = "androidx.credentials:credentials", version.re
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingComposeVersion" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntimeVersion" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompilerVersion" }
 androidx-room-guava = { module = "androidx.room:room-guava", version.ref = "roomGuavaVersion" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtxVersion" }
@@ -51,6 +56,7 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomTestingVersion" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coilGif" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gsonVersion" }
 introshowcaseview = { module = "com.canopas.intro-showcase-view:introshowcaseview", version.ref = "introshowcaseview" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

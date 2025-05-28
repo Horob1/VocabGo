@@ -8,6 +8,7 @@ import com.acteam.vocago.presentation.screen.auth.verify2fa.VerifyTwoFAViewModel
 import com.acteam.vocago.presentation.screen.auth.verifyemail.VerifyEmailViewModel
 import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
+import com.acteam.vocago.presentation.setting.SettingViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -48,7 +49,13 @@ val viewModelModule = module {
 
     viewModel {
         NewsViewModel(
-            get(), get(), get(), get(), get(), get(), get()
+            get(), get(), get(), get(), get(), get(), get(), get()
+        )
+    }
+
+    viewModel {
+        SettingViewModel(
+            get(), get(), get(), get(), get(), get()
         )
     }
 }
