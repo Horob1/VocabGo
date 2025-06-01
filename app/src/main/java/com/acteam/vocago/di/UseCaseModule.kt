@@ -12,6 +12,7 @@ import com.acteam.vocago.domain.usecase.GetNewsDetailUseCase
 import com.acteam.vocago.domain.usecase.GetNewsPagingUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
+import com.acteam.vocago.domain.usecase.LoginGoogleUseCase
 import com.acteam.vocago.domain.usecase.LoginUseCase
 import com.acteam.vocago.domain.usecase.RegisterUseCase
 import com.acteam.vocago.domain.usecase.ResendVerifyEmailUseCase
@@ -40,6 +41,9 @@ val useCaseModule = module {
 
     single {
         LoginUseCase(get(), get())
+    }
+    single {
+        LoginGoogleUseCase(get(), get())
     }
     single {
         ForgotPasswordUseCase(get())

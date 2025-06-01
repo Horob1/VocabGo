@@ -1,6 +1,7 @@
 package com.acteam.vocago.presentation.screen.auth.login
 
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,8 +50,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.acteam.vocago.BuildConfig
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
@@ -63,6 +66,7 @@ import com.acteam.vocago.presentation.screen.common.data.UIErrorType
 import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.utils.CredentialHelper
 import com.acteam.vocago.utils.DeviceType
+import com.acteam.vocago.utils.GoogleLoginHelper
 import com.acteam.vocago.utils.getDeviceType
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
@@ -207,9 +211,27 @@ fun LoginScreen(
 //                    PlatFormSignUpButton(R.drawable.github) {}
                     GoogleLoginButton(
                         onClick = {
-                            // TODO: xử lý đăng nhập bằng Google
+                            val activity = context as? ComponentActivity ?: return@GoogleLoginButton
+                            GoogleLoginHelper.loginWithGoogle(
+                                activity = activity,
+                                context = context,
+                                scope = activity.lifecycleScope,
+                                webClientId = BuildConfig.GOOGLE_CLIENT_ID,
+                                onSuccess = { idToken ->
+                                    viewModel.loginWithGoogle(idToken) {
+                                        rootNavController.navigate(NavScreen.MainNavScreen) {
+                                            popUpTo(NavScreen.AuthNavScreen) { inclusive = true }
+                                            launchSingleTop = true
+                                        }
+                                    }
+                                },
+                                onError = { message ->
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                }
+                            )
                         }
                     )
+
                 }
 
                 Spacer(modifier = Modifier.height(verticalSpacing / 3))
@@ -330,7 +352,27 @@ fun LoginScreen(
 //                    PlatFormSignUpButton(R.drawable.github) {}
                         GoogleLoginButton(
                             onClick = {
-                                // TODO: xử lý đăng nhập bằng Google
+                                val activity =
+                                    context as? ComponentActivity ?: return@GoogleLoginButton
+                                GoogleLoginHelper.loginWithGoogle(
+                                    activity = activity,
+                                    context = context,
+                                    scope = activity.lifecycleScope,
+                                    webClientId = BuildConfig.GOOGLE_CLIENT_ID,
+                                    onSuccess = { idToken ->
+                                        viewModel.loginWithGoogle(idToken) {
+                                            rootNavController.navigate(NavScreen.MainNavScreen) {
+                                                popUpTo(NavScreen.AuthNavScreen) {
+                                                    inclusive = true
+                                                }
+                                                launchSingleTop = true
+                                            }
+                                        }
+                                    },
+                                    onError = { message ->
+                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                    }
+                                )
                             }
                         )
                     }

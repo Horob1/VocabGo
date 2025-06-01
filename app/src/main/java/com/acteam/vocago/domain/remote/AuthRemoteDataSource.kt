@@ -17,5 +17,5 @@ interface AuthRemoteDataSource {
     suspend fun verifyEmail(email: String, otp: String)
     suspend fun resendVerifyEmail(email: String)
     suspend fun verifyTwoFA(email: String, otpToken: String): VerifyTwoFARespose
-    suspend fun loginGoogle(token: String): LoginGoogleResponse?
+    suspend fun loginGoogle(token: String): LoginGoogleResponse
 }

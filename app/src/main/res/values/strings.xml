@@ -103,6 +103,19 @@
     <string name="text_search">Search</string>
     <string name="text_choose_categories">Choose categories</string>
 
+    <!--Chat-->
+    <string name="text_everyday_friend">Everyday friend</string>
+    <string name="text_english_tutor">English tutor</string>
+    <string name="text_developer">Developer</string>
+    <string name="text_football_boat">Boat football</string>
+    <string name="text_football_goat">Goat football</string>
+    <string name="text_singer">Singer</string>
+    <string name="text_us_president">US President</string>
+    <string name="text_game_player">Game player</string>
+    <string name="text_practice_communicate_with_chatbot">Practice communicate with chatbot</string>
+    <string name="text_selection_for_you">Selection for you</string>
+    <string name="text_facebook_founder">Facebook founder</string>
+    <string name="google_login_failed">No Google account available on this device</string>
     <string name="text_retry">Retry</string>
     <string name="text_no_data_found">No data found!</string>
 

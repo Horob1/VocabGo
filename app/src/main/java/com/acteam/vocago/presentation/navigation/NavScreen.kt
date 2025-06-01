@@ -19,6 +19,7 @@ sealed class NavScreen {
     data object UserNavScreen : NavScreen()
 
     @Serializable
+    data class CommonChatNavScreen(val id: Int, val title: String, val avatarRes: Int) : NavScreen()
     data class NewsHistoryNavScreen(
         val isBookmark: Boolean,
     ) : NavScreen()
@@ -73,5 +74,4 @@ sealed class NavScreen {
     @Serializable
     data object ChatNavScreen : NavScreen()
 
-    // Mâm 3
 }

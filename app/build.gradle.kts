@@ -26,6 +26,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", "\"${localProperties["BASE_URL"]}\"")
+        buildConfigField("String", "GEMINI_API_KEY", "\"${localProperties["GEMINI_API_KEY"]}\"")
+        buildConfigField("String", "GOOGLE_CLIENT_ID", "\"${localProperties["GOOGLE_CLIENT_ID"]}\"")
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -59,12 +61,16 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.credentials.v120alpha03)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
     // paging
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
     // ROOM
     implementation(libs.gson)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.generativeai.v060)
     ksp(libs.androidx.room.compiler)
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)

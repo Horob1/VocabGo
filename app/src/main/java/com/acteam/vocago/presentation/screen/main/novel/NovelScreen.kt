@@ -66,7 +66,6 @@ fun NovelScreen() {
                                 tabletLandscape = 24
                             ),
                             color = MaterialTheme.colorScheme.primary
-
                         )
                     )
                     Spacer(

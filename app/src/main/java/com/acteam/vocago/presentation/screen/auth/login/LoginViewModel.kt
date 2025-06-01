@@ -1,8 +1,10 @@
 package com.acteam.vocago.presentation.screen.auth.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.acteam.vocago.data.model.ApiException
+import com.acteam.vocago.domain.usecase.LoginGoogleUseCase
 import com.acteam.vocago.domain.usecase.LoginUseCase
 import com.acteam.vocago.presentation.screen.auth.login.data.LoginFormState
 import com.acteam.vocago.presentation.screen.common.data.UIErrorType
@@ -12,6 +14,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
+    private val loginGoogleUseCase: LoginGoogleUseCase
 ) : ViewModel() {
     private val _loginFormState = MutableStateFlow(LoginFormState())
     val loginFormState = _loginFormState
@@ -82,6 +85,44 @@ class LoginViewModel(
         }
     }
 
+    fun loginWithGoogle(token: String, afterLoginSuccess: suspend () -> Unit) {
+        viewModelScope.launch {
+            _loginUIState.value = UIState.UILoading
+            try {
+                val response = loginGoogleUseCase(token)
+                Log.d("login response", response.toString())
+                afterLoginSuccess()
+                _loginUIState.value = UIState.UISuccess
+            } catch (e: Exception) {
+                e.printStackTrace()
+                if (e is ApiException) {
+                    when (e.code) {
+                        // truyền lên sai định dạng
+                        422 -> _loginUIState.value =
+                            UIState.UIError(UIErrorType.UnexpectedEntityError)
+                        // Tài khoản chưa verify
+                        400 -> _loginUIState.value =
+                            UIState.UIError(UIErrorType.BadRequestError)
+                        // Sai mật khẩu
+                        401 -> _loginUIState.value =
+                            UIState.UIError(UIErrorType.UnauthorizedError)
+                        // Tài khoản or mật khẩu ko tồn tại :V
+                        404 -> _loginUIState.value =
+                            UIState.UIError(UIErrorType.NotFoundError)
+                        // User bị ban rồi
+                        403 -> _loginUIState.value = UIState.UIError(UIErrorType.ForbiddenError)
+                        // Xac thuc 2 buoc
+                        428 -> _loginUIState.value =
+                            UIState.UIError(UIErrorType.PreconditionFailedError)
+
+                        else -> _loginUIState.value = UIState.UIError(UIErrorType.UnknownError)
+                    }
+                } else {
+                    _loginUIState.value = UIState.UIError(UIErrorType.UnknownError)
+                }
+            }
+        }
+    }
 
     fun clearUIState() {
         _loginUIState.value = UIState.UISuccess(Unit)
