@@ -12,12 +12,12 @@ import kotlinx.coroutines.launch
 
 
 class ForgotPasswordViewModel(
-    private val forgotPasswordUseCase: ForgotPasswordUseCase
+    private val forgotPasswordUseCase: ForgotPasswordUseCase,
 ) : ViewModel() {
     private val _forgotPasswordFormState = MutableStateFlow(ForgotPasswordState())
     val forgotPasswordFormState = _forgotPasswordFormState
 
-    private val _forgotPasswordUIState = MutableStateFlow<UIState>(UIState.UISuccess)
+    private val _forgotPasswordUIState = MutableStateFlow<UIState<Unit>>(UIState.UISuccess(Unit))
     val forgotPasswordUIState = _forgotPasswordUIState
 
     fun setEmail(email: String) {
@@ -35,7 +35,7 @@ class ForgotPasswordViewModel(
                     email = _forgotPasswordFormState.value.email
                 )
                 afterForgotPasswordSuccess()
-                _forgotPasswordUIState.value = UIState.UISuccess
+                _forgotPasswordUIState.value = UIState.UISuccess(Unit)
             } catch (e: Exception) {
                 if (e is ApiException) {
                     _forgotPasswordUIState.value = UIState.UIError(
@@ -55,6 +55,6 @@ class ForgotPasswordViewModel(
     }
 
     fun clearUIState() {
-        _forgotPasswordUIState.value = UIState.UISuccess
+        _forgotPasswordUIState.value = UIState.UISuccess(Unit)
     }
 }

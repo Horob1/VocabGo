@@ -1,17 +1,20 @@
 package com.acteam.vocago.data.paging
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.acteam.vocago.data.local.dao.NewsDao
+import androidx.room.withTransaction
+import com.acteam.vocago.data.local.AppDatabase
 import com.acteam.vocago.data.local.entity.NewsEntity
+import com.acteam.vocago.data.local.mapping.toNewsEntity
 import com.acteam.vocago.domain.remote.NewsRemoteDataSource
 
 @OptIn(ExperimentalPagingApi::class)
 class NewsRemoteMediator(
     private val newsRemoteDataSource: NewsRemoteDataSource,
-    private val newsDao: NewsDao,
+    private val appDatabase: AppDatabase,
     private val categories: List<String>,
     private val keySearch: String,
     private val level: String,
@@ -20,11 +23,13 @@ class NewsRemoteMediator(
         loadType: LoadType,
         state: PagingState<Int, NewsEntity>,
     ): MediatorResult {
-
         try {
-            val page = when (loadType) {
+            val loadKey = when (loadType) {
                 LoadType.REFRESH -> 1
-                LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
+                LoadType.PREPEND -> return MediatorResult.Success(
+                    endOfPaginationReached = true
+                )
+
                 LoadType.APPEND -> {
                     val lastItem = state.lastItemOrNull()
                     if (lastItem == null) {
@@ -36,7 +41,7 @@ class NewsRemoteMediator(
             }
 
             val response = newsRemoteDataSource.getNews(
-                page = page,
+                page = loadKey,
                 limit = state.config.pageSize,
                 categories = categories,
                 keySearch = keySearch,
@@ -44,29 +49,35 @@ class NewsRemoteMediator(
             )
 
             if (response.isSuccess) {
-                response.getOrNull()?.let { body ->
-                    val meta = body.meta
-                    val data = body.data
+                val body = response.getOrNull()
+                    ?: return MediatorResult.Error(NullPointerException("Response body is null"))
 
-                    val entities = data.map { dto ->
-                        dto.toNewsEntity(page = meta.page)
-                    }
+                val meta = body.meta
+                val data = body.data
 
+                val entities = data.map { dto -> toNewsEntity(dto, loadKey) }
+
+                appDatabase.withTransaction {
                     if (loadType == LoadType.REFRESH) {
-                        newsDao.clearAllNews()
+                        appDatabase.newsDao().clearAllNews()
                     }
-
-                    newsDao.insertNews(entities)
-
-                    return MediatorResult.Success(endOfPaginationReached = meta.page >= meta.totalPages)
+                    appDatabase.newsDao().insertNews(entities)
                 }
-            }
+                Log.d("RemoteMediator", "meta: $meta")
+                Log.d(
+                    "RemoteMediator",
+                    "LoadType: $loadType, page: ${meta.page}, entities: ${entities.size}"
+                )
 
-            return MediatorResult.Error(IllegalStateException("Response failed"))
+                Log.d("RemoteMediator", "next page: ${meta.page < meta.totalPages}")
+
+                return MediatorResult.Success(endOfPaginationReached = meta.page >= meta.totalPages)
+            } else {
+                return MediatorResult.Error(IllegalStateException("Response failed"))
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             return MediatorResult.Error(e)
-
         }
     }
 }

@@ -24,15 +24,18 @@ sealed class NavScreen {
     ) : NavScreen()
 
     @Serializable
+    data class NewsDetailNavScreen(
+        val newsId: String,
+    ) : NavScreen()
+
+    @Serializable
     data object DictionaryNavScreen : NavScreen()
 
     @Serializable
     data object SettingNavScreen : NavScreen()
 
     @Serializable
-    data class NewsDetailNavScreen(
-        val newsId: Int,
-    ) : NavScreen()
+    data object CameraNavScreen : NavScreen()
 
     // Mâm 2
     // Mân 2 của Auth

@@ -20,9 +20,9 @@ import kotlinx.coroutines.launch
 
 class VerifyEmailViewModel(
     private val verifyEmailUseCase: VerifyEmailUseCase,
-    private val resendVerifyEmailUseCase: ResendVerifyEmailUseCase
+    private val resendVerifyEmailUseCase: ResendVerifyEmailUseCase,
 ) : ViewModel() {
-    private val _verifyEmailUIState = MutableStateFlow<UIState>(UIState.UISuccess)
+    private val _verifyEmailUIState = MutableStateFlow<UIState<Unit>>(UIState.UISuccess(Unit))
     val verifyEmailUIState = _verifyEmailUIState
 
     private val _otpState = MutableStateFlow(OtpState())
@@ -62,7 +62,7 @@ class VerifyEmailViewModel(
             try {
                 verifyEmailUseCase(email, _otpState.value.otp)
                 afterVerifySuccess()
-                _verifyEmailUIState.value = UIState.UISuccess
+                _verifyEmailUIState.value = UIState.UISuccess(Unit)
             } catch (e: Exception) {
                 if (e is ApiException) {
                     when (e.code) {
@@ -92,7 +92,7 @@ class VerifyEmailViewModel(
 
             try {
                 resendVerifyEmailUseCase(email)
-                _verifyEmailUIState.value = UIState.UISuccess
+                _verifyEmailUIState.value = UIState.UISuccess(Unit)
                 _otpState.value = _otpState.value.copy(timeLeft = 300)
                 startOtpCountdown(_otpState.value.timeLeft)
             } catch (e: Exception) {
@@ -119,7 +119,7 @@ class VerifyEmailViewModel(
     }
 
     fun clearUIState() {
-        _verifyEmailUIState.value = UIState.UISuccess
+        _verifyEmailUIState.value = UIState.UISuccess(Unit)
     }
 
 }

@@ -32,6 +32,7 @@ import com.acteam.vocago.R
 
 @Composable
 fun LoadingSurface(
+    modifier: Modifier = Modifier,
     picSize: Int = 180,
 ) {
     val context = LocalContext.current
@@ -42,7 +43,7 @@ fun LoadingSurface(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         // Nền mờ (chỉ nền)

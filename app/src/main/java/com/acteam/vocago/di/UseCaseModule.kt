@@ -8,6 +8,7 @@ import com.acteam.vocago.domain.usecase.GetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.GetLanguageUseCase
 import com.acteam.vocago.domain.usecase.GetLocalUserProfileUseCase
 import com.acteam.vocago.domain.usecase.GetLoginStateUseCase
+import com.acteam.vocago.domain.usecase.GetNewsDetailUseCase
 import com.acteam.vocago.domain.usecase.GetNewsPagingUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
@@ -101,5 +102,9 @@ val useCaseModule = module {
 
     single {
         SetThemeUseCase(get())
+    }
+
+    single {
+        GetNewsDetailUseCase(get())
     }
 }

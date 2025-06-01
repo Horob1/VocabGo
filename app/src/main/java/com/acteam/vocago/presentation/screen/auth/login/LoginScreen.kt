@@ -474,7 +474,7 @@ fun LoginScreen(
 
 @Composable
 fun GoogleLoginButton(
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     OutlinedButton(
         onClick = onClick,
@@ -512,8 +512,8 @@ fun GoogleLoginButton(
 fun SignUpText(
     descFontSize: TextUnit,
     horizontalPadding: Dp,
-    uiState: UIState,
-    onSignUpClick: () -> Unit
+    uiState: UIState<Unit>,
+    onSignUpClick: () -> Unit,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(

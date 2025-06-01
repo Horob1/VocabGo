@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.acteam.vocago.domain.model.FeatureBarItem
@@ -26,13 +27,41 @@ import com.acteam.vocago.utils.safeClickable
 @Composable
 fun FeatureBar(
     rootNavController: NavController,
+    shadowColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
 ) {
-    val shadowColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+    val horizontalPadding = responsiveDP(
+        mobile = 16,
+        tabletPortrait = 24,
+        tabletLandscape = 32
+    )
+    val verticalPadding = responsiveDP(
+        mobile = 8,
+        tabletPortrait = 12,
+        tabletLandscape = 16
+    )
+    val itemHeight = responsiveDP(
+        mobile = 48,
+        tabletPortrait = 64,
+        tabletLandscape = 80
+    )
+    val itemPadding = responsiveDP(
+        mobile = 4,
+        tabletPortrait = 8,
+        tabletLandscape = 12
+    )
     val items = listOf(
-        FeatureBarItem.TranslateCam(onClick = {}),
-        FeatureBarItem.BookMark(onClick = {}),
-        FeatureBarItem.History(onClick = {}),
-        FeatureBarItem.Dictionary(onClick = {}),
+        FeatureBarItem.TranslateCam(onClick = {
+            rootNavController.navigate(NavScreen.CameraNavScreen)
+        }),
+        FeatureBarItem.BookMark(onClick = {
+            rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = true))
+        }),
+        FeatureBarItem.History(onClick = {
+            rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = false))
+        }),
+        FeatureBarItem.Dictionary(onClick = {
+            rootNavController.navigate(NavScreen.DictionaryNavScreen)
+        }),
         FeatureBarItem.Setting(onClick = {
             rootNavController.navigate(NavScreen.SettingNavScreen)
         }),
@@ -52,16 +81,8 @@ fun FeatureBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    horizontal = responsiveDP(
-                        mobile = 16,
-                        tabletPortrait = 24,
-                        tabletLandscape = 32
-                    ),
-                    vertical = responsiveDP(
-                        mobile = 8,
-                        tabletPortrait = 12,
-                        tabletLandscape = 16
-                    )
+                    horizontal = horizontalPadding,
+                    vertical = verticalPadding
                 ),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -72,18 +93,10 @@ fun FeatureBar(
                     modifier = Modifier
                         .weight(1f)
                         .height(
-                            responsiveDP(
-                                mobile = 48,
-                                tabletPortrait = 64,
-                                tabletLandscape = 80
-                            )
+                            itemHeight
                         )
                         .padding(
-                            responsiveDP(
-                                mobile = 4,
-                                tabletPortrait = 8,
-                                tabletLandscape = 12
-                            )
+                            itemPadding
                         )
                 )
             }

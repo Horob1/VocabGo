@@ -1,5 +1,6 @@
 package com.acteam.vocago.domain.remote
 
+import com.acteam.vocago.data.model.NewsDetailDto
 import com.acteam.vocago.data.model.NewsDto
 import com.acteam.vocago.data.model.PaginatedResponse
 
@@ -12,4 +13,6 @@ interface NewsRemoteDataSource {
         keySearch: String,
         level: String,
     ): Result<PaginatedResponse<NewsDto>>
+
+    suspend fun getNewsDetail(id: String): Result<NewsDetailDto>
 }

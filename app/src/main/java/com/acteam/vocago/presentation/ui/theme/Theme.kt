@@ -8,12 +8,9 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.acteam.vocago.domain.model.AppTheme
-import com.acteam.vocago.domain.usecase.GetDynamicColorUseCase
-import com.acteam.vocago.domain.usecase.GetThemeUseCase
 
 // === LIGHT THEME ===
 private val LightColorScheme = lightColorScheme(
@@ -53,23 +50,21 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun VocaGoTheme(
-    getTheme: GetThemeUseCase,
-    getDynamicColor: GetDynamicColorUseCase,
+    userTheme: AppTheme = AppTheme.SYSTEM,
+    dynamicColorEnabled: Boolean = false,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val userTheme = getTheme().collectAsState(initial = AppTheme.SYSTEM)
-    val dynamicColorState = getDynamicColor().collectAsState(initial = false)
 
-    val isDarkTheme = when (userTheme.value) {
+
+    val isDarkTheme = when (userTheme) {
         AppTheme.LIGHT -> false
         AppTheme.DARK -> true
         else -> darkTheme
     }
 
-    // Sử dụng dynamic color cho Android 12+ và màu sắc mặc định cho các hệ thống cũ hơn
     val colorScheme = when {
-        dynamicColorState.value && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+        dynamicColorEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
@@ -78,10 +73,9 @@ fun VocaGoTheme(
         else -> LightColorScheme
     }
 
-    // Áp dụng theme với typography và màu sắc đã chọn
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography, // Bạn có thể mở rộng typography nếu cần
+        typography = Typography,
         content = content
     )
 }

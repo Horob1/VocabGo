@@ -2,9 +2,13 @@ package com.acteam.vocago.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.acteam.vocago.data.model.QuestionNewsDto
-import com.acteam.vocago.data.model.TranslationNewsDto
-import com.acteam.vocago.data.model.WordNewsDto
+
+data class NewsEntityWord(
+    val a1: Int,
+    val a2: Int,
+    val b1: Int,
+    val b2: Int,
+)
 
 @Entity(tableName = "news")
 data class NewsEntity(
@@ -16,17 +20,9 @@ data class NewsEntity(
     val title: String,
     val url: String,
     val coverImage: String,
-    val content: String,
     val views: Int,
     val level: String,
-    val ratingCount: Int,
-    val ratingSum: Int,
-    val ratingAvg: Double,
-    val words: List<WordNewsDto>,
-    val isPublished: Boolean,
-    val questions: List<QuestionNewsDto>,
-    val tags: List<String>,
-    val translations: List<TranslationNewsDto>,
+    val words: NewsEntityWord,
     val createdAt: String,
     // Cái này dùng để dùng với paging nhé
     val page: Int,

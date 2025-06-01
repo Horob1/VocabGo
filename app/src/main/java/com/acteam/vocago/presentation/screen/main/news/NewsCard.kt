@@ -24,15 +24,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.acteam.vocago.R
 import com.acteam.vocago.data.local.entity.NewsEntity
 import com.acteam.vocago.utils.DateDisplayHelper
@@ -45,6 +50,8 @@ fun BigNewsCard(
     news: NewsEntity,
     onItemClick: () -> Unit,
 ) {
+    val loadingPainter = rememberAsyncImagePainter(model = R.drawable.loading_news)
+
     ElevatedCard(
         onClick = onItemClick,
         modifier = modifier
@@ -65,11 +72,34 @@ fun BigNewsCard(
                     )
                     .clip(MaterialTheme.shapes.medium)
             ) {
-                AsyncImage(
-                    model = news.coverImage,
+                val context = LocalContext.current
+                SubcomposeAsyncImage(
+                    model =
+                        remember(news.coverImage) {
+                            ImageRequest.Builder(context)
+                                .data(news.coverImage)
+                                .crossfade(true)
+                                .diskCachePolicy(CachePolicy.ENABLED)
+                                .memoryCachePolicy(CachePolicy.ENABLED)
+                                .build()
+                        },
                     contentDescription = "News Image",
-                    placeholder = painterResource(id = R.drawable.loading_news),
-                    error = painterResource(id = R.drawable.loading_news),
+                    loading = {
+                        Image(
+                            painter = loadingPainter,
+                            contentDescription = "Loading",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    },
+                    error = {
+                        Image(
+                            painter = loadingPainter,
+                            contentDescription = "Loading",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    },
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
@@ -106,30 +136,35 @@ fun BigNewsCard(
                     }
                 }
 
-                val keywordStats = listOf(
-                    Triple(
-                        "A1",
-                        news.words.count { it.level == "A1" },
-                        Color(0xFF81C784) // pastel green
-                    ),
-                    Triple(
-                        "A2",
-                        news.words.count { it.level == "A2" },
-                        Color(0xFF64B5F6) // pastel blue
-                    ),
-                    Triple(
-                        "B1",
-                        news.words.count { it.level == "B1" },
-                        Color(0xFFFFF176) // pastel yellow
-                    ),
-                    Triple(
-                        "B2",
-                        news.words.count { it.level == "B2" },
-                        Color(0xFFEF9A9A) // pastel red
+                val keywordStats = remember(news.words) {
+                    listOf(
+                        Triple(
+                            "A1",
+                            news.words.a1,
+                            Color(0xFF81C784) // pastel green
+                        ),
+                        Triple(
+                            "A2",
+                            news.words.a2,
+                            Color(0xFF64B5F6) // pastel blue
+                        ),
+                        Triple(
+                            "B1",
+                            news.words.b1,
+                            Color(0xFFFFF176) // pastel yellow
+                        ),
+                        Triple(
+                            "B2",
+                            news.words.b2,
+                            Color(0xFFEF9A9A) // pastel red
+                        )
                     )
-                )
+                }
 
-                val total = keywordStats.sumOf { it.second }
+                val total = remember(news.words) {
+                    news.words.a1 + news.words.a2 + news.words.b1 + news.words.b2
+                }
+
                 Row(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
@@ -230,6 +265,8 @@ fun SmallNewsCard(
     news: NewsEntity,
     onItemClick: () -> Unit = {},
 ) {
+    val loadingPainter = rememberAsyncImagePainter(model = R.drawable.loading_news)
+
     val rowHeight = responsiveDP(
         mobile = 80,
         tabletPortrait = 100,
@@ -252,11 +289,34 @@ fun SmallNewsCard(
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                AsyncImage(
-                    model = news.coverImage,
+                val context = LocalContext.current
+                SubcomposeAsyncImage(
+                    model =
+                        remember(news.coverImage) {
+                            ImageRequest.Builder(context)
+                                .data(news.coverImage)
+                                .crossfade(true)
+                                .diskCachePolicy(CachePolicy.ENABLED)
+                                .memoryCachePolicy(CachePolicy.ENABLED)
+                                .build()
+                        },
                     contentDescription = "News Image",
-                    placeholder = painterResource(id = R.drawable.loading_news),
-                    error = painterResource(id = R.drawable.loading_news),
+                    loading = {
+                        Image(
+                            painter = loadingPainter,
+                            contentDescription = "Loading",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    },
+                    error = {
+                        Image(
+                            painter = loadingPainter,
+                            contentDescription = "Loading",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    },
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(
@@ -303,30 +363,35 @@ fun SmallNewsCard(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        val keywordStats = listOf(
-                            Triple(
-                                "A1",
-                                news.words.count { it.level == "A1" },
-                                Color(0xFF81C784) // pastel green
-                            ),
-                            Triple(
-                                "A2",
-                                news.words.count { it.level == "A2" },
-                                Color(0xFF64B5F6) // pastel blue
-                            ),
-                            Triple(
-                                "B1",
-                                news.words.count { it.level == "B1" },
-                                Color(0xFFFFF176) // pastel yellow
-                            ),
-                            Triple(
-                                "B2",
-                                news.words.count { it.level == "B2" },
-                                Color(0xFFEF9A9A) // pastel red
+                        val keywordStats = remember(news.words) {
+                            listOf(
+                                Triple(
+                                    "A1",
+                                    news.words.a1,
+                                    Color(0xFF81C784) // pastel green
+                                ),
+                                Triple(
+                                    "A2",
+                                    news.words.a2,
+                                    Color(0xFF64B5F6) // pastel blue
+                                ),
+                                Triple(
+                                    "B1",
+                                    news.words.b1,
+                                    Color(0xFFFFF176) // pastel yellow
+                                ),
+                                Triple(
+                                    "B2",
+                                    news.words.b2,
+                                    Color(0xFFEF9A9A) // pastel red
+                                )
                             )
-                        )
+                        }
 
-                        val total = keywordStats.sumOf { it.second }
+                        val total = remember(news.words) {
+                            news.words.a1 + news.words.a2 + news.words.b1 + news.words.b2
+                        }
+
                         Row(
                             modifier = Modifier
                                 .weight(1f)
@@ -339,7 +404,7 @@ fun SmallNewsCard(
                         ) {
                             keywordStats.forEach { (_, count, color) ->
                                 val ratio = when {
-                                    total == 0 -> 1f
+                                    count == 0 -> 1f
                                     count.toFloat() / total == 0f -> 1f
                                     else -> count.toFloat() / total
                                 }
@@ -427,8 +492,6 @@ fun SmallNewsCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
-
         }
     }
 }

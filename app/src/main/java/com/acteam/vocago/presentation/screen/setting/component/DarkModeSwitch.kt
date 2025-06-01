@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.setting.component
+package com.acteam.vocago.presentation.screen.setting.component
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween

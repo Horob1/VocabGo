@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.setting
+package com.acteam.vocago.presentation.screen.setting
 
 import android.os.Build
 import android.widget.Toast
@@ -46,10 +46,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.acteam.vocago.R
 import com.acteam.vocago.domain.model.AppTheme
+import com.acteam.vocago.presentation.screen.setting.component.DarkModeSwitch
 import com.acteam.vocago.presentation.screen.welcome.component.ChangeLanguageDialog
 import com.acteam.vocago.presentation.screen.welcome.component.ChooseLanguageButton
 import com.acteam.vocago.presentation.screen.welcome.data.ChooseLanguageData
-import com.acteam.vocago.presentation.setting.component.DarkModeSwitch
 import com.acteam.vocago.utils.LanguageUtils
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP

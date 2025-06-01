@@ -29,6 +29,39 @@ data class NewsDto(
     val title: String,
     val url: String,
     val coverImage: String,
+    val views: Int,
+    val level: String,
+    val words: List<WordNewsDto>,
+    val isPublished: Boolean,
+    val createdAt: String,
+)
+
+@Serializable
+data class NewsDetailLogQsaDto(
+    val qsIndex: Int,
+    val chosenAnswer: Int,
+)
+
+@Serializable
+data class NewLogDto(
+    val _id: String,
+    val newsId: String,
+    val userId: String,
+    val rating: Int,
+    val score: Int,
+    val isBookmarked: Boolean,
+    val questionLogs: List<NewsDetailLogQsaDto>,
+    val updatedAt: String,
+    val createdAt: String,
+)
+
+@Serializable
+data class NewsDetailDto(
+    val _id: String,
+    val category: String,
+    val title: String,
+    val url: String,
+    val coverImage: String,
     val content: String,
     val views: Int,
     val level: String,
@@ -41,27 +74,6 @@ data class NewsDto(
     val tags: List<String>,
     val translations: List<TranslationNewsDto>,
     val createdAt: String,
-) {
-    fun toNewsEntity(page: Int): NewsEntity {
-        return NewsEntity(
-            _id = _id,
-            category = category,
-            title = title,
-            url = url,
-            coverImage = coverImage,
-            content = content,
-            views = views,
-            level = level,
-            ratingCount = ratingCount,
-            ratingSum = ratingSum,
-            ratingAvg = ratingAvg,
-            words = words,
-            isPublished = isPublished,
-            questions = questions,
-            tags = tags,
-            translations = translations,
-            createdAt = createdAt,
-            page = page,
-        )
-    }
-}
+    val log: NewLogDto?,
+    val bookmarkCount: Int,
+)

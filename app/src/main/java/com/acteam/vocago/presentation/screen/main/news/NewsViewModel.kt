@@ -2,6 +2,7 @@ package com.acteam.vocago.presentation.screen.main.news
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.acteam.vocago.domain.model.NewsLevel
 import com.acteam.vocago.domain.usecase.GetChosenNewsCategoriesUseCase
@@ -68,6 +69,11 @@ class NewsViewModel(
         )
     }
         .cachedIn(viewModelScope)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = PagingData.empty()
+        )
 
 
     suspend fun syncProfile() {

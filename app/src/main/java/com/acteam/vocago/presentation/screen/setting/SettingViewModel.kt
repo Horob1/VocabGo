@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.setting
+package com.acteam.vocago.presentation.screen.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
