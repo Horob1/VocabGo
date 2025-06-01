@@ -22,13 +22,15 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 fun NavBottomBar(navController: NavController) {
-    val items = listOf(
-        NavBottomBarItem.Voca,
-        NavBottomBarItem.Novel,
-        NavBottomBarItem.News,
-        NavBottomBarItem.Toeic,
-        NavBottomBarItem.Chat
-    )
+    val items = remember {
+        listOf(
+            NavBottomBarItem.Voca,
+            NavBottomBarItem.Novel,
+            NavBottomBarItem.News,
+            NavBottomBarItem.Toeic,
+            NavBottomBarItem.Chat
+        )
+    }
 
     val currentDestination = navController
         .currentBackStackEntryAsState().value?.destination
@@ -38,7 +40,8 @@ fun NavBottomBar(navController: NavController) {
             val selected = currentDestination?.route == item.route::class.qualifiedName
 
             val composition by rememberLottieComposition(
-                LottieCompositionSpec.RawRes(item.icon))
+                LottieCompositionSpec.RawRes(item.icon)
+            )
             val progress = remember { Animatable(0f) }
 
             // Play animation when selected

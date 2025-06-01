@@ -19,7 +19,7 @@ class LoginViewModel(
     private val _loginFormState = MutableStateFlow(LoginFormState())
     val loginFormState = _loginFormState
 
-    private val _loginUIState = MutableStateFlow<UIState>(UIState.UISuccess)
+    private val _loginUIState = MutableStateFlow<UIState<Unit>>(UIState.UISuccess(Unit))
     val loginUIState = _loginUIState
 
     fun setUsername(username: String) {
@@ -54,7 +54,7 @@ class LoginViewModel(
                     password = _loginFormState.value.password
                 )
                 afterLoginSuccess()
-                _loginUIState.value = UIState.UISuccess
+                _loginUIState.value = UIState.UISuccess(Unit)
             } catch (e: Exception) {
                 e.printStackTrace()
                 if (e is ApiException) {
@@ -125,6 +125,6 @@ class LoginViewModel(
     }
 
     fun clearUIState() {
-        _loginUIState.value = UIState.UISuccess
+        _loginUIState.value = UIState.UISuccess(Unit)
     }
 }

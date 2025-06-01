@@ -64,7 +64,11 @@ dependencies {
     implementation(libs.androidx.credentials.v120alpha03)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+    // paging
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
     // ROOM
+    implementation(libs.gson)
     implementation(libs.androidx.room.runtime)
     implementation(libs.generativeai.v060)
     ksp(libs.androidx.room.compiler)

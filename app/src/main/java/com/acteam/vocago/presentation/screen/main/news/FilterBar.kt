@@ -19,6 +19,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,10 +34,11 @@ import com.acteam.vocago.utils.safeClickable
 
 @Composable
 fun FilterBar(
-    level: NewsLevel,
-    onLevelChange: (NewsLevel) -> Unit,
+    viewModel: NewsViewModel,
     onFilterClick: () -> Unit,
 ) {
+    val level by viewModel.chosenLevel.collectAsState()
+
     val containerColor = when (level) {
         NewsLevel.EASY -> Color.Green.copy(
             alpha = 0.5f
@@ -78,7 +81,7 @@ fun FilterBar(
             level = level,
             nextLevel = nextLevel,
             onLevelChange = {
-                onLevelChange(it)
+                viewModel.updateChosenLevel(it)
             },
             containerColor = containerColor,
             contentColor = contentColor

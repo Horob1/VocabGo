@@ -1,9 +1,11 @@
 package com.acteam.vocago.di
 
 import com.acteam.vocago.data.repository.LanguageRepositoryImpl
+import com.acteam.vocago.data.repository.NewsRepositoryImpl
 import com.acteam.vocago.data.repository.SystemConfigRepositoryImpl
 import com.acteam.vocago.data.repository.WelcomeRepositoryImpl
 import com.acteam.vocago.domain.repository.LanguageRepository
+import com.acteam.vocago.domain.repository.NewsRepository
 import com.acteam.vocago.domain.repository.SystemConfigRepository
 import com.acteam.vocago.domain.repository.WelcomeRepository
 import org.koin.dsl.module
@@ -17,5 +19,9 @@ val repositoryModule = module {
     }
     single<SystemConfigRepository> {
         SystemConfigRepositoryImpl(get())
+    }
+
+    single<NewsRepository> {
+        NewsRepositoryImpl(get(), get())
     }
 }

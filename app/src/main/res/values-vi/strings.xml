@@ -109,5 +109,29 @@
     <string name="text_selection_for_you">Chọn tướng</string>
     <string name="text_facebook_founder">Nhà sáng lập Facebook</string>
     <string name="google_login_failed">Thiết bị chưa có tài khoản Google</string>
+    <string name="text_retry">Thử lại</string>
+    <string name="text_no_data_found">Không tìm thấy dữ liệu!</string>
+
+
+    <string name="just_now">Vừa đăng</string>
+    <string name="minute_ago">phút trước</string>
+    <string name="hour_ago">giờ trước</string>
+    <string name="day_ago">ngày trước</string>
+    <string name="week_ago">tuần trước</string>
+    <string name="month_ago">tháng trước</string>
+    <string name="year_ago">năm trước</string>
+
+    <string name="title_setting">Cài đặt</string>
+    <string name="title_theme">Giao diện</string>
+    <string name="title_locales">Ngôn ngữ</string>
+    <string name="title_dark_mode">Chế độ tối</string>
+    <string name="desc_dark_mode">Bật chế độ tối</string>
+    <string name="title_follow_system_theme">Đồng bộ giao diện hệ thống</string>
+    <string name="desc_follow_system">Đồng bộ với giao diện hệ thống</string>
+    <string name="title_dynamic_color">Màu động</string>
+    <string name="desc_dynamic_color">Bật màu động cho Android 12+</string>
+    <string name="title_language">Ngôn ngữ</string>
+    <string name="desc_language">Thay đổi ngôn ngữ ứng dụng</string>
+    <string name="toast_please_turn_off_the_sync_system_them">Tắt đồng bộ giao diện để đổi giao diện</string>
 
 </resources>

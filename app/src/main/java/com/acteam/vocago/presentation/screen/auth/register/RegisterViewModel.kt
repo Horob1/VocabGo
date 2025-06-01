@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class RegisterViewModel(
     private val registerUseCase: RegisterUseCase,
 ) : ViewModel() {
-    private val _registerUIState = MutableStateFlow<UIState>(UIState.UISuccess)
+    private val _registerUIState = MutableStateFlow<UIState<Unit>>(UIState.UISuccess(Unit))
     val registerUIState = _registerUIState
 
     private val _registerFormState = MutableStateFlow(RegisterFormState())
@@ -95,7 +95,7 @@ class RegisterViewModel(
                     gender = _registerFormState.value.gender,
                 )
                 afterRegisterSuccess()
-                _registerUIState.value = UIState.UISuccess
+                _registerUIState.value = UIState.UISuccess(Unit)
             } catch (e: Exception) {
                 e.printStackTrace()
                 if (e is ApiException) {
@@ -112,6 +112,6 @@ class RegisterViewModel(
     }
 
     fun clearUIState() {
-        _registerUIState.value = UIState.UISuccess
+        _registerUIState.value = UIState.UISuccess(Unit)
     }
 }

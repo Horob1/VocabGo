@@ -116,4 +116,27 @@
     <string name="text_selection_for_you">Selection for you</string>
     <string name="text_facebook_founder">Facebook founder</string>
     <string name="google_login_failed">No Google account available on this device</string>
+    <string name="text_retry">Retry</string>
+    <string name="text_no_data_found">No data found!</string>
+
+    <string name="just_now">Just now</string>
+    <string name="minute_ago">minute ago</string>
+    <string name="hour_ago">hour ago</string>
+    <string name="day_ago">day ago</string>
+    <string name="week_ago">week ago</string>
+    <string name="month_ago">month ago</string>
+    <string name="year_ago">year ago</string>
+
+    <string name="title_setting">Settings</string>
+    <string name="title_theme">Theme</string>
+    <string name="title_locales">Locales</string>
+    <string name="title_dark_mode">Dark Mode</string>
+    <string name="desc_dark_mode">Enable dark mode</string>
+    <string name="title_follow_system_theme">Sync system theme</string>
+    <string name="desc_follow_system">Sync with the device theme</string>
+    <string name="title_dynamic_color">Dynamic Color</string>
+    <string name="desc_dynamic_color">Enable dynamic color for Android 12+</string>
+    <string name="title_language">Language</string>
+    <string name="desc_language">Change app language</string>
+    <string name="toast_please_turn_off_the_sync_system_them">Please turn off the sync system theme to change the theme</string>
 </resources>

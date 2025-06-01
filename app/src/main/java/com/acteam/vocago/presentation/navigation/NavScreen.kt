@@ -20,6 +20,23 @@ sealed class NavScreen {
 
     @Serializable
     data class CommonChatNavScreen(val id: Int, val title: String, val avatarRes: Int) : NavScreen()
+    data class NewsHistoryNavScreen(
+        val isBookmark: Boolean,
+    ) : NavScreen()
+
+    @Serializable
+    data class NewsDetailNavScreen(
+        val newsId: String,
+    ) : NavScreen()
+
+    @Serializable
+    data object DictionaryNavScreen : NavScreen()
+
+    @Serializable
+    data object SettingNavScreen : NavScreen()
+
+    @Serializable
+    data object CameraNavScreen : NavScreen()
 
     // Mâm 2
     // Mân 2 của Auth
@@ -56,6 +73,5 @@ sealed class NavScreen {
 
     @Serializable
     data object ChatNavScreen : NavScreen()
-
 
 }

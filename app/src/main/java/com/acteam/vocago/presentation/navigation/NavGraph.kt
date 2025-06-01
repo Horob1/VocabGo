@@ -14,6 +14,10 @@ import com.acteam.vocago.presentation.screen.auth.SetupAuthNavGraph
 import com.acteam.vocago.presentation.screen.main.SetupMainNavGraph
 import com.acteam.vocago.presentation.screen.main.chat.ChatComponent.CommonChatScreen
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
+import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailScreen
+import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
+import com.acteam.vocago.presentation.screen.setting.SettingScreen
+import com.acteam.vocago.presentation.screen.setting.SettingViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeScreen
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -58,6 +62,33 @@ fun SetupNavGraph(
                 title = arg.title,
                 avatarRes = arg.avatarRes,
                 viewModel = chatViewModel,
+
+        composable<NavScreen.NewsDetailNavScreen> {
+            val newsDetailViewModel = koinViewModel<NewsDetailViewModel>()
+            val arg = it.toRoute<NavScreen.NewsDetailNavScreen>()
+            NewsDetailScreen(
+                viewModel = newsDetailViewModel,
+                newsId = arg.newsId
+            )
+        }
+
+        composable<NavScreen.NewsHistoryNavScreen> {
+            val arg = it.toRoute<NavScreen.ResetPasswordNavScreen>()
+
+        }
+
+        composable<NavScreen.DictionaryNavScreen> {
+
+        }
+
+        composable<NavScreen.CameraNavScreen> {
+
+        }
+
+        composable<NavScreen.SettingNavScreen> {
+            val settingViewModel = koinViewModel<SettingViewModel>()
+            SettingScreen(
+                viewModel = settingViewModel,
                 rootNavController = navController
             )
         }

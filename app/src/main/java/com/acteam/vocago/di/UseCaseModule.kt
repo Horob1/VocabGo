@@ -8,6 +8,8 @@ import com.acteam.vocago.domain.usecase.GetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.GetLanguageUseCase
 import com.acteam.vocago.domain.usecase.GetLocalUserProfileUseCase
 import com.acteam.vocago.domain.usecase.GetLoginStateUseCase
+import com.acteam.vocago.domain.usecase.GetNewsDetailUseCase
+import com.acteam.vocago.domain.usecase.GetNewsPagingUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
 import com.acteam.vocago.domain.usecase.LoginGoogleUseCase
@@ -16,6 +18,8 @@ import com.acteam.vocago.domain.usecase.RegisterUseCase
 import com.acteam.vocago.domain.usecase.ResendVerifyEmailUseCase
 import com.acteam.vocago.domain.usecase.ResetPasswordUseCase
 import com.acteam.vocago.domain.usecase.SaveOnBoardingStateUseCase
+import com.acteam.vocago.domain.usecase.SetDynamicColorUseCase
+import com.acteam.vocago.domain.usecase.SetThemeUseCase
 import com.acteam.vocago.domain.usecase.SyncProfileUseCase
 import com.acteam.vocago.domain.usecase.UpdateChosenCategoriesUseCase
 import com.acteam.vocago.domain.usecase.UpdateChosenNewsLevelUseCase
@@ -90,5 +94,21 @@ val useCaseModule = module {
 
     single {
         GetDynamicColorUseCase(get())
+    }
+
+    single {
+        GetNewsPagingUseCase(get())
+    }
+
+    single {
+        SetDynamicColorUseCase(get())
+    }
+
+    single {
+        SetThemeUseCase(get())
+    }
+
+    single {
+        GetNewsDetailUseCase(get())
     }
 }

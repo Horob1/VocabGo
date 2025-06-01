@@ -16,7 +16,7 @@ class VerifyTwoFAViewModel(
     private val _otpState = MutableStateFlow(OtpState())
     val otpState = _otpState
 
-    private val _verifyTwoFAUIState = MutableStateFlow<UIState>(UIState.UISuccess)
+    private val _verifyTwoFAUIState = MutableStateFlow<UIState<Unit>>(UIState.UISuccess(Unit))
     val verifyTwoFAUIState = _verifyTwoFAUIState
 
     fun setOtpValue(otp: String) {
@@ -29,7 +29,7 @@ class VerifyTwoFAViewModel(
             try {
                 verifyTwoFAUseCase(email, _otpState.value.otp)
                 afterVerifySuccess()
-                _verifyTwoFAUIState.value = UIState.UISuccess
+                _verifyTwoFAUIState.value = UIState.UISuccess(Unit)
             } catch (e: Exception) {
                 if (e is ApiException) {
                     when (e.code) {
@@ -51,7 +51,7 @@ class VerifyTwoFAViewModel(
     }
 
     fun clearUIState() {
-        _verifyTwoFAUIState.value = UIState.UISuccess
+        _verifyTwoFAUIState.value = UIState.UISuccess(Unit)
     }
 
 }

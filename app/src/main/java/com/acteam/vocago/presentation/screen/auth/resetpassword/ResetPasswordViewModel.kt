@@ -21,13 +21,13 @@ import kotlinx.coroutines.launch
 
 class ResetPasswordViewModel(
     private val resetPasswordUseCase: ResetPasswordUseCase,
-    private val forgotPasswordUseCase: ForgotPasswordUseCase
+    private val forgotPasswordUseCase: ForgotPasswordUseCase,
 ) : ViewModel() {
 
     private val _resetPasswordFormState = MutableStateFlow(ResetPasswordFormState())
     val resetPasswordFormState = _resetPasswordFormState
 
-    private val _resetPasswordUIState = MutableStateFlow<UIState>(UIState.UISuccess)
+    private val _resetPasswordUIState = MutableStateFlow<UIState<Unit>>(UIState.UISuccess(Unit))
     val resetPasswordUIState = _resetPasswordUIState
 
     private val _otpState = MutableStateFlow(OtpState())
@@ -96,7 +96,7 @@ class ResetPasswordViewModel(
                     otp = _otpState.value.otp
                 )
                 afterResetPasswordSuccess()
-                _resetPasswordUIState.value = UIState.UISuccess
+                _resetPasswordUIState.value = UIState.UISuccess(Unit)
             } catch (e: Exception) {
                 if (e is ApiException) {
                     when (e.code) {
@@ -125,7 +125,7 @@ class ResetPasswordViewModel(
 
             try {
                 forgotPasswordUseCase(email)
-                _resetPasswordUIState.value = UIState.UISuccess
+                _resetPasswordUIState.value = UIState.UISuccess(Unit)
                 _otpState.value = _otpState.value.copy(timeLeft = 300)
                 startOtpCountdown(300)
             } catch (e: Exception) {
@@ -136,6 +136,6 @@ class ResetPasswordViewModel(
 
 
     fun clearUIState() {
-        _resetPasswordUIState.value = UIState.UISuccess
+        _resetPasswordUIState.value = UIState.UISuccess(Unit)
     }
 }
