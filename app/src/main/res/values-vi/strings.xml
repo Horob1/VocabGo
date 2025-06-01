@@ -95,4 +95,19 @@
 
     <string name="text_search">Tìm kiếm</string>
     <string name="text_choose_categories">Chọn danh mục</string>
+
+    <!--Chat-->
+    <string name="text_everyday_friend">Người bạn hằng ngày</string>
+    <string name="text_developer">Lập trình viên</string>
+    <string name="text_football_boat">Huyền thoại bóng đá</string>
+    <string name="text_english_tutor">Gia sư tiếng Anh</string>
+    <string name="text_football_goat">Huyền thoại bóng đá</string>
+    <string name="text_singer">Ca sĩ</string>
+    <string name="text_us_president">Tổng thống Hoa Kỳ</string>
+    <string name="text_game_player">Game thủ</string>
+    <string name="text_practice_communicate_with_chatbot">Giao tiếp với chatbot</string>
+    <string name="text_selection_for_you">Chọn tướng</string>
+    <string name="text_facebook_founder">Nhà sáng lập Facebook</string>
+    <string name="google_login_failed">Thiết bị chưa có tài khoản Google</string>
+
 </resources>

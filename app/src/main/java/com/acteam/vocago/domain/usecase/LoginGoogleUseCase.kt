@@ -8,15 +8,13 @@ class LoginGoogleUseCase(
     private val authRemoteDataSource: AuthRemoteDataSource,
     private val authLocalDataSource: AuthLocalDataSource,
 ) {
-    suspend operator fun invoke(token: String): LoginGoogleResponse? {
+    suspend operator fun invoke(token: String): LoginGoogleResponse {
         val data = authRemoteDataSource.loginGoogle(token)
-        if (data != null) {
-            authLocalDataSource.saveCredential(
-                data.accessToken,
-                data.refreshToken,
-                data.credentialId
-            )
-        }
+        authLocalDataSource.saveCredential(
+            data.accessToken,
+            data.refreshToken,
+            data.credentialId,
+        )
         return data
     }
 }

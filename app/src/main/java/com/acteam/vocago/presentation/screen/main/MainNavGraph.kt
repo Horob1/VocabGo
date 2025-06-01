@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.acteam.vocago.presentation.navigation.NavScreen
+import com.acteam.vocago.presentation.screen.main.chat.ChatScreen
 import com.acteam.vocago.presentation.screen.main.common.NavBottomBar
 import com.acteam.vocago.presentation.screen.main.news.NewsScreen
 import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
@@ -54,7 +55,9 @@ fun SetupMainNavGraph(rootNavController: NavController) {
                 Text(text = "Toeic")
             }
             composable<NavScreen.ChatNavScreen> {
-                Text(text = "Chat")
+                ChatScreen(
+                    rootNavController = rootNavController,
+                )
             }
         }
     }

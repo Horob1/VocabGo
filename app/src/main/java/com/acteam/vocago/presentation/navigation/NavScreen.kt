@@ -18,6 +18,9 @@ sealed class NavScreen {
     @Serializable
     data object UserNavScreen : NavScreen()
 
+    @Serializable
+    data class CommonChatNavScreen(val id: Int, val title: String, val avatarRes: Int) : NavScreen()
+
     // Mâm 2
     // Mân 2 của Auth
     @Serializable
@@ -54,5 +57,5 @@ sealed class NavScreen {
     @Serializable
     data object ChatNavScreen : NavScreen()
 
-    // Mâm 3
+
 }

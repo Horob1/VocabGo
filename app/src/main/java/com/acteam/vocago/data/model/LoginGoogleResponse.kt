@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoginGoogleResponse(
+    val credentialId: String,
     val accessToken: String,
     val refreshToken: String,
-    val credentialId: String
 )

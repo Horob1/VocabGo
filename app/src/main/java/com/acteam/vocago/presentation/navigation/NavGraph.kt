@@ -9,8 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.acteam.vocago.presentation.screen.auth.SetupAuthNavGraph
 import com.acteam.vocago.presentation.screen.main.SetupMainNavGraph
+import com.acteam.vocago.presentation.screen.main.chat.ChatComponent.CommonChatScreen
+import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeScreen
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -45,7 +48,18 @@ fun SetupNavGraph(
             )
         }
         composable<NavScreen.UserNavScreen> {
-            
+
+        }
+        composable<NavScreen.CommonChatNavScreen> {
+            val chatViewModel = koinViewModel<ChatViewModel>()
+            val arg = it.toRoute<NavScreen.CommonChatNavScreen>()
+            CommonChatScreen(
+                id = arg.id,
+                title = arg.title,
+                avatarRes = arg.avatarRes,
+                viewModel = chatViewModel,
+                rootNavController = navController
+            )
         }
     }
 }
