@@ -62,6 +62,9 @@ fun SetupNavGraph(
                 title = arg.title,
                 avatarRes = arg.avatarRes,
                 viewModel = chatViewModel,
+                rootNavController = navController
+            )
+        }
 
         composable<NavScreen.NewsDetailNavScreen> {
             val newsDetailViewModel = koinViewModel<NewsDetailViewModel>()
@@ -73,7 +76,7 @@ fun SetupNavGraph(
         }
 
         composable<NavScreen.NewsHistoryNavScreen> {
-            val arg = it.toRoute<NavScreen.ResetPasswordNavScreen>()
+            it.toRoute<NavScreen.ResetPasswordNavScreen>()
 
         }
 

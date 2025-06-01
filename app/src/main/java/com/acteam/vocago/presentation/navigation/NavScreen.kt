@@ -20,6 +20,8 @@ sealed class NavScreen {
 
     @Serializable
     data class CommonChatNavScreen(val id: Int, val title: String, val avatarRes: Int) : NavScreen()
+
+    @Serializable
     data class NewsHistoryNavScreen(
         val isBookmark: Boolean,
     ) : NavScreen()

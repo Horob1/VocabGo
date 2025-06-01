@@ -92,7 +92,7 @@ class LoginViewModel(
                 val response = loginGoogleUseCase(token)
                 Log.d("login response", response.toString())
                 afterLoginSuccess()
-                _loginUIState.value = UIState.UISuccess
+                _loginUIState.value = UIState.UISuccess(Unit)
             } catch (e: Exception) {
                 e.printStackTrace()
                 if (e is ApiException) {
