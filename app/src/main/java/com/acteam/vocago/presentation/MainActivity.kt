@@ -7,8 +7,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.acteam.vocago.domain.model.AppTheme
@@ -19,11 +21,13 @@ import com.acteam.vocago.presentation.navigation.SetupNavGraph
 import com.acteam.vocago.presentation.ui.theme.VocaGoTheme
 import com.acteam.vocago.utils.isTablet
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.component.inject
 
 class MainActivity : AppCompatActivity(), KoinComponent {
     private val getOnBoardingStateUseCase: GetStartScreenUseCase by inject()
+    private val getThemeUseCase: GetThemeUseCase by inject()
+    private val getDynamicColorUseCase: GetDynamicColorUseCase by inject()
+    private var isReady = false
 
     @SuppressLint("SourceLockedOrientationActivity")
     @OptIn(ExperimentalAnimationApi::class)
@@ -32,14 +36,22 @@ class MainActivity : AppCompatActivity(), KoinComponent {
         if (!this.isTablet()) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
-        installSplashScreen()
+
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { !isReady }
+
         enableEdgeToEdge()
-        val getThemeUseCase = get<GetThemeUseCase>()
-        val getDynamicColorUseCase = get<GetDynamicColorUseCase>()
+
         setContent {
             val userTheme by getThemeUseCase().collectAsState(initial = AppTheme.SYSTEM)
             val dynamicColor by getDynamicColorUseCase().collectAsState(initial = false)
-            val startDestination = getOnBoardingStateUseCase()
+
+            LaunchedEffect(userTheme, dynamicColor) {
+                isReady = true
+            }
+
+            val startDestination = remember { getOnBoardingStateUseCase() }
+
             VocaGoTheme(
                 userTheme = userTheme,
                 dynamicColorEnabled = dynamicColor

@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.screen.main.chat.ChatComponent
+package com.acteam.vocago.presentation.screen.main.chat.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,7 +31,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun TypingIndicator(
     avatar: Any? = R.drawable.capybara_avatar,
-    chatbotName: String // vẫn giữ tham số nếu muốn dùng sau
+    chatbotName: String, // vẫn giữ tham số nếu muốn dùng sau
 ) {
     val deviceType = getDeviceType()
 

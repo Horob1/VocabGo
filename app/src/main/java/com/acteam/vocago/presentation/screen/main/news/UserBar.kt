@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,16 +25,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import coil.compose.SubcomposeAsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.acteam.vocago.R
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.safeClickable
-
 
 @Composable
 fun UserBar(
@@ -42,8 +42,10 @@ fun UserBar(
     viewModel: NewsViewModel,
 ) {
 
+
     val isAuth by viewModel.loginState.collectAsState()
-    val userState by viewModel.userState.collectAsState()
+    val userProfile by viewModel.userState.collectAsState()
+
 
     LaunchedEffect(isAuth) {
         if (isAuth) {
@@ -51,18 +53,21 @@ fun UserBar(
         }
     }
 
-    // xử lý title text
     val anonymousText = stringResource(R.string.text_anonymous)
     val helloText = stringResource(R.string.text_hello)
-    val name = when {
-        !isAuth -> anonymousText
-        userState == null -> "..."
-        else -> "${userState?.firstName} ${userState?.lastName}"
+
+    val name by remember(isAuth, userProfile, anonymousText) {
+        derivedStateOf {
+            when {
+                !isAuth -> anonymousText
+                userProfile == null -> "..."
+                else -> "${userProfile?.firstName ?: ""} ${userProfile?.lastName ?: ""}".trim()
+            }
+        }
     }
+
     val titleText = "$helloText, $name"
 
-
-    // responsive
     val horizontalPadding =
         responsiveDP(mobile = 16, tabletPortrait = 24, tabletLandscape = 32)
     val verticalPadding =
@@ -85,10 +90,10 @@ fun UserBar(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                titleText, style = MaterialTheme.typography.titleMedium.copy(
+                text = titleText, // Explicitly pass text
+                style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = fontSize,
                     color = MaterialTheme.colorScheme.primary
-
                 )
             )
             Spacer(
@@ -97,7 +102,7 @@ fun UserBar(
                 )
             )
             Text(
-                stringResource(R.string.text_wellcome_to_vocago),
+                text = stringResource(R.string.text_wellcome_to_vocago),
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurface.copy(
                         0.7f
@@ -107,7 +112,7 @@ fun UserBar(
         }
 
         UserAvatar(
-            imageUrl = userState?.avatar,
+            imageUrl = userProfile?.avatar,
             onClick = {
                 if (isAuth) navigateToProfile()
                 else navigateToLogin()
@@ -122,9 +127,12 @@ fun UserAvatar(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
+
     val context = LocalContext.current
-    val loadingPainter = rememberAsyncImagePainter(model = R.drawable.capybara_avatar)
-    val imageRequest = remember(imageUrl) {
+
+    val placeholderPainter = painterResource(id = R.drawable.capybara_avatar)
+
+    val imageRequest = remember(imageUrl, context) {
         ImageRequest.Builder(context)
             .data(imageUrl)
             .crossfade(true)
@@ -133,35 +141,39 @@ fun UserAvatar(
             .build()
     }
 
+    val avatarSize = responsiveDP(mobile = 40, tabletPortrait = 48, tabletLandscape = 56)
+
     Box(
         modifier = modifier
-            .size(responsiveDP(mobile = 40, tabletPortrait = 48, tabletLandscape = 56))
+            .size(avatarSize)
             .clip(CircleShape)
             .safeClickable(key = "user_bar_profile") { onClick() },
         contentAlignment = Alignment.Center
     ) {
         if (imageUrl.isNullOrEmpty()) {
             Image(
-                painter = loadingPainter,
-                contentDescription = "User Avatar Default",
-                modifier = Modifier.fillMaxSize()
+                painter = placeholderPainter,
+                contentDescription = "User Avatar Placeholder",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
         } else {
             SubcomposeAsyncImage(
                 model = imageRequest,
-                contentDescription = "User Avatar",
+                contentDescription = "User Avatar Online",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
                 loading = {
                     CircularProgressIndicator(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.size(avatarSize * 0.5f)
                     )
                 },
                 error = {
                     Image(
-                        painter = loadingPainter,
+                        painter = placeholderPainter,
                         contentDescription = "User Avatar Error",
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
                     )
                 }
             )

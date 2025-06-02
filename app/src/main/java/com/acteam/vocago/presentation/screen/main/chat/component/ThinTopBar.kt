@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.screen.main.chat.ChatComponent
+package com.acteam.vocago.presentation.screen.main.chat.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Videocam
@@ -38,7 +38,7 @@ import com.acteam.vocago.utils.getDeviceType
 fun ThinTopBar(
     title: String,
     onBackClick: () -> Unit,
-    avatarRes: Int? = null
+    avatarRes: Int? = null,
 ) {
     val deviceType = getDeviceType()
 
@@ -96,7 +96,7 @@ fun ThinTopBar(
                 modifier = Modifier.size(iconSize)
             ) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
                     tint = MaterialTheme.colorScheme.primary
                 )

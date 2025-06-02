@@ -24,9 +24,9 @@ class NewsRepositoryImpl(
     ): Flow<PagingData<NewsEntity>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 10,
-                initialLoadSize = 20,
-                prefetchDistance = 5,
+                pageSize = 5,
+                initialLoadSize = 10,
+                prefetchDistance = 1,
                 maxSize = 200,
                 enablePlaceholders = false
             ),

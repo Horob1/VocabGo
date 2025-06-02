@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.screen.main.chat.ChatComponent
+package com.acteam.vocago.presentation.screen.main.chat.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 fun MessengerInput(
     input: String,
     onInputChange: (String) -> Unit,
-    onSendClick: () -> Unit
+    onSendClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -77,7 +77,7 @@ fun MessengerInput(
                 )
         ) {
             Icon(
-                imageVector = Icons.Default.Send,
+                imageVector = Icons.AutoMirrored.Filled.Send,
                 contentDescription = "Send",
                 tint = Color.White
             )

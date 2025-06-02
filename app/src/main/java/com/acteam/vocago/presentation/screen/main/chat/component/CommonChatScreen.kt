@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.screen.main.chat.ChatComponent
+package com.acteam.vocago.presentation.screen.main.chat.component
 
 import MessageItem
 import androidx.compose.foundation.clickable

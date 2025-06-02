@@ -24,6 +24,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +37,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.acteam.vocago.R
@@ -50,7 +51,31 @@ fun BigNewsCard(
     news: NewsEntity,
     onItemClick: () -> Unit,
 ) {
-    val loadingPainter = rememberAsyncImagePainter(model = R.drawable.loading_news)
+
+    val loadingErrorPainter = painterResource(id = R.drawable.loading_news)
+
+
+    val keywordStats by remember(news.words) {
+        derivedStateOf {
+            listOf(
+                Triple("A1", news.words.a1, Color(0xFF81C784)), // pastel green
+                Triple("A2", news.words.a2, Color(0xFF64B5F6)), // pastel blue
+                Triple("B1", news.words.b1, Color(0xFFFFF176)), // pastel yellow
+                Triple("B2", news.words.b2, Color(0xFFEF9A9A))  // pastel red
+            )
+        }
+    }
+
+    val totalWords by remember(news.words) {
+        derivedStateOf {
+            news.words.a1 + news.words.a2 + news.words.b1 + news.words.b2
+        }
+    }
+
+
+    val formattedDate by remember(news.createdAt) {
+        derivedStateOf { DateDisplayHelper.formatDateString(news.createdAt) }
+    }
 
     ElevatedCard(
         onClick = onItemClick,
@@ -73,20 +98,21 @@ fun BigNewsCard(
                     .clip(MaterialTheme.shapes.medium)
             ) {
                 val context = LocalContext.current
+
+                val imageRequest = remember(news.coverImage) {
+                    ImageRequest.Builder(context)
+                        .data(news.coverImage)
+                        .crossfade(true)
+                        .diskCachePolicy(CachePolicy.ENABLED) // Good: Caching enabled
+                        .memoryCachePolicy(CachePolicy.ENABLED) // Good: Caching enabled
+                        .build()
+                }
                 SubcomposeAsyncImage(
-                    model =
-                        remember(news.coverImage) {
-                            ImageRequest.Builder(context)
-                                .data(news.coverImage)
-                                .crossfade(true)
-                                .diskCachePolicy(CachePolicy.ENABLED)
-                                .memoryCachePolicy(CachePolicy.ENABLED)
-                                .build()
-                        },
+                    model = imageRequest,
                     contentDescription = "News Image",
                     loading = {
                         Image(
-                            painter = loadingPainter,
+                            painter = loadingErrorPainter,
                             contentDescription = "Loading",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
@@ -94,15 +120,14 @@ fun BigNewsCard(
                     },
                     error = {
                         Image(
-                            painter = loadingPainter,
-                            contentDescription = "Loading",
+                            painter = loadingErrorPainter,
+                            contentDescription = "Error Loading Image",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
                     },
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
 
                 Box(
@@ -110,24 +135,18 @@ fun BigNewsCard(
                         .align(Alignment.TopStart)
                         .padding(8.dp)
                         .background(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                0.7f
-                            ),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.7f),
                             shape = RoundedCornerShape(8.dp)
                         )
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = news.category,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.surface
                         )
-
                         Spacer(modifier = Modifier.width(4.dp))
-
                         Image(
                             painter = painterResource(id = R.drawable.vi_flag),
                             contentDescription = null,
@@ -136,56 +155,26 @@ fun BigNewsCard(
                     }
                 }
 
-                val keywordStats = remember(news.words) {
-                    listOf(
-                        Triple(
-                            "A1",
-                            news.words.a1,
-                            Color(0xFF81C784) // pastel green
-                        ),
-                        Triple(
-                            "A2",
-                            news.words.a2,
-                            Color(0xFF64B5F6) // pastel blue
-                        ),
-                        Triple(
-                            "B1",
-                            news.words.b1,
-                            Color(0xFFFFF176) // pastel yellow
-                        ),
-                        Triple(
-                            "B2",
-                            news.words.b2,
-                            Color(0xFFEF9A9A) // pastel red
-                        )
-                    )
-                }
-
-                val total = remember(news.words) {
-                    news.words.a1 + news.words.a2 + news.words.b1 + news.words.b2
-                }
-
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .fillMaxWidth()
-                        .height(6.dp)
-                ) {
-                    keywordStats.forEach { (_, count, color) ->
-                        val ratio = when {
-                            total == 0 -> 1f
-                            count.toFloat() / total == 0f -> 1f
-                            else -> count.toFloat() / total
+                if (totalWords > 0) {
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .fillMaxWidth()
+                            .height(6.dp)
+                    ) {
+                        keywordStats.forEach { (_, count, color) ->
+                            val ratio = if (count > 0) count.toFloat() / totalWords else 0f
+                            if (ratio > 0f) { // Only add a Box if it will be visible
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .weight(ratio)
+                                        .background(color)
+                                )
+                            }
                         }
-                        Box(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(ratio)
-                                .background(color)
-                        )
                     }
                 }
-
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -193,7 +182,7 @@ fun BigNewsCard(
             Text(
                 text = news.title,
                 style = MaterialTheme.typography.titleMedium.copy(
-                    fontSize = responsiveSP(
+                    fontSize = responsiveSP( // Assuming responsiveSP is lightweight
                         mobile = 18,
                         tabletPortrait = 20,
                         tabletLandscape = 22
@@ -210,37 +199,33 @@ fun BigNewsCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                if (
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+
                         Icon(
                             imageVector = Icons.Default.AccessTime,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(16.dp)
                         )
+
                         Spacer(modifier = Modifier.width(4.dp))
+
                         DateDisplayHelper.ConvertToTimeAgo(
-                            dateTime = news.createdAt
-                        )
+                            dateTime = news.createdAt,
+
+                            )
                     }
+                }
 
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.RemoveRedEye,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(16.dp)
                     )
-
                     Spacer(modifier = Modifier.width(4.dp))
-
                     Text(
                         text = news.views.toString(),
                         style = MaterialTheme.typography.bodySmall,
@@ -248,15 +233,14 @@ fun BigNewsCard(
                     )
                 }
                 Text(
-                    text = DateDisplayHelper.formatDateString(
-                        news.createdAt
-                    ),
+                    text = formattedDate, // Use pre-calculated value
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
     }
+
 }
 
 @Composable
@@ -265,13 +249,41 @@ fun SmallNewsCard(
     news: NewsEntity,
     onItemClick: () -> Unit = {},
 ) {
-    val loadingPainter = rememberAsyncImagePainter(model = R.drawable.loading_news)
+    val loadingErrorPainter = painterResource(id = R.drawable.loading_news)
 
-    val rowHeight = responsiveDP(
-        mobile = 80,
-        tabletPortrait = 100,
-        tabletLandscape = 120
-    )
+    val keywordStats by remember(news.words) {
+        derivedStateOf {
+            listOf(
+                Triple("A1", news.words.a1, Color(0xFF81C784)),
+                Triple("A2", news.words.a2, Color(0xFF64B5F6)),
+                Triple("B1", news.words.b1, Color(0xFFFFF176)),
+                Triple("B2", news.words.b2, Color(0xFFEF9A9A))
+            )
+        }
+    }
+    val totalWords by remember(news.words) {
+        derivedStateOf {
+            news.words.a1 + news.words.a2 + news.words.b1 + news.words.b2
+        }
+    }
+
+    val formattedDate by remember(news.createdAt) {
+        derivedStateOf { DateDisplayHelper.formatDateString(news.createdAt) }
+    }
+
+
+    val rowHeight = responsiveDP(mobile = 80, tabletPortrait = 100, tabletLandscape = 120)
+
+    val imageWidth =
+        responsiveDP(mobile = 120, tabletPortrait = 140, tabletLandscape = 140)
+
+    val titleFontSize =
+        responsiveSP(mobile = 16, tabletPortrait = 18, tabletLandscape = 20)
+
+    val titleLineHeight =
+        responsiveSP(mobile = 18, tabletPortrait = 20, tabletLandscape = 22)
+
+
     ElevatedCard(
         onClick = onItemClick,
         modifier = modifier
@@ -285,25 +297,24 @@ fun SmallNewsCard(
                 .padding(12.dp),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val context = LocalContext.current
+                val imageRequest = remember(news.coverImage) {
+                    ImageRequest.Builder(context)
+                        .data(news.coverImage)
+                        .crossfade(true)
+                        .diskCachePolicy(CachePolicy.ENABLED)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+                        .build()
+                }
                 SubcomposeAsyncImage(
-                    model =
-                        remember(news.coverImage) {
-                            ImageRequest.Builder(context)
-                                .data(news.coverImage)
-                                .crossfade(true)
-                                .diskCachePolicy(CachePolicy.ENABLED)
-                                .memoryCachePolicy(CachePolicy.ENABLED)
-                                .build()
-                        },
+                    model = imageRequest,
                     contentDescription = "News Image",
                     loading = {
                         Image(
-                            painter = loadingPainter,
+                            painter = loadingErrorPainter, // Use optimized painter
                             contentDescription = "Loading",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
@@ -311,48 +322,29 @@ fun SmallNewsCard(
                     },
                     error = {
                         Image(
-                            painter = loadingPainter,
-                            contentDescription = "Loading",
+                            painter = loadingErrorPainter, // Use optimized painter
+                            contentDescription = "Error Loading Image",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
                     },
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(
-                            height = rowHeight,
-                            width = rowHeight + responsiveDP(
-                                mobile = 30,
-                                tabletPortrait = 40,
-                                tabletLandscape = 40
-                            )
-                        )
+                        .size(height = rowHeight, width = imageWidth) // Use remembered values
                         .clip(RoundedCornerShape(8.dp))
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Column(
-                    modifier = Modifier.height(
-                        rowHeight
-                    ),
+                    modifier = Modifier.height(rowHeight), // Use remembered value
                     verticalArrangement = Arrangement.Top
                 ) {
-                    val fontSize = responsiveSP(
-                        mobile = 16,
-                        tabletPortrait = 18,
-                        tabletLandscape = 20
-                    )
-                    val lineHeight = responsiveSP(
-                        mobile = 18,
-                        tabletPortrait = 20,
-                        tabletLandscape = 22
-                    )
                     Text(
                         text = news.title,
                         style = MaterialTheme.typography.titleLarge.copy(
-                            fontSize = fontSize,
-                            lineHeight = lineHeight
+                            fontSize = titleFontSize, // Use remembered value
+                            lineHeight = titleLineHeight // Use remembered value
                         ),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
@@ -363,80 +355,38 @@ fun SmallNewsCard(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        val keywordStats = remember(news.words) {
-                            listOf(
-                                Triple(
-                                    "A1",
-                                    news.words.a1,
-                                    Color(0xFF81C784) // pastel green
-                                ),
-                                Triple(
-                                    "A2",
-                                    news.words.a2,
-                                    Color(0xFF64B5F6) // pastel blue
-                                ),
-                                Triple(
-                                    "B1",
-                                    news.words.b1,
-                                    Color(0xFFFFF176) // pastel yellow
-                                ),
-                                Triple(
-                                    "B2",
-                                    news.words.b2,
-                                    Color(0xFFEF9A9A) // pastel red
-                                )
+                        // Optimization 4: Improved logic for keyword stats bar ratio
+                        if (totalWords > 0) {
+                            Row(
+                                modifier = Modifier
+                                    .weight(1f) // Ensure this row takes available space before timeAgo
+                                    .height(6.dp)
+                                    .clip(RoundedCornerShape(6.dp))
+                            ) {
+                                keywordStats.forEach { (_, count, color) ->
+                                    val ratio =
+                                        if (count > 0) count.toFloat() / totalWords else 0f
+                                    if (ratio > 0f) {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxHeight()
+                                                .weight(ratio)
+                                                .background(color)
+                                        )
+                                    }
+                                }
+                            }
+                        } else {
+                            Spacer(Modifier.weight(1f)) // Maintain layout if bar is not shown
+                        }
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            DateDisplayHelper.ConvertToTimeAgo(
+                                dateTime = news.createdAt,
                             )
                         }
-
-                        val total = remember(news.words) {
-                            news.words.a1 + news.words.a2 + news.words.b1 + news.words.b2
-                        }
-
-                        Row(
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(6.dp)
-                                .clip(
-                                    RoundedCornerShape(
-                                        6.dp
-                                    )
-                                )
-                        ) {
-                            keywordStats.forEach { (_, count, color) ->
-                                val ratio = when {
-                                    count == 0 -> 1f
-                                    count.toFloat() / total == 0f -> 1f
-                                    else -> count.toFloat() / total
-                                }
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .weight(ratio)
-                                        .background(color)
-                                )
-                            }
-                        }
-
-                        if (
-                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                        )
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(
-                                    start = 16.dp
-                                )
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.AccessTime,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                DateDisplayHelper.ConvertToTimeAgo(
-                                    dateTime = news.createdAt
-                                )
-                            }
                     }
                 }
             }
@@ -447,17 +397,13 @@ fun SmallNewsCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = news.category,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-
                     Spacer(modifier = Modifier.width(4.dp))
-
                     Image(
                         painter = painterResource(id = R.drawable.vi_flag),
                         contentDescription = null,
@@ -465,18 +411,14 @@ fun SmallNewsCard(
                     )
                 }
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.RemoveRedEye,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(16.dp)
                     )
-
                     Spacer(modifier = Modifier.width(4.dp))
-
                     Text(
                         text = news.views.toString(),
                         style = MaterialTheme.typography.bodySmall,
@@ -485,13 +427,12 @@ fun SmallNewsCard(
                 }
 
                 Text(
-                    text = DateDisplayHelper.formatDateString(
-                        news.createdAt
-                    ),
+                    text = formattedDate, // Use pre-calculated value
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
     }
+
 }

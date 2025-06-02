@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.screen.main.chat.ChatComponent
+package com.acteam.vocago.presentation.screen.main.chat.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -47,7 +47,7 @@ fun UserProfileCard(
     name: String,
     jobTitle: String,
     modifier: Modifier = Modifier,
-    onclick: () -> Unit
+    onclick: () -> Unit,
 ) {
     val deviceType = getDeviceType()
 

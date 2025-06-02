@@ -22,7 +22,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
-import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +33,9 @@ fun NewsScreen(
     val newsPagingItems = viewModel.newsFlow.collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
     var isShowFilterDialog by remember { mutableStateOf(false) }
-    val isRefreshing = newsPagingItems.loadState.refresh is LoadState.Loading
+    val isRefreshing by remember(newsPagingItems.loadState.refresh) {
+        derivedStateOf { newsPagingItems.loadState.refresh is LoadState.Loading }
+    }
     val showUserBar by remember {
         derivedStateOf {
             lazyListState.firstVisibleItemIndex == 0 && lazyListState.firstVisibleItemScrollOffset < 50
@@ -87,27 +88,34 @@ fun NewsScreen(
 
                 items(
                     count = newsPagingItems.itemCount,
-                    key = {
-                        UUID.randomUUID().toString()
+                    key = { index ->
+                        val item =
+                            newsPagingItems.peek(index)
+                        item?._id
+                            ?: index
                     },
+                    contentType = { index ->
+                        if (index == 0) "big_news_card" else "small_news_card"
+                    }
                 ) { index ->
-                    val item = newsPagingItems[index]
-                    item?.let {
+                    val item =
+                        newsPagingItems[index]
+                    item?.let { newsItem ->
                         if (index == 0) {
                             BigNewsCard(
-                                news = item,
+                                news = newsItem,
                                 onItemClick = {
                                     rootNavController.navigate(
-                                        NavScreen.NewsDetailNavScreen(newsId = item._id)
+                                        NavScreen.NewsDetailNavScreen(newsId = newsItem._id)
                                     )
                                 },
                             )
                         } else {
                             SmallNewsCard(
-                                news = item,
+                                news = newsItem,
                                 onItemClick = {
                                     rootNavController.navigate(
-                                        NavScreen.NewsDetailNavScreen(newsId = item._id)
+                                        NavScreen.NewsDetailNavScreen(newsId = newsItem._id)
                                     )
                                 }
                             )
@@ -115,20 +123,20 @@ fun NewsScreen(
                     }
                 }
 
-                item {
-                    when (newsPagingItems.loadState.append) {
-                        is LoadState.Loading -> {
-                            LoadingSurface()
-                        }
+                if (newsPagingItems.loadState.append is LoadState.Loading) {
+                    item {
+                        LoadingSurface()
+                    }
+                }
 
-                        else -> {}
+                if (newsPagingItems.loadState.append is LoadState.Error) {
+                    item {
+                        //  Handle error state
                     }
                 }
             }
         }
     }
-
-
 
     FilterDialog(
         isVisible = isShowFilterDialog,

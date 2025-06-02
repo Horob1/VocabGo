@@ -28,7 +28,7 @@ import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
-import com.acteam.vocago.presentation.screen.main.chat.ChatComponent.UserProfileCard
+import com.acteam.vocago.presentation.screen.main.chat.component.UserProfileCard
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
 import com.acteam.vocago.utils.responsiveSP
@@ -249,7 +249,7 @@ data class UserProfileData(
     val name: String,
     val jobTitle: String,
     val chatId: Int,
-    val onclick: (Int) -> Unit
+    val onclick: (Int) -> Unit,
 )
 
 

@@ -12,8 +12,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.acteam.vocago.presentation.screen.auth.SetupAuthNavGraph
 import com.acteam.vocago.presentation.screen.main.SetupMainNavGraph
-import com.acteam.vocago.presentation.screen.main.chat.ChatComponent.CommonChatScreen
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
+import com.acteam.vocago.presentation.screen.main.chat.component.CommonChatScreen
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailScreen
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingScreen
