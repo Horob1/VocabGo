@@ -61,8 +61,9 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.credentials.play.services.auth)
+    //google
     implementation(libs.googleid)
+    implementation(libs.androidx.credentials.play.services.auth)
     // paging
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
