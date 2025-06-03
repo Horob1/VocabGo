@@ -91,7 +91,7 @@
     <string name="enum_news_category_tech">Công nghệ</string>
     <string name="enum_news_category_sport">Thể thao</string>
     <string name="enum_news_category_world">Thế giới</string>
-    <string name="enum_news_category_perpectives">Chia sẻ kinh nghiệm</string>
+    <string name="enum_news_category_perspectives">Chia sẻ kinh nghiệm</string>
 
     <string name="text_search">Tìm kiếm</string>
     <string name="text_choose_categories">Chọn danh mục</string>

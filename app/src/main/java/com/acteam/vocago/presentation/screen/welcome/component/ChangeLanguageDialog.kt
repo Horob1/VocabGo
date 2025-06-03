@@ -26,7 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import coil.compose.rememberAsyncImagePainter
 import com.acteam.vocago.R
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
@@ -35,12 +34,13 @@ import com.acteam.vocago.utils.responsiveValue
 @Composable
 fun ChangeLanguageDialog(
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
 ) {
+
     val horizontalPadding = responsiveDP(mobile = 24, tabletPortrait = 40, tabletLandscape = 48)
     val titleFontSize = responsiveSP(mobile = 18, tabletPortrait = 24, tabletLandscape = 28)
     val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 18, tabletLandscape = 20)
-
+    val boxHeight = responsiveValue(mobile = 260, tabletPortrait = 360, tabletLandscape = 400).dp
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
@@ -53,54 +53,64 @@ fun ChangeLanguageDialog(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(
-                            responsiveValue(
-                                260,
-                                360,
-                                400
-                            ).dp
-                        )
+                        .height(boxHeight)
                         .background(MaterialTheme.colorScheme.background)
                 ) {
                     Image(
-                        painter = rememberAsyncImagePainter(R.drawable.screen_flicker),
-                        contentDescription = "Pager Image",
+                        painter = painterResource(R.drawable.screen_flicker),
+                        contentDescription = "Screen Flicker",
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
+
                 Spacer(modifier = Modifier.height(12.dp))
+
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(id = R.string.txt_screen_may_be_flicker),
-                    fontSize = titleFontSize,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.primary
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontSize = titleFontSize,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 )
+
                 Spacer(modifier = Modifier.height(12.dp))
+
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = horizontalPadding)
                         .padding(top = 20.dp),
                     text = stringResource(id = R.string.txt_screen_may_be_flicker_detail),
-                    fontSize = descFontSize,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = descFontSize,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center
+                    )
                 )
+
                 Spacer(modifier = Modifier.height(20.dp))
+
                 Row(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp)
                 ) {
-                    TextButton(onClick = onDismiss) {
+                    TextButton(onClick = {
+                        onDismiss()
+                    }) {
                         Text(stringResource(id = R.string.btn_cancel))
                     }
+
                     Spacer(modifier = Modifier.width(12.dp))
-                    TextButton(onClick = onConfirm) {
+
+                    TextButton(onClick = {
+                        onConfirm()
+                    }) {
                         Text(stringResource(id = R.string.btn_continue))
                     }
                 }

@@ -36,22 +36,26 @@ import com.acteam.vocago.utils.responsiveSP
 
 @Composable
 fun ChooseLanguagePage(
-    viewModel: WelcomeViewModel
+    viewModel: WelcomeViewModel,
 ) {
     val context = LocalContext.current
-    val languages = listOf(
-        ChooseLanguageData.System,
-        ChooseLanguageData.English,
-        ChooseLanguageData.Vietnamese
-    )
+    val languages = remember {
+        listOf(
+            ChooseLanguageData.System,
+            ChooseLanguageData.English,
+            ChooseLanguageData.Vietnamese
+        )
+    }
     val appLanguage = viewModel.appLanguage.collectAsState()
-    var oldLanguage by remember { mutableStateOf<AppLanguage>(appLanguage.value) }
+    var oldLanguage by remember { mutableStateOf(appLanguage.value) }
     var isShowDialog by remember { mutableStateOf(false) }
-    val image = when (appLanguage.value) {
-        AppLanguage.English -> R.drawable.capy_uk
-        AppLanguage.Vietnamese -> R.drawable.capy_vi
-        else -> {
-            R.drawable.capy_world
+    val image = remember(appLanguage.value) {
+        when (appLanguage.value) {
+            AppLanguage.English -> R.drawable.capy_uk
+            AppLanguage.Vietnamese -> R.drawable.capy_vi
+            else -> {
+                R.drawable.capy_world
+            }
         }
     }
 
@@ -89,7 +93,13 @@ fun ChooseLanguagePage(
                     space = verticalSpacing
                 )
             ) {
-                items(languages.size) { index ->
+                items(
+                    languages.size,
+                    key = { index -> index },
+                    contentType = {
+                        "ChooseLanguageButton"
+                    }
+                ) { index ->
                     val lang = languages[index]
                     ChooseLanguageButton(
                         lang.flag,
@@ -138,7 +148,13 @@ fun ChooseLanguagePage(
                         .padding(horizontal = horizontalPadding),
                     verticalArrangement = Arrangement.spacedBy(space = verticalSpacing)
                 ) {
-                    items(languages.size) { index ->
+                    items(
+                        languages.size,
+                        key = { index -> index },
+                        contentType = {
+                            "ChooseLanguageButton"
+                        }
+                    ) { index ->
                         val lang = languages[index]
                         ChooseLanguageButton(
                             lang.flag,

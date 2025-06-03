@@ -73,7 +73,7 @@ fun FilterDialog(
             NewsCategory.SPORT,
             NewsCategory.WORLD,
             NewsCategory.BUSINESS,
-            NewsCategory.PERPECTIVES,
+            NewsCategory.PERSPECTIVES,
             NewsCategory.TRAVEL,
         )
     }

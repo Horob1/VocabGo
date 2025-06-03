@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,23 +50,25 @@ fun FeatureBar(
         tabletPortrait = 8,
         tabletLandscape = 12
     )
-    val items = listOf(
-        FeatureBarItem.TranslateCam(onClick = {
-            rootNavController.navigate(NavScreen.CameraNavScreen)
-        }),
-        FeatureBarItem.BookMark(onClick = {
-            rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = true))
-        }),
-        FeatureBarItem.History(onClick = {
-            rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = false))
-        }),
-        FeatureBarItem.Dictionary(onClick = {
-            rootNavController.navigate(NavScreen.DictionaryNavScreen)
-        }),
-        FeatureBarItem.Setting(onClick = {
-            rootNavController.navigate(NavScreen.SettingNavScreen)
-        }),
-    )
+    val items = remember {
+        listOf(
+            FeatureBarItem.TranslateCam(onClick = {
+                rootNavController.navigate(NavScreen.CameraNavScreen)
+            }),
+            FeatureBarItem.BookMark(onClick = {
+                rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = true))
+            }),
+            FeatureBarItem.History(onClick = {
+                rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = false))
+            }),
+            FeatureBarItem.Dictionary(onClick = {
+                rootNavController.navigate(NavScreen.DictionaryNavScreen)
+            }),
+            FeatureBarItem.Setting(onClick = {
+                rootNavController.navigate(NavScreen.SettingNavScreen)
+            }),
+        )
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()

@@ -10,6 +10,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,13 +30,15 @@ fun WelcomeScreen(
     viewModel: WelcomeViewModel,
     navController: NavController,
 ) {
-    val pages = listOf(
-        OnBoardingPageData.First,
-        OnBoardingPageData.Second,
-        OnBoardingPageData.Third,
-        OnBoardingPageData.Fourth,
-        OnBoardingPageData.Fifth
-    )
+    val pages = remember {
+        listOf(
+            OnBoardingPageData.First,
+            OnBoardingPageData.Second,
+            OnBoardingPageData.Third,
+            OnBoardingPageData.Fourth,
+            OnBoardingPageData.Fifth
+        )
+    }
 
     val pagerState = rememberPagerState(
         initialPage = 0,

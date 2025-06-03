@@ -97,7 +97,7 @@
     <string name="enum_news_category_tech">Tech</string>
     <string name="enum_news_category_sport">Sport</string>
     <string name="enum_news_category_world">World</string>
-    <string name="enum_news_category_perpectives">Perpectives</string>
+    <string name="enum_news_category_perspectives">Perspectives</string>
 
     <string name="text_level" translatable="false">Level</string>
     <string name="text_search">Search</string>

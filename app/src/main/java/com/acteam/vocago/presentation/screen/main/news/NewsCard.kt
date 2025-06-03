@@ -434,5 +434,4 @@ fun SmallNewsCard(
             }
         }
     }
-
 }
