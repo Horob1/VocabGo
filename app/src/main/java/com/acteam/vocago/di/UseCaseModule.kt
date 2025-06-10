@@ -1,14 +1,17 @@
 package com.acteam.vocago.di
 
+import com.acteam.vocago.domain.usecase.AnswerNewsUseCase
 import com.acteam.vocago.domain.usecase.ChooseLanguageUserCase
 import com.acteam.vocago.domain.usecase.ForgotPasswordUseCase
 import com.acteam.vocago.domain.usecase.GetChosenNewsCategoriesUseCase
 import com.acteam.vocago.domain.usecase.GetChosenNewsLevelUseCase
+import com.acteam.vocago.domain.usecase.GetDictionaryWordUseCase
 import com.acteam.vocago.domain.usecase.GetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.GetLanguageUseCase
 import com.acteam.vocago.domain.usecase.GetLocalUserProfileUseCase
 import com.acteam.vocago.domain.usecase.GetLoginStateUseCase
 import com.acteam.vocago.domain.usecase.GetNewsDetailUseCase
+import com.acteam.vocago.domain.usecase.GetNewsHistoryPagingUseCase
 import com.acteam.vocago.domain.usecase.GetNewsPagingUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
@@ -21,6 +24,7 @@ import com.acteam.vocago.domain.usecase.SaveOnBoardingStateUseCase
 import com.acteam.vocago.domain.usecase.SetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.SetThemeUseCase
 import com.acteam.vocago.domain.usecase.SyncProfileUseCase
+import com.acteam.vocago.domain.usecase.ToggleBookmarkNewsUseCase
 import com.acteam.vocago.domain.usecase.UpdateChosenCategoriesUseCase
 import com.acteam.vocago.domain.usecase.UpdateChosenNewsLevelUseCase
 import com.acteam.vocago.domain.usecase.VerifyEmailUseCase
@@ -110,5 +114,21 @@ val useCaseModule = module {
 
     single {
         GetNewsDetailUseCase(get())
+    }
+
+    single {
+        AnswerNewsUseCase(get())
+    }
+
+    single {
+        ToggleBookmarkNewsUseCase(get())
+    }
+
+    single {
+        GetNewsHistoryPagingUseCase(get())
+    }
+
+    single {
+        GetDictionaryWordUseCase(get())
     }
 }

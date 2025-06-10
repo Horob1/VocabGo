@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.screen.main.news
+package com.acteam.vocago.presentation.screen.main.news.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.acteam.vocago.R
 import com.acteam.vocago.domain.model.NewsCategory
+import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 

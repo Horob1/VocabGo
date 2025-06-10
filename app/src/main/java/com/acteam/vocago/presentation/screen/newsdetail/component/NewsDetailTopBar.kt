@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.screen.newsdetail
+package com.acteam.vocago.presentation.screen.newsdetail.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +44,7 @@ fun NewsDetailTopBar(
     stop: () -> Unit,
     isSpeaking: Boolean,
     backgroundAlpha: Float,
+    isTranslate: Boolean,
     alwaysOnTop: Boolean = true,
     isBookmark: Boolean = true,
 ) {
@@ -110,6 +111,7 @@ fun NewsDetailTopBar(
                         Icon(
                             imageVector = Icons.Default.Translate,
                             contentDescription = "Translate",
+                            tint = if (isTranslate) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                         )
                     }
 

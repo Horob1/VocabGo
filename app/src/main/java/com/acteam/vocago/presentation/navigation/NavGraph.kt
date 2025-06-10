@@ -11,15 +11,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.acteam.vocago.presentation.screen.auth.SetupAuthNavGraph
+import com.acteam.vocago.presentation.screen.choosevoca.ChooseVocaListScreen
+import com.acteam.vocago.presentation.screen.dictionary.DictionaryScreen
 import com.acteam.vocago.presentation.screen.main.SetupMainNavGraph
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.chat.component.CommonChatScreen
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailScreen
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
+import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryScreen
+import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingScreen
 import com.acteam.vocago.presentation.screen.setting.SettingViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeScreen
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
+import com.acteam.vocago.presentation.screen.worddetail.WordDetailScreen
+import com.acteam.vocago.presentation.screen.worddetail.WordDetailViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @ExperimentalAnimationApi
@@ -71,17 +77,44 @@ fun SetupNavGraph(
             val arg = it.toRoute<NavScreen.NewsDetailNavScreen>()
             NewsDetailScreen(
                 viewModel = newsDetailViewModel,
-                newsId = arg.newsId
+                newsId = arg.newsId,
+                rootNavController = navController
             )
         }
 
         composable<NavScreen.NewsHistoryNavScreen> {
-            it.toRoute<NavScreen.ResetPasswordNavScreen>()
+            val arg = it.toRoute<NavScreen.NewsHistoryNavScreen>()
+            val isBookmark = arg.isBookmark
+            val newsHistoryViewModel = koinViewModel<NewsHistoryViewModel>()
+            newsHistoryViewModel.setIsBookmark(isBookmark)
+            NewsHistoryScreen(
+                viewModel = newsHistoryViewModel,
+                rootNavController = navController
+            )
+        }
 
+        composable<NavScreen.WordDetailNavScreen> {
+            val arg = it.toRoute<NavScreen.WordDetailNavScreen>()
+            val word = arg.word
+            val wordDetailViewModel = koinViewModel<WordDetailViewModel>()
+            WordDetailScreen(
+                word = word,
+                rootNavController = navController,
+                viewModel = wordDetailViewModel,
+            )
+        }
+
+        composable<NavScreen.ChooseVocaListNavScreen> {
+            val arg = it.toRoute<NavScreen.ChooseVocaListNavScreen>()
+            val word = arg.word
+            ChooseVocaListScreen(
+                word = word,
+                rootNavController = navController
+            )
         }
 
         composable<NavScreen.DictionaryNavScreen> {
-
+            DictionaryScreen()
         }
 
         composable<NavScreen.CameraNavScreen> {

@@ -139,4 +139,22 @@
     <string name="title_language">Language</string>
     <string name="desc_language">Change app language</string>
     <string name="toast_please_turn_off_the_sync_system_them">Please turn off the sync system theme to change the theme</string>
+
+    <string name="title_practice">Practice</string>
+    <string name="related_articles">Related Articles</string>
+
+    <string name="submit">Submit</string>
+    <string name="more_content">More content</string>
+    <string name="text_score">Score: </string>
+
+    <string name="title_login_required">Login Required</string>
+    <string name="desc_login_required">You need to login to continue</string>
+
+    <string name="title_history">History</string>
+    <string name="title_bookmark">Bookmark</string>
+
+    <string name="tab_definition">Definition</string>
+    <string name="tab_idioms">Idioms</string>
+    <string name="tab_synonyms">Synonyms</string>
+    <string name="tab_antonyms">Antonyms</string>
 </resources>

@@ -134,4 +134,20 @@
     <string name="desc_language">Thay đổi ngôn ngữ ứng dụng</string>
     <string name="toast_please_turn_off_the_sync_system_them">Tắt đồng bộ giao diện để đổi giao diện</string>
 
+    <string name="title_practice">Thực hành</string>
+    <string name="related_articles">Bài viết liên quan</string>
+    <string name="submit">Nộp bài</string>
+    <string name="more_content">Xem thêm</string>
+    <string name="text_score">Điểm: </string>
+
+    <string name="title_login_required">Yêu cầu đăng nhập</string>
+    <string name="desc_login_required">Bạn cần đăng nhập để tiếp tục</string>
+
+    <string name="title_history">Lịch sử</string>
+    <string name="title_bookmark">Đánh dấu</string>
+
+    <string name="tab_definition">Định nghĩa</string>
+    <string name="tab_idioms">Thành ngữ</string>
+    <string name="tab_synonyms">Từ đồng nghĩa</string>
+    <string name="tab_antonyms">Từ trái nghĩa</string>
 </resources>

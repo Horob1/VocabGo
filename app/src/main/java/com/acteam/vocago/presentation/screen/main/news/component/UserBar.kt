@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.screen.main.news
+package com.acteam.vocago.presentation.screen.main.news.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +31,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.acteam.vocago.R
+import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.safeClickable

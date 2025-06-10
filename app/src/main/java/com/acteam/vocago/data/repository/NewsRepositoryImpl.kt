@@ -6,7 +6,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.acteam.vocago.data.local.AppDatabase
 import com.acteam.vocago.data.local.entity.NewsEntity
+import com.acteam.vocago.data.local.entity.NewsHistoryEntity
 import com.acteam.vocago.data.model.NewsDetailDto
+import com.acteam.vocago.data.paging.NewsLogRemoteMediator
 import com.acteam.vocago.data.paging.NewsRemoteMediator
 import com.acteam.vocago.domain.remote.NewsRemoteDataSource
 import com.acteam.vocago.domain.repository.NewsRepository
@@ -39,6 +41,26 @@ class NewsRepositoryImpl(
             ),
             pagingSourceFactory = {
                 appDatabase.newsDao().getAllNewsInInsertOrder()
+            }
+        ).flow
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getNewsHistoriesPagingFlow(): Flow<PagingData<NewsHistoryEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                initialLoadSize = 10,
+                prefetchDistance = 5,
+                maxSize = 200,
+                enablePlaceholders = false
+            ),
+            remoteMediator = NewsLogRemoteMediator(
+                newsRemoteDataSource = newsRemoteDataSource,
+                appDatabase = appDatabase
+            ),
+            pagingSourceFactory = {
+                appDatabase.newsHistoryDao().getAllNewsHistoryInInsertOrder()
             }
         ).flow
     }

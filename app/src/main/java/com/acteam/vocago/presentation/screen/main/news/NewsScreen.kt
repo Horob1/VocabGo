@@ -10,6 +10,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +23,13 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
+import com.acteam.vocago.presentation.screen.common.LoginRequiredDialog
+import com.acteam.vocago.presentation.screen.main.news.component.BigNewsCard
+import com.acteam.vocago.presentation.screen.main.news.component.FeatureBar
+import com.acteam.vocago.presentation.screen.main.news.component.FilterBar
+import com.acteam.vocago.presentation.screen.main.news.component.FilterDialog
+import com.acteam.vocago.presentation.screen.main.news.component.SmallNewsCard
+import com.acteam.vocago.presentation.screen.main.news.component.UserBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,12 +38,14 @@ fun NewsScreen(
     rootNavController: NavController,
     navController: NavController,
 ) {
+    val isAuth by viewModel.loginState.collectAsState()
     val newsPagingItems = viewModel.newsFlow.collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
     var isShowFilterDialog by remember { mutableStateOf(false) }
     val isRefreshing by remember(newsPagingItems.loadState.refresh) {
         derivedStateOf { newsPagingItems.loadState.refresh is LoadState.Loading }
     }
+    var isShowLoginDialog by remember { mutableStateOf(false) }
     val showUserBar by remember {
         derivedStateOf {
             lazyListState.firstVisibleItemIndex == 0 && lazyListState.firstVisibleItemScrollOffset < 50
@@ -59,7 +69,11 @@ fun NewsScreen(
         }
 
         FeatureBar(
-            rootNavController = rootNavController
+            rootNavController = rootNavController,
+            isAuth = isAuth,
+            runOnUnAuth = {
+                isShowLoginDialog = true
+            }
         )
 
         PullToRefreshBox(
@@ -143,5 +157,15 @@ fun NewsScreen(
         onDismiss = { isShowFilterDialog = false },
         viewModel = viewModel
     )
+
+    if (isShowLoginDialog) {
+        LoginRequiredDialog(
+            onDismiss = { isShowLoginDialog = false },
+            onConfirm = {
+                isShowLoginDialog = false
+                rootNavController.navigate(NavScreen.AuthNavScreen)
+            }
+        )
+    }
 
 }

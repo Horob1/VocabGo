@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.screen.main.news
+package com.acteam.vocago.presentation.screen.main.news.component
 
 import android.os.Build
 import androidx.compose.foundation.Image

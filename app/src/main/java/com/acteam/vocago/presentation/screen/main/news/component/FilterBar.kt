@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.screen.main.news
+package com.acteam.vocago.presentation.screen.main.news.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
 import com.acteam.vocago.domain.model.NewsLevel
+import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.utils.safeClickable
 
 @Composable

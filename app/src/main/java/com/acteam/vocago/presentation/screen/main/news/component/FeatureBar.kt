@@ -1,6 +1,7 @@
-package com.acteam.vocago.presentation.screen.main.news
+package com.acteam.vocago.presentation.screen.main.news.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -23,11 +24,12 @@ import androidx.navigation.NavController
 import com.acteam.vocago.domain.model.FeatureBarItem
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.utils.responsiveDP
-import com.acteam.vocago.utils.safeClickable
 
 @Composable
 fun FeatureBar(
     rootNavController: NavController,
+    isAuth: Boolean,
+    runOnUnAuth: () -> Unit,
     shadowColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
 ) {
     val horizontalPadding = responsiveDP(
@@ -56,9 +58,17 @@ fun FeatureBar(
                 rootNavController.navigate(NavScreen.CameraNavScreen)
             }),
             FeatureBarItem.BookMark(onClick = {
+                if (!isAuth) {
+                    runOnUnAuth()
+                    return@BookMark
+                }
                 rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = true))
             }),
             FeatureBarItem.History(onClick = {
+                if (!isAuth) {
+                    runOnUnAuth()
+                    return@History
+                }
                 rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = false))
             }),
             FeatureBarItem.Dictionary(onClick = {
@@ -115,7 +125,7 @@ fun FeatureItem(item: FeatureBarItem, modifier: Modifier = Modifier) {
             .clip(
                 MaterialTheme.shapes.medium
             )
-            .safeClickable(key = "feature_item") { item.onItemClick() }
+            .clickable { item.onItemClick() }
             .background(
                 MaterialTheme.colorScheme.onSurface.copy(
                     alpha = 0.3f
