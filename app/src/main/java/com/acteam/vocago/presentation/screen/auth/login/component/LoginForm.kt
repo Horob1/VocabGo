@@ -1,5 +1,6 @@
 package com.acteam.vocago.presentation.screen.auth.login.component
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,6 +43,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -59,6 +61,9 @@ import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.safeClickable
 import kotlinx.coroutines.launch
+import kotlin.system.measureTimeMillis
+
+private const val TAG = "LoginFormPerformance"
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -67,192 +72,202 @@ fun LoginForm(
     onLoginClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
 ) {
+
     val context = LocalContext.current
     val formState by viewModel.loginFormState.collectAsState()
     val uiState by viewModel.loginUIState.collectAsState()
 
     val scope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
 
     val usernameFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
 
     val textFieldFontSize = responsiveSP(14, 20, 20)
+    val forgotPasswordFontSize = responsiveSP(14, 20, 20)
+    responsiveDP(48, 56, 60)
 
     Column {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
-                .shadow(
-                    6.dp,
-                    RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-                )
-        ) {
-            Row(
+        measureTimeMillis {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceVariant,
-                        RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
-                    )
-                    .border(
-                        1.dp, MaterialTheme.colorScheme.primary.copy(
-                            alpha = 0.5f
-                        ), RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .shadow(
+                        6.dp,
+                        RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
                     )
             ) {
-                Box(
+                Row(
                     modifier = Modifier
-                        .width(48.dp)
-                        .fillMaxHeight()
+                        .fillMaxWidth()
+                        .height(56.dp)
                         .background(
-                            MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(topStart = 12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
+                            MaterialTheme.colorScheme.surfaceVariant,
+                            RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+                        )
+                        .border(
+                            1.dp, MaterialTheme.colorScheme.primary.copy(
+                                alpha = 0.5f
+                            ), RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+                        )
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
+                    Box(
+                        modifier = Modifier
+                            .width(48.dp)
+                            .fillMaxHeight()
+                            .background(
+                                MaterialTheme.colorScheme.primary,
+                                shape = RoundedCornerShape(topStart = 12.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
 
-                OutlinedTextField(
-                    value = formState.username,
-                    onValueChange = { viewModel.setUsername(it) },
-                    placeholder = { Text(stringResource(R.string.input_enter_username)) },
-                    textStyle = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = textFieldFontSize
-                    ),
-                    singleLine = true,
-                    modifier = Modifier
-                        .weight(1f)
-                        .focusRequester(usernameFocusRequester)
-                        .onFocusChanged(
-                            onFocusChanged = {
-                                if (it.isFocused && formState.username == "") {
+                    OutlinedTextField(
+                        value = formState.username,
+                        onValueChange = { viewModel.setUsername(it) },
+                        placeholder = { Text(stringResource(R.string.input_enter_username)) },
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = textFieldFontSize
+                        ),
+                        singleLine = true,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .focusRequester(usernameFocusRequester)
+                            .onFocusChanged { focusState ->
+                                if (focusState.isFocused && formState.username.isEmpty()) {
                                     scope.launch {
-                                        CredentialHelper.getCredential(context) { username, password ->
-                                            viewModel.setUsername(username)
-                                            viewModel.setPassword(password)
-                                            passwordFocusRequester.requestFocus()
-                                            onLoginClick()
+                                        Log.d(TAG, "Attempting to fetch credentials.")
+                                        val fetchTime = measureTimeMillis {
+                                            CredentialHelper.getCredential(context) { username, password ->
+                                                viewModel.setUsername(username)
+                                                viewModel.setPassword(password)
+                                                passwordFocusRequester.requestFocus()
+                                            }
                                         }
+                                        Log.d(TAG, "Credential fetch took $fetchTime ms.")
                                     }
                                 }
                             }
-                        )
-                        .autofill(
-                            autofillType = listOf(AutofillType.Username, AutofillType.EmailAddress),
-                            onFill = {
-                                viewModel.setUsername(it)
-                            },
-                        )
-                        .fillMaxHeight(),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Next,
-                        keyboardType = KeyboardType.Email
-                    ),
-                    keyboardActions = KeyboardActions(onNext = {
-                        passwordFocusRequester.requestFocus()
-                    }),
-                    readOnly = uiState is UIState.UILoading,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent,
-                        disabledBorderColor = Color.Transparent
-                    )
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceVariant,
-                        RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-                    )
-                    .border(
-                        1.dp, MaterialTheme.colorScheme.primary.copy(
-                            alpha = 0.5f
-                        ), RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-                    )
-            ) {
-                Box(
-                    modifier = Modifier
-                        .width(48.dp)
-                        .fillMaxHeight()
-                        .background(
-                            MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(bottomStart = 12.dp)
+                            .autofill(
+                                autofillType = listOf(
+                                    AutofillType.Username,
+                                    AutofillType.EmailAddress
+                                ),
+                                onFill = {
+                                    viewModel.setUsername(it)
+                                },
+                            ),
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Email
                         ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary
+                        keyboardActions = KeyboardActions(onNext = {
+                            passwordFocusRequester.requestFocus()
+                        }),
+                        readOnly = uiState is UIState.UILoading,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedBorderColor = Color.Transparent,
+                            disabledBorderColor = Color.Transparent,
+                        )
                     )
                 }
 
-                OutlinedTextField(
-                    value = formState.password,
-                    onValueChange = { viewModel.setPassword(it) },
-                    placeholder = { Text(stringResource(R.string.input_enter_password)) },
-                    singleLine = true,
-                    textStyle = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = textFieldFontSize
-                    ),
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .focusRequester(passwordFocusRequester)
-                        .autofill(
-                            autofillType = listOf(AutofillType.Password),
-                            onFill = {
-                                viewModel.setPassword(it)
-                            }
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceVariant,
+                            RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
                         )
-                        .fillMaxHeight(),
-                    visualTransformation = if (formState.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent,
-                        disabledBorderColor = Color.Transparent
-                    ),
-                    readOnly = uiState is UIState.UILoading,
-                    trailingIcon = {
-                        val image =
-                            if (formState.passwordVisible) R.drawable.hidden else R.drawable.view
-                        val description =
-                            if (formState.passwordVisible) "Hidden password" else "Show password"
+                        .border(
+                            1.dp, MaterialTheme.colorScheme.primary.copy(
+                                alpha = 0.5f
+                            ), RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
+                        )
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(48.dp)
+                            .fillMaxHeight()
+                            .background(
+                                MaterialTheme.colorScheme.primary,
+                                shape = RoundedCornerShape(bottomStart = 12.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
 
-                        IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
-                            Icon(
-                                painter = painterResource(id = image),
-                                contentDescription = description,
-                                modifier = Modifier
-                                    .height(24.dp)
-                                    .width(24.dp)
-                            )
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Password
-                    ),
-                    keyboardActions = KeyboardActions(onDone = {
-                        if (formState.isLoginButtonEnabled && uiState !is UIState.UILoading) {
-                            onLoginClick()
-                        }
-                    })
-                )
+                    OutlinedTextField(
+                        value = formState.password,
+                        onValueChange = { viewModel.setPassword(it) },
+                        placeholder = { Text(stringResource(R.string.input_enter_password)) },
+                        singleLine = true,
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = textFieldFontSize
+                        ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .focusRequester(passwordFocusRequester)
+                            .autofill(
+                                autofillType = listOf(AutofillType.Password),
+                                onFill = {
+                                    viewModel.setPassword(it)
+                                }
+                            ),
+                        visualTransformation = if (formState.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedBorderColor = Color.Transparent,
+                            disabledBorderColor = Color.Transparent,
+                        ),
+                        readOnly = uiState is UIState.UILoading,
+                        trailingIcon = {
+                            val image =
+                                if (formState.passwordVisible) R.drawable.hidden else R.drawable.view
+                            val description =
+                                if (formState.passwordVisible) "Hidden password" else "Show password"
+
+                            IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
+                                Icon(
+                                    painter = painterResource(id = image),
+                                    contentDescription = description,
+                                    modifier = Modifier
+                                        .height(24.dp)
+                                        .width(24.dp)
+                                )
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Password
+                        ),
+                        keyboardActions = KeyboardActions(onDone = {
+                            if (formState.isLoginButtonEnabled && uiState !is UIState.UILoading) {
+                                keyboardController?.hide()
+                                onLoginClick()
+                            }
+                        })
+                    )
+                }
             }
         }
-
         Spacer(modifier = Modifier.height(6.dp))
 
         Row(
@@ -264,11 +279,11 @@ fun LoginForm(
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.primary,
-                    fontSize = responsiveSP(14, 20, 20)
+                    fontSize = forgotPasswordFontSize
                 ),
                 modifier = Modifier
                     .safeClickable(
-                        "btn_forgot_password",
+                        key = "btn_forgot_password",
                         onClick = {
                             if (uiState !is UIState.UILoading) onForgotPasswordClick()
                         }

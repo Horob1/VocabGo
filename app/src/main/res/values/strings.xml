@@ -139,4 +139,15 @@
     <string name="title_language">Language</string>
     <string name="desc_language">Change app language</string>
     <string name="toast_please_turn_off_the_sync_system_them">Please turn off the sync system theme to change the theme</string>
+
+    <string name="text_vietnam">Viet Nam</string>
+    <string name="text_hanquoc">Korea</string>
+    <string name="text_bentre">Ben Tre</string>
+    <string name="text_eastern_england">Eastern England</string>
+    <string name="text_white_house">The White House</string>
+    <string name="text_hoguom">Guom Lake</string>
+    <string name="text_explore">Explore</string>
+    <string name="text_chat">Chat</string>
+    <string name="text_call_ended">Call ended</string>
+    <string name="text_call_duration">Call duration:</string>
 </resources>

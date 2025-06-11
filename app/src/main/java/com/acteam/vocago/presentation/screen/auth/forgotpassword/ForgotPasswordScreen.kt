@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,6 +41,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,6 +57,7 @@ import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.auth.common.AuthImageCard
 import com.acteam.vocago.presentation.screen.auth.common.TopBar
 import com.acteam.vocago.presentation.screen.auth.common.TopBarNoTitle
+import com.acteam.vocago.presentation.screen.auth.forgotpassword.data.ForgotPasswordState
 import com.acteam.vocago.presentation.screen.common.ErrorBannerWithTimer
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.common.data.UIErrorType
@@ -63,7 +67,6 @@ import com.acteam.vocago.utils.getDeviceType
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.responsiveValue
-
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -78,12 +81,34 @@ fun ForgotPasswordScreen(
     val context = LocalContext.current
 
     val deviceType = getDeviceType()
+
     val horizontalPadding = responsiveDP(24, 40, 48)
     val verticalSpacing = responsiveDP(12, 20, 24)
     val titleFontSize = responsiveSP(30, 36, 42)
     val textFontSize = responsiveSP(20, 24, 24)
     val buttonHeight = responsiveDP(48, 56, 60)
     val topPadding = responsiveDP(16, 24, 28)
+
+    val onSendForgotPasswordAction =
+        remember(formState.email, formState.isForgotPasswordButtonEnabled, uiState) {
+            {
+                if (formState.isForgotPasswordButtonEnabled) {
+                    viewModel.forgotPassword {
+                        focusManager.clearFocus()
+                        authNavController.navigate(
+                            NavScreen.ResetPasswordNavScreen(email = formState.email)
+                        ) { launchSingleTop = true }
+                    }
+                } else {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.text_please_type_email),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+
 
     Box(
         modifier = Modifier
@@ -92,160 +117,45 @@ fun ForgotPasswordScreen(
                 detectTapGestures { focusManager.clearFocus() }
             }
     ) {
-        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = horizontalPadding),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(verticalSpacing)
-            ) {
-                TopBar(
-                    text = stringResource(R.string.text_forgot_password),
-                    titleFontSize,
-                    onBackClick = {
-                        authNavController.navigate(NavScreen.LoginNavScreen) {
-                            popUpTo(NavScreen.ForgotPasswordNavScreen) { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    }
-                )
+        val isMobileOrPortrait =
+            deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait
 
-                AuthImageCard(R.drawable.forgotpassword, width = 0.8f)
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                InputLabel(textFontSize)
-
-                EmailInputField(
-                    email = formState.email,
-                    onEmailChange = viewModel::setEmail,
-                    focusRequester = emailFocusRequester,
-                    focusManager = focusManager,
-                    isButtonEnabled = formState.isForgotPasswordButtonEnabled,
-                    isLoading = uiState is UIState.UILoading,
-                    onSendClick = {
-                        viewModel.forgotPassword {
-                            authNavController.navigate(
-                                NavScreen.ResetPasswordNavScreen(email = formState.email)
-                            ) { launchSingleTop = true }
-                        }
-                    }
-                )
-
-                SendButton(
-                    isEnabled = formState.isForgotPasswordButtonEnabled,
-                    isLoading = uiState is UIState.UILoading,
-                    height = buttonHeight,
-                    onClick = {
-                        if (formState.isForgotPasswordButtonEnabled) {
-                            viewModel.forgotPassword {
-                                focusManager.clearFocus()
-                                authNavController.navigate(
-                                    NavScreen.ResetPasswordNavScreen(email = formState.email)
-                                ) { launchSingleTop = true }
-                            }
-                        } else {
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.text_please_type_email),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                )
-                Spacer(modifier = Modifier.height(verticalSpacing / 3))
-            }
+        if (isMobileOrPortrait) {
+            MobilePortraitContent(
+                formState = formState,
+                uiState = uiState,
+                viewModel = viewModel,
+                authNavController = authNavController,
+                emailFocusRequester = emailFocusRequester,
+                focusManager = focusManager,
+                horizontalPadding = horizontalPadding,
+                verticalSpacing = verticalSpacing,
+                titleFontSize = titleFontSize,
+                textFontSize = textFontSize,
+                buttonHeight = buttonHeight,
+                onSendForgotPasswordAction = onSendForgotPasswordAction
+            )
         } else {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = horizontalPadding),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .padding(top = topPadding),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top
-                ) {
-                    TopBarNoTitle(
-                        onBackClick = {
-                            authNavController.navigate(NavScreen.LoginNavScreen) {
-                                popUpTo(NavScreen.ForgotPasswordNavScreen) { inclusive = true }
-                                launchSingleTop = true
-                            }
-                        })
-                    Spacer(modifier = Modifier.height(verticalSpacing))
-                    AuthImageCard(R.drawable.forgotpassword, width = 0.8f)
-                }
-
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .padding(top = topPadding),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(verticalSpacing)
-                ) {
-                    Spacer(modifier = Modifier.height(verticalSpacing * 3))
-                    Text(
-                        text = stringResource(R.string.text_forgot_password),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = titleFontSize
-                        ),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(verticalSpacing * 2))
-                    InputLabel(textFontSize)
-
-                    EmailInputField(
-                        email = formState.email,
-                        onEmailChange = viewModel::setEmail,
-                        focusRequester = emailFocusRequester,
-                        focusManager = focusManager,
-                        isButtonEnabled = formState.isForgotPasswordButtonEnabled,
-                        isLoading = uiState is UIState.UILoading,
-                        onSendClick = {
-                            viewModel.forgotPassword {
-                                authNavController.navigate(
-                                    NavScreen.ResetPasswordNavScreen(email = formState.email)
-                                ) { launchSingleTop = true }
-                            }
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(verticalSpacing * 2))
-                    SendButton(
-                        isEnabled = formState.isForgotPasswordButtonEnabled,
-                        isLoading = uiState is UIState.UILoading,
-                        height = buttonHeight,
-                        onClick = {
-                            if (formState.isForgotPasswordButtonEnabled) {
-                                viewModel.forgotPassword {
-                                    focusManager.clearFocus()
-                                    authNavController.navigate(
-                                        NavScreen.ResetPasswordNavScreen(email = formState.email)
-                                    ) { launchSingleTop = true }
-                                }
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.text_please_type_email),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    )
-                }
-            }
+            LandscapeContent(
+                formState = formState,
+                uiState = uiState,
+                viewModel = viewModel,
+                authNavController = authNavController,
+                emailFocusRequester = emailFocusRequester,
+                focusManager = focusManager,
+                horizontalPadding = horizontalPadding,
+                verticalSpacing = verticalSpacing,
+                titleFontSize = titleFontSize,
+                textFontSize = textFontSize,
+                buttonHeight = buttonHeight,
+                topPadding = topPadding,
+                onSendForgotPasswordAction = onSendForgotPasswordAction
+            )
         }
+
         if (uiState is UIState.UIError) {
             val errorType = (uiState as UIState.UIError).errorType
-            val message = when (errorType) {
+            val messageResId = when (errorType) {
                 UIErrorType.NotFoundError -> R.string.text_email_has_not_been_register
                 UIErrorType.BadRequestError -> R.string.text_email_is_not_verify
                 UIErrorType.UnauthorizedError -> R.string.text_email_incorrect
@@ -256,7 +166,7 @@ fun ForgotPasswordScreen(
             }
             ErrorBannerWithTimer(
                 title = stringResource(R.string.text_error),
-                message = stringResource(message),
+                message = stringResource(messageResId),
                 iconResId = R.drawable.error_banner,
                 onTimeout = { viewModel.clearUIState() },
                 onDismiss = { viewModel.clearUIState() },
@@ -266,12 +176,158 @@ fun ForgotPasswordScreen(
             )
         }
     }
+
     if (uiState is UIState.UILoading) {
-        LoadingSurface(
-            picSize = responsiveValue(180, 360, 360)
-        )
+        val picSize = responsiveValue(180, 360, 360)
+        LoadingSurface(picSize = picSize)
     }
 }
+
+@Composable
+private fun MobilePortraitContent(
+    formState: ForgotPasswordState,
+    uiState: UIState<Unit>,
+    viewModel: ForgotPasswordViewModel,
+    authNavController: NavController,
+    emailFocusRequester: FocusRequester,
+    focusManager: FocusManager,
+    horizontalPadding: Dp,
+    verticalSpacing: Dp,
+    titleFontSize: TextUnit,
+    textFontSize: TextUnit,
+    buttonHeight: Dp,
+    onSendForgotPasswordAction: () -> Unit
+) {
+    val imeBottomPx = WindowInsets.ime.getBottom(LocalDensity.current)
+    val imeBottomDp = with(LocalDensity.current) { imeBottomPx.toDp() }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = horizontalPadding)
+            .padding(bottom = imeBottomDp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(verticalSpacing)
+    ) {
+        TopBar(
+            text = stringResource(R.string.text_forgot_password),
+            fontSize = titleFontSize,
+            onBackClick = {
+                authNavController.navigate(NavScreen.LoginNavScreen) {
+                    popUpTo(NavScreen.ForgotPasswordNavScreen) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+        )
+
+        AuthImageCard(R.drawable.forgotpassword, width = 0.8f)
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        InputLabel(textFontSize)
+
+        EmailInputField(
+            email = formState.email,
+            onEmailChange = viewModel::setEmail,
+            focusRequester = emailFocusRequester,
+            focusManager = focusManager,
+            isButtonEnabled = formState.isForgotPasswordButtonEnabled,
+            isLoading = uiState is UIState.UILoading,
+            onSendClick = onSendForgotPasswordAction
+        )
+
+        SendButton(
+            isEnabled = formState.isForgotPasswordButtonEnabled,
+            isLoading = uiState is UIState.UILoading,
+            height = buttonHeight,
+            onClick = onSendForgotPasswordAction
+        )
+        Spacer(modifier = Modifier.height(verticalSpacing / 3))
+    }
+}
+
+@Composable
+private fun LandscapeContent(
+    formState: ForgotPasswordState,
+    uiState: UIState<Unit>,
+    viewModel: ForgotPasswordViewModel,
+    authNavController: NavController,
+    emailFocusRequester: FocusRequester,
+    focusManager: FocusManager,
+    horizontalPadding: Dp,
+    verticalSpacing: Dp,
+    titleFontSize: TextUnit,
+    textFontSize: TextUnit,
+    buttonHeight: Dp,
+    topPadding: Dp,
+    onSendForgotPasswordAction: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = horizontalPadding),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
+                .padding(top = topPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            TopBarNoTitle(
+                onBackClick = {
+                    authNavController.navigate(NavScreen.LoginNavScreen) {
+                        popUpTo(NavScreen.ForgotPasswordNavScreen) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                })
+            Spacer(modifier = Modifier.height(verticalSpacing))
+            AuthImageCard(R.drawable.forgotpassword, width = 0.8f)
+        }
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
+                .padding(top = topPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(verticalSpacing)
+        ) {
+            Spacer(modifier = Modifier.height(verticalSpacing * 3))
+            Text(
+                text = stringResource(R.string.text_forgot_password),
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = titleFontSize
+                ),
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(verticalSpacing * 2))
+            InputLabel(textFontSize)
+
+            EmailInputField(
+                email = formState.email,
+                onEmailChange = viewModel::setEmail,
+                focusRequester = emailFocusRequester,
+                focusManager = focusManager,
+                isButtonEnabled = formState.isForgotPasswordButtonEnabled,
+                isLoading = uiState is UIState.UILoading,
+                onSendClick = onSendForgotPasswordAction
+            )
+            Spacer(modifier = Modifier.height(verticalSpacing * 2))
+            SendButton(
+                isEnabled = formState.isForgotPasswordButtonEnabled,
+                isLoading = uiState is UIState.UILoading,
+                height = buttonHeight,
+                onClick = onSendForgotPasswordAction
+            )
+        }
+    }
+}
+
 
 @Composable
 fun InputLabel(fontSize: TextUnit) {
@@ -285,6 +341,7 @@ fun InputLabel(fontSize: TextUnit) {
         color = MaterialTheme.colorScheme.primary
     )
 }
+
 
 @Composable
 fun EmailInputField(
@@ -353,6 +410,7 @@ fun EmailInputField(
     }
 }
 
+
 @Composable
 fun SendButton(
     isEnabled: Boolean,
@@ -360,11 +418,14 @@ fun SendButton(
     height: Dp,
     onClick: () -> Unit
 ) {
+    val buttonModifier = remember(height) {
+        Modifier
+            .fillMaxWidth()
+            .height(height)
+    }
     Button(
         onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(height),
+        modifier = buttonModifier,
         enabled = isEnabled && !isLoading
     ) {
         Text(

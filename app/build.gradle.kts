@@ -61,9 +61,13 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.credentials.v120alpha03)
-    implementation(libs.androidx.credentials.play.services.auth)
+    //camera
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    //google
     implementation(libs.googleid)
+    implementation(libs.androidx.credentials.play.services.auth)
     // paging
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)

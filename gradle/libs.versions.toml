@@ -1,16 +1,15 @@
 [versions]
 accompanistFlowlayoutVersion = "0.36.0"
 agp = "8.9.1"
-androidxCredentials = "1.2.0-alpha03"
+cameraCamera2Version = "1.4.2"
 coilCompose = "2.5.0"
 coilGif = "2.5.0"
 coreSplashscreen = "1.0.1"
 credentials = "1.5.0"
-credentialsVersion = "<latest_version>"
 datastorePreferences = "1.0.0"
 googleGenerativeai = "0.6.0"
-googleidVersion = "<latest_version>"
 
+googleidVersion = "1.1.1"
 gsonVersion = "2.13.1"
 introshowcaseview = "2.0.1"
 koinCompose = "4.1.0-Beta5"
@@ -32,8 +31,6 @@ composeBom = "2024.09.00"
 composeNavigation = "2.8.9"
 lottieComposeVersion = "6.4.0"
 materialIconsExtended = "1.7.8"
-playServicesAuth = "20.7.0"
-playServicesAuthVersion = "21.3.0"
 
 pagingComposeVersion = "3.3.6"
 pagingRuntimeVersion = "3.3.6"
@@ -48,12 +45,13 @@ serialization = "1.6.3"
 [libraries]
 accompanist-flowlayout-v0360 = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayoutVersion" }
 android-lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieComposeVersion" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2Version" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCamera2Version" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCamera2Version" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
-androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentialsVersion" }
-androidx-credentials-v120alpha03 = { module = "androidx.credentials:credentials", version.ref = "androidxCredentials" }
-androidx-credentials-vlatestversion = { module = "androidx.credentials:credentials", version.ref = "credentialsVersion" }
+androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
@@ -94,8 +92,6 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorSerializationKotlinxJson" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
-play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuthVersion" }
-play-services-auth-v2070 = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

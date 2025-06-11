@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -47,12 +47,6 @@ fun MessageItem(
         DeviceType.TabletLandscape -> 20.dp
     }
 
-    when (deviceType) {
-        DeviceType.Mobile -> 280.dp
-        DeviceType.TabletPortrait -> 380.dp
-        DeviceType.TabletLandscape -> 500.dp
-    }
-
     val textStyle = when (deviceType) {
         DeviceType.Mobile -> MaterialTheme.typography.bodyMedium
         DeviceType.TabletPortrait -> MaterialTheme.typography.bodyLarge
@@ -76,60 +70,74 @@ fun MessageItem(
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         horizontalArrangement = alignment,
-        verticalAlignment = Alignment.Bottom // ✅ Cần đáy khớp
+        verticalAlignment = Alignment.Top
     ) {
         if (message.isModel) {
-            Box(
-                modifier = Modifier.align(Alignment.Bottom) // ✅ Avatar canh đáy
-            ) {
+            Row(verticalAlignment = Alignment.Bottom) {
                 Image(
                     painter = painterResource(id = chatbotAvatar),
                     contentDescription = "Avatar",
                     modifier = Modifier
                         .size(avatarSize)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.primary),
+                    contentScale = ContentScale.Crop
                 )
+                Spacer(modifier = Modifier.width(4.dp))
+
+                Box(
+                    modifier = Modifier
+                        .widthIn(max = LocalConfiguration.current.screenWidthDp.dp * 0.6f)
+                        .background(bubbleColor, RoundedCornerShape(12.dp))
+                        .padding(
+                            top = bubblePadding,
+                            bottom = 0.dp,
+                            start = bubblePadding,
+                            end = bubblePadding
+                        )
+                ) {
+                    Text(
+                        text = message.message,
+                        color = textColor,
+                        style = textStyle
+                    )
+                }
             }
-            Spacer(modifier = Modifier.width(4.dp))
-        }
+        } else {
+            Row(verticalAlignment = Alignment.Bottom) {
+                Box(
+                    modifier = Modifier
+                        .widthIn(max = LocalConfiguration.current.screenWidthDp.dp * 0.6f)
+                        .background(bubbleColor, RoundedCornerShape(12.dp))
+                        .padding(bubblePadding)
+                ) {
+                    Text(
+                        text = message.message,
+                        color = textColor,
+                        style = textStyle
+                    )
+                }
 
-        Box(
-            modifier = Modifier
-                .wrapContentWidth()
-                .widthIn(max = LocalConfiguration.current.screenWidthDp.dp * 0.7f)
-                .background(bubbleColor, RoundedCornerShape(12.dp))
-                .padding(bubblePadding)
-        ) {
-            Text(
-                text = message.message,
-                color = textColor,
-                style = textStyle
-            )
-        }
+                Spacer(modifier = Modifier.width(4.dp))
 
-        if (!message.isModel) {
-            Spacer(modifier = Modifier.width(4.dp))
+                val painter = if (!userAvatarUrl.isNullOrBlank()) {
+                    rememberAsyncImagePainter(model = userAvatarUrl)
+                } else {
+                    painterResource(id = userDefautlAvatar)
+                }
 
-            val painter = if (!userAvatarUrl.isNullOrBlank()) {
-                rememberAsyncImagePainter(model = userAvatarUrl)
-            } else {
-                painterResource(id = userDefautlAvatar)
-            }
-
-            Box(
-                modifier = Modifier.align(Alignment.Bottom) // ✅ Avatar canh đáy
-            ) {
                 Image(
                     painter = painter,
                     contentDescription = "Avatar",
                     modifier = Modifier
                         .size(avatarSize)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.primary),
+                    contentScale = ContentScale.Crop
                 )
             }
         }
     }
 
 }
+

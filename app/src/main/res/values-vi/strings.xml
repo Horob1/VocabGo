@@ -106,7 +106,7 @@
     <string name="text_us_president">Tổng thống Hoa Kỳ</string>
     <string name="text_game_player">Game thủ</string>
     <string name="text_practice_communicate_with_chatbot">Giao tiếp với chatbot</string>
-    <string name="text_selection_for_you">Chọn tướng</string>
+    <string name="text_selection_for_you">Lựa chọn của bạn</string>
     <string name="text_facebook_founder">Nhà sáng lập Facebook</string>
     <string name="google_login_failed">Thiết bị chưa có tài khoản Google</string>
     <string name="text_retry">Thử lại</string>
@@ -133,5 +133,16 @@
     <string name="title_language">Ngôn ngữ</string>
     <string name="desc_language">Thay đổi ngôn ngữ ứng dụng</string>
     <string name="toast_please_turn_off_the_sync_system_them">Tắt đồng bộ giao diện để đổi giao diện</string>
+
+    <string name="text_vietnam">Việt Nam</string>
+    <string name="text_hanquoc">Hàn Quốc</string>
+    <string name="text_bentre">Bến Tre</string>
+    <string name="text_eastern_england">Đông Anh</string>
+    <string name="text_white_house">Nhà Trắng</string>
+    <string name="text_hoguom">Hồ Gươm</string>
+    <string name="text_explore">Khám phá</string>
+    <string name="text_chat">Nhắn tin</string>
+    <string name="text_call_ended">Cuộc gọi đã kết thúc</string>
+    <string name="text_call_duration">Thời gian gọi:</string>
 
 </resources>
