@@ -65,7 +65,7 @@ fun DateInputField(
             calendar.get(Calendar.DAY_OF_MONTH)
         ).apply {
             setButton(DatePickerDialog.BUTTON_NEGATIVE, "Cancel") { _, _ ->
-                showDialog = false // Keep dialog closed if Cancel is clicked
+                showDialog = false
             }
         }.show()
     }

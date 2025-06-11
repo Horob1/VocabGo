@@ -46,6 +46,13 @@ sealed class NavScreen {
     @Serializable
     data object CameraNavScreen : NavScreen()
 
+    @Serializable
+    data class VideoCallNavScreen(
+        val receivedName: String,
+        val avatarResId: Int,
+        val videoResId: Int?
+    ) : NavScreen()
+
     // Mâm 2
     // Mân 2 của Auth
     @Serializable

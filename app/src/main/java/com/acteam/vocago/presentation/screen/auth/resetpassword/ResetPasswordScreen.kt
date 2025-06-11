@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -71,7 +72,11 @@ fun ResetPasswordScreen(
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
     val scrollState = rememberScrollState()
-    val deviceType = getDeviceType()
+    val configuration = LocalConfiguration.current
+
+    val deviceType =
+        getDeviceType()
+
 
     val buttonHeight = responsiveDP(48, 56, 60)
     val titleFontSize = responsiveSP(30, 36, 42)
@@ -80,7 +85,6 @@ fun ResetPasswordScreen(
     val verticalSpacing = responsiveDP(12, 20, 24)
     val topPadding = responsiveDP(16, 24, 28)
     val horizontalPadding = responsiveDP(24, 40, 48)
-
     LaunchedEffect(Unit) {
         viewModel.startOtpCountdown(300)
     }
@@ -92,6 +96,8 @@ fun ResetPasswordScreen(
                 detectTapGestures { focusManager.clearFocus() }
             }
     ) {
+        val enableVerticalScroll = configuration.screenHeightDp < 800
+
         when (deviceType) {
             DeviceType.Mobile, DeviceType.TabletPortrait -> {
                 Column(
@@ -99,8 +105,8 @@ fun ResetPasswordScreen(
                         .padding(horizontal = horizontalPadding)
                         .fillMaxSize()
                         .then(
-                            if (LocalConfiguration.current.screenHeightDp < 800)
-                                Modifier.verticalScroll(scrollState) else Modifier
+                            if (enableVerticalScroll) Modifier.verticalScroll(scrollState)
+                            else Modifier
                         ),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(verticalSpacing)
@@ -122,7 +128,8 @@ fun ResetPasswordScreen(
                         descFontSize = descFontSize,
                         verticalSpacing = verticalSpacing,
                         buttonHeight = buttonHeight,
-                        context = context
+                        context = context,
+                        deviceType = deviceType
                     )
                 }
             }
@@ -178,28 +185,31 @@ fun ResetPasswordScreen(
                             descFontSize = descFontSize,
                             verticalSpacing = verticalSpacing,
                             buttonHeight = buttonHeight,
-                            context = context
+                            context = context,
+                            deviceType = deviceType
                         )
                     }
                 }
             }
         }
-
         if (uiState is UIState.UIError) {
-            val messageRes = when ((uiState as UIState.UIError).errorType) {
-                UIErrorType.NotFoundError -> R.string.text_email_has_not_been_register
-                UIErrorType.BadRequestError -> R.string.text_otp_expired_and_invalid
-                UIErrorType.UnexpectedEntityError -> R.string.text_unknown_error
-                UIErrorType.ForbiddenError -> R.string.text_user_was_banned
-                UIErrorType.TooManyRequestsError -> R.string.text_too_many_requests
-                else -> R.string.text_unknown_error
+            val error = uiState as UIState.UIError
+            val messageRes = remember(error.errorType) {
+                when (error.errorType) {
+                    UIErrorType.NotFoundError -> R.string.text_email_has_not_been_register
+                    UIErrorType.BadRequestError -> R.string.text_otp_expired_and_invalid
+                    UIErrorType.UnexpectedEntityError -> R.string.text_unknown_error
+                    UIErrorType.ForbiddenError -> R.string.text_user_was_banned
+                    UIErrorType.TooManyRequestsError -> R.string.text_too_many_requests
+                    else -> R.string.text_unknown_error
+                }
             }
             ErrorBannerWithTimer(
                 title = stringResource(R.string.text_error),
                 message = stringResource(messageRes),
                 iconResId = R.drawable.error_banner,
-                onTimeout = { viewModel.clearUIState() },
-                onDismiss = { viewModel.clearUIState() },
+                onTimeout = remember(viewModel) { { viewModel.clearUIState() } },
+                onDismiss = remember(viewModel) { { viewModel.clearUIState() } },
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(horizontal = 16.dp)
@@ -207,7 +217,8 @@ fun ResetPasswordScreen(
         }
 
         if (uiState is UIState.UILoading) {
-            LoadingSurface(picSize = responsiveValue(180, 360, 360))
+            val picSize = responsiveValue(180, 360, 360)
+            LoadingSurface(picSize = picSize)
         }
     }
 }
@@ -224,34 +235,34 @@ private fun CommonContent(
     descFontSize: TextUnit,
     verticalSpacing: Dp,
     buttonHeight: Dp,
-    context: Context
+    context: Context,
+    deviceType: DeviceType
 ) {
-    val deviceType = getDeviceType()
     if (deviceType == DeviceType.Mobile) {
         Spacer(modifier = Modifier.height(verticalSpacing))
-
     }
     CountdownDisplay(timerText = countDownState)
     if (deviceType == DeviceType.Mobile) {
         Spacer(modifier = Modifier.height(verticalSpacing))
-
     }
-    OTPInputField(otp = otpState.otp, onOtpChange = viewModel::setOtpValue)
+    OTPInputField(
+        otp = otpState.otp,
+        onOtpChange = viewModel::setOtpValue
+    )
     Spacer(modifier = Modifier.height(verticalSpacing / 3))
 
     Text(
         text = "${stringResource(R.string.text_send_otp)} $email",
         style = MaterialTheme.typography.bodyLarge.copy(
             fontWeight = FontWeight.Bold,
-            fontSize = textFontSize,
+            fontSize = textFontSize, // Using passed-in value
             textAlign = TextAlign.Center
         ),
         color = MaterialTheme.colorScheme.primary
     )
 
-    ResetPasswordForm(
-        viewModel = viewModel,
-        onSaveChangeClick = {
+    val onSaveChangeClick = remember(viewModel, email, authNavController, focusManager) {
+        {
             viewModel.resetPassword(email) {
                 authNavController.navigate(NavScreen.LoginNavScreen) {
                     popUpTo(0)
@@ -260,6 +271,10 @@ private fun CommonContent(
             }
             focusManager.clearFocus()
         }
+    }
+    ResetPasswordForm(
+        viewModel = viewModel,
+        onSaveChangeClick = onSaveChangeClick
     )
 
     Text(
@@ -271,24 +286,23 @@ private fun CommonContent(
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .fillMaxWidth()
-            .safeClickable("btn_resend_email_forgot_password") {
-                viewModel.requestOtpAndStartCountdown(email)
-            }
+            .safeClickable(
+                "btn_resend_email_forgot_password",
+                onClick = remember(viewModel, email) {
+                    {
+                        viewModel.requestOtpAndStartCountdown(email)
+                    }
+                })
             .padding(8.dp),
         textAlign = TextAlign.End
     )
 
     if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
         Spacer(modifier = Modifier.height(verticalSpacing * 2))
-
     }
 
-    Button(
-        modifier = Modifier
-            .height(buttonHeight)
-            .fillMaxWidth()
-            .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
-        onClick = {
+    val onResetButtonClick = remember(viewModel, email, authNavController, focusManager, context) {
+        {
             if (viewModel.resetPasswordFormState.value.isResetPasswordButtonEnabled) {
                 viewModel.resetPassword(email) {
                     authNavController.navigate(NavScreen.LoginNavScreen) {
@@ -305,6 +319,14 @@ private fun CommonContent(
                 ).show()
             }
         }
+    }
+
+    Button(
+        modifier = Modifier
+            .height(buttonHeight)
+            .fillMaxWidth()
+            .shadow(8.dp, shape = RoundedCornerShape(24.dp)),
+        onClick = onResetButtonClick
     ) {
         Text(
             text = stringResource(R.string.btn_save_change).uppercase(),

@@ -1,13 +1,19 @@
 package com.acteam.vocago.presentation.screen.main.chat
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
@@ -15,19 +21,26 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
+import com.acteam.vocago.presentation.screen.main.chat.component.LocationCard
 import com.acteam.vocago.presentation.screen.main.chat.component.UserProfileCard
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
@@ -41,6 +54,7 @@ fun ChatScreen(
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
+    val visibleLocationCardPage = remember { mutableStateOf<Int?>(null) }
 
     val deviceType = getDeviceType()
 
@@ -48,7 +62,11 @@ fun ChatScreen(
         UserProfileData(
             R.drawable.ronaldo_avt, "Online", "Ronaldo",
             stringResource(R.string.text_football_boat),
-            1
+            1,
+            location = "Riyard",
+            country = "Saudi Arabia",
+            locationImageRes = R.drawable.ronaldo_location,
+            videoResId = R.raw.ronaldo_videocall
         ) { id ->
             rootNavController.navigate(
                 NavScreen.CommonChatNavScreen(
@@ -62,7 +80,11 @@ fun ChatScreen(
         UserProfileData(
             R.drawable.messi_avatar, "Online", "Messi",
             stringResource(R.string.text_football_goat),
-            2
+            2,
+            location = "Miami",
+            country = "USA",
+            locationImageRes = R.drawable.messi_location,
+            videoResId = R.raw.messi_callvideo
         ) { id ->
             rootNavController.navigate(
                 NavScreen.CommonChatNavScreen(
@@ -74,9 +96,30 @@ fun ChatScreen(
         },
 
         UserProfileData(
+            R.drawable.dack_avatar, "Online", "Jack",
+            stringResource(R.string.text_singer),
+            8,
+            location = stringResource(R.string.text_bentre),
+            country = stringResource(R.string.text_vietnam),
+            locationImageRes = R.drawable.bentre,
+            videoResId = R.raw.jack_videocall
+        ) { id ->
+            rootNavController.navigate(
+                NavScreen.CommonChatNavScreen(
+                    id,
+                    "Jack",
+                    R.drawable.dack_avatar
+                )
+            )
+        },
+        UserProfileData(
             R.drawable.trum_avatar, "Online", "Trump",
             stringResource(R.string.text_us_president),
-            3
+            3,
+            location = stringResource(R.string.text_white_house),
+            country = "USA",
+            locationImageRes = R.drawable.nhatrang,
+            videoResId = null
         ) { id ->
             rootNavController.navigate(
                 NavScreen.CommonChatNavScreen(
@@ -90,7 +133,11 @@ fun ChatScreen(
         UserProfileData(
             R.drawable.dev_chatbot, "Online", "The Anh",
             stringResource(R.string.text_developer),
-            4
+            4,
+            location = stringResource(R.string.text_eastern_england),
+            country = stringResource(R.string.text_vietnam),
+            locationImageRes = R.drawable.donganh,
+            videoResId = null
         ) { id ->
             rootNavController.navigate(
                 NavScreen.CommonChatNavScreen(
@@ -104,7 +151,11 @@ fun ChatScreen(
         UserProfileData(
             R.drawable.daily_chatbot, "Online", "Van Cong",
             stringResource(R.string.text_everyday_friend),
-            5
+            5,
+            location = "Berlin",
+            country = stringResource(R.string.text_vietnam),
+            locationImageRes = R.drawable.songcau,
+            videoResId = null
         ) { id ->
             rootNavController.navigate(
                 NavScreen.CommonChatNavScreen(
@@ -118,7 +169,11 @@ fun ChatScreen(
         UserProfileData(
             R.drawable.tutor_chatbot, "Online", "Minh Nhat",
             stringResource(R.string.text_english_tutor),
-            6
+            6,
+            location = stringResource(R.string.text_hoguom),
+            country = stringResource(R.string.text_vietnam),
+            locationImageRes = R.drawable.hoguom,
+            videoResId = null
         ) { id ->
             rootNavController.navigate(
                 NavScreen.CommonChatNavScreen(
@@ -132,7 +187,11 @@ fun ChatScreen(
         UserProfileData(
             R.drawable.zuckerberg_avatar, "Online", "Zuckerberg",
             stringResource(R.string.text_facebook_founder),
-            7
+            7,
+            location = "California",
+            country = "USA",
+            locationImageRes = R.drawable.cali,
+            videoResId = null
         ) { id ->
             rootNavController.navigate(
                 NavScreen.CommonChatNavScreen(
@@ -143,24 +202,15 @@ fun ChatScreen(
             )
         },
 
-        UserProfileData(
-            R.drawable.dack_avatar, "Online", "Jack",
-            stringResource(R.string.text_singer),
-            8
-        ) { id ->
-            rootNavController.navigate(
-                NavScreen.CommonChatNavScreen(
-                    id,
-                    "Jack",
-                    R.drawable.dack_avatar
-                )
-            )
-        },
 
         UserProfileData(
             R.drawable.faker_avatar, "Online", "Faker",
             stringResource(R.string.text_game_player),
-            9
+            9,
+            location = "Seoul",
+            country = stringResource(R.string.text_hanquoc),
+            locationImageRes = R.drawable.seoul,
+            videoResId = null
         ) { id ->
             rootNavController.navigate(
                 NavScreen.CommonChatNavScreen(
@@ -181,7 +231,11 @@ fun ChatScreen(
     }
     val cardHeight = screenHeight * 0.6f
     val horizontalPadding = (screenWidth - cardWidth) / 2
-
+    val cardPositions = remember {
+        mutableStateListOf<IntOffset>().apply {
+            repeat(userProfileList.size) { add(IntOffset.Zero) }
+        }
+    }
     Column {
         Header()
 
@@ -204,41 +258,103 @@ fun ChatScreen(
         if (deviceType == DeviceType.TabletPortrait) {
             Spacer(modifier = Modifier.height(64.dp))
         } else {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(12.dp))
         }
-        HorizontalPager(
-            state = pagerState,
-            contentPadding = PaddingValues(horizontal = horizontalPadding),
-            pageSpacing = 0.dp,
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(cardHeight)
-        ) { page ->
-            val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
-            val absOffset = pageOffset.absoluteValue.coerceIn(0f, 1f)
-
-            val scale = lerp(0.85f, 1f, 1f - absOffset)
-            val alpha = lerp(0.5f, 1f, 1f - absOffset)
-            val rotationY = lerp(if (pageOffset < 0) 15f else -15f, 0f, 1f - absOffset)
-            val density = LocalDensity.current.density
-
-            UserProfileCard(
-                imageResId = userProfileList[page].imageResId,
-                status = userProfileList[page].status,
-                name = userProfileList[page].name,
-                jobTitle = userProfileList[page].jobTitle,
+                .fillMaxSize()
+                .pointerInput(visibleLocationCardPage.value) {
+                    detectTapGestures(onTap = {
+                        visibleLocationCardPage.value = null
+                    })
+                }
+        ) {
+            HorizontalPager(
+                state = pagerState,
+                contentPadding = PaddingValues(horizontal = horizontalPadding),
+                pageSpacing = 0.dp,
                 modifier = Modifier
-                    .graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                        this.alpha = alpha
-                        this.rotationY = rotationY
-                        this.cameraDistance = 12 * density
+                    .fillMaxWidth()
+                    .height(cardHeight)
+            ) { page ->
+
+                val pageOffset =
+                    (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+                val absOffset = pageOffset.absoluteValue.coerceIn(0f, 1f)
+
+                val scale = lerp(0.85f, 1f, 1f - absOffset)
+                val alpha = lerp(0.5f, 1f, 1f - absOffset)
+                val rotationY = lerp(if (pageOffset < 0) 15f else -15f, 0f, 1f - absOffset)
+                val density = LocalDensity.current.density
+
+                UserProfileCard(
+                    imageResId = userProfileList[page].imageResId,
+                    status = userProfileList[page].status,
+                    name = userProfileList[page].name,
+                    jobTitle = userProfileList[page].jobTitle,
+                    modifier = Modifier
+                        .graphicsLayer {
+                            scaleX = scale
+                            scaleY = scale
+                            this.alpha = alpha
+                            this.rotationY = rotationY
+                            this.cameraDistance = 12 * density
+                        }
+                        .width(cardWidth)
+                        .height(cardHeight),
+                    onclick = { userProfileList[page].onclick(userProfileList[page].chatId) },
+                    onToggleLocationClick = {
+                        visibleLocationCardPage.value =
+                            if (visibleLocationCardPage.value == page) null else page
+                    },
+                    onVideoCallClick = {
+                        rootNavController.navigate(
+                            NavScreen.VideoCallNavScreen(
+                                receivedName = userProfileList[page].name,
+                                avatarResId = userProfileList[page].imageResId,
+                                videoResId = userProfileList[page].videoResId
+                            )
+                        )
                     }
-                    .width(cardWidth)
-                    .height(cardHeight),
-                onclick = { userProfileList[page].onclick(userProfileList[page].chatId) })
+                )
+            }
+
+            visibleLocationCardPage.value?.let { page ->
+                val pos = cardPositions.getOrNull(page) ?: IntOffset.Zero
+                var offsetY = 0
+                offsetY = if (deviceType == DeviceType.TabletLandscape) {
+                    with(LocalDensity.current) { (cardHeight * 0.15f).toPx().toInt() }
+                } else {
+                    with(LocalDensity.current) { (cardHeight * 0.25f).toPx().toInt() }
+                }
+                var offsetXExtra = 0
+                offsetXExtra = if (deviceType == DeviceType.Mobile) {
+                    with(LocalDensity.current) { 48.dp.toPx().toInt() }
+                } else if (deviceType == DeviceType.TabletPortrait) {
+                    with(LocalDensity.current) { 120.dp.toPx().toInt() }
+                } else {
+                    with(LocalDensity.current) { 320.dp.toPx().toInt() }
+                }
+                LocationCard(
+                    location = userProfileList[page].location,
+                    country = userProfileList[page].country,
+                    imageRes = userProfileList[page].locationImageRes,
+                    modifier = Modifier
+                        .offset { IntOffset(pos.x + offsetXExtra, (pos.y + offsetY).toInt()) }
+                        .width(cardWidth)
+                        .zIndex(10f)
+                        .clickable(
+                            enabled = true,
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            // bấm trong LocationCard thì không ẩn
+                        }
+                )
+            }
+
         }
+
     }
 }
 
@@ -249,6 +365,10 @@ data class UserProfileData(
     val name: String,
     val jobTitle: String,
     val chatId: Int,
+    val location: String,
+    val country: String,
+    val locationImageRes: Int,
+    val videoResId: Int?,
     val onclick: (Int) -> Unit,
 )
 

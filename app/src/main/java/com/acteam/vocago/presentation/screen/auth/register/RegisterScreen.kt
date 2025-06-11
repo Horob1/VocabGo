@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -20,10 +22,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -63,13 +67,16 @@ fun RegisterScreen(
     val buttonHeight = responsiveDP(mobile = 48, tabletPortrait = 56, tabletLandscape = 60)
     val descFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
     val deviceType = getDeviceType()
+    val imeBottomPx = WindowInsets.ime.getBottom(LocalDensity.current)
+    val imeBottomDp = with(LocalDensity.current) { imeBottomPx.toDp() }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
-                detectTapGestures { focusManager.clearFocus() }
+                detectTapGestures(onTap = { focusManager.clearFocus() })
             }
+            .padding(bottom = imeBottomDp)
     ) {
         Column(
             modifier = Modifier
@@ -93,13 +100,14 @@ fun RegisterScreen(
 
             RegisterForm(viewModel)
 
-            Spacer(modifier = Modifier.height(verticalSpacing / 3))
+            Spacer(modifier = Modifier.height(verticalSpacing / 3)) // Use remembered verticalSpacing
+            val currentEmailForNav = rememberUpdatedState(formState.email)
 
             Button(
                 onClick = {
                     viewModel.register {
                         authNavController.navigate(
-                            NavScreen.VerifyEmailNavScreen(email = formState.email)
+                            NavScreen.VerifyEmailNavScreen(email = currentEmailForNav.value)
                         ) {
                             launchSingleTop = true
                         }
@@ -120,28 +128,32 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(verticalSpacing / 3))
         }
-
-        if (uiState is UIState.UIError) {
-            val message = when ((uiState as UIState.UIError).errorType) {
-                UIErrorType.ConflictError -> R.string.text_username_or_email_already_exists
-                UIErrorType.ServerError -> R.string.text_server_error
-                else -> R.string.text_unknown_error
+        when (val currentUiState = uiState) {
+            is UIState.UIError -> {
+                val messageResId = when (currentUiState.errorType) {
+                    UIErrorType.ConflictError -> R.string.text_username_or_email_already_exists
+                    UIErrorType.ServerError -> R.string.text_server_error
+                    else -> R.string.text_unknown_error
+                }
+                ErrorBannerWithTimer(
+                    title = stringResource(R.string.text_error),
+                    message = stringResource(messageResId),
+                    iconResId = R.drawable.error_banner,
+                    onTimeout = { viewModel.clearUIState() },
+                    onDismiss = { viewModel.clearUIState() },
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(horizontal = 16.dp)
+                )
             }
 
-            ErrorBannerWithTimer(
-                title = stringResource(R.string.text_error),
-                message = stringResource(message),
-                iconResId = R.drawable.error_banner,
-                onTimeout = { viewModel.clearUIState() },
-                onDismiss = { viewModel.clearUIState() },
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(horizontal = 16.dp)
-            )
-        }
+            is UIState.UILoading -> {
+                val loadingPicSize = responsiveValue(180, 360, 360)
+                LoadingSurface(picSize = loadingPicSize)
+            }
 
-        if (uiState is UIState.UILoading) {
-            LoadingSurface(picSize = responsiveValue(180, 360, 360))
+            else -> {
+            }
         }
     }
 }

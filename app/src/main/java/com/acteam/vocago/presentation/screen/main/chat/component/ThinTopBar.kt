@@ -12,9 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -124,38 +121,6 @@ fun ThinTopBar(
                 ),
                 maxLines = 1,
             )
-
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(
-                onClick = {},
-                modifier = Modifier.size(iconSize)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Videocam,
-                    contentDescription = "VideoCall",
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-            }
-            IconButton(
-                onClick = {},
-                modifier = Modifier.size(iconSize)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Call,
-                    contentDescription = "Call",
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-            }
-            IconButton(
-                onClick = {},
-                modifier = Modifier.size(iconSize)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "Setting",
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-            }
         }
     }
 }
