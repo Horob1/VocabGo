@@ -21,4 +21,8 @@ val daoModule = module {
         get<AppDatabase>().newsDao()
     }
 
+    single {
+        get<AppDatabase>().newsHistoryDao()
+    }
+
 }

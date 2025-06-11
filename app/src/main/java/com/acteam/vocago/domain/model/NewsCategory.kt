@@ -11,5 +11,5 @@ enum class NewsCategory(val value: String, @StringRes val stringResId: Int) {
     TECH("Tech", R.string.enum_news_category_tech),
     SPORT("Sports", R.string.enum_news_category_sport),
     WORLD("World", R.string.enum_news_category_world),
-    PERPECTIVES("Perpectives", R.string.enum_news_category_perpectives)
+    PERSPECTIVES("Perspectives", R.string.enum_news_category_perspectives)
 }

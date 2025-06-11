@@ -27,7 +27,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
 import com.acteam.vocago.R
 
 @Composable
@@ -35,15 +34,17 @@ fun ChooseLanguageButton(
     @DrawableRes flagIcon: Int,
     @StringRes languageName: Int,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val context = LocalContext.current
-    val message =
-        "${stringResource(languageName)} ${stringResource(R.string.mess_is_current_language)} "
     Button(
         onClick = {
             if (!isSelected) onClick()
-            else Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            else Toast.makeText(
+                context,
+                "${context.getString(languageName)} ${context.getString(R.string.mess_is_current_language)}",
+                Toast.LENGTH_SHORT
+            ).show()
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
@@ -60,7 +61,7 @@ fun ChooseLanguageButton(
             modifier = Modifier.fillMaxWidth()
         ) {
             Image(
-                painter = rememberAsyncImagePainter(model = flagIcon),
+                painter = painterResource(flagIcon),
                 contentDescription = "${stringResource(languageName)} Flag",
                 modifier = Modifier
                     .size(40.dp)

@@ -17,14 +17,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun OnBoardingImageCard(
     @DrawableRes
     image: Int,
     maxWith: Float = 0.9f,
-    maxHigh: Float = 0.7f
+    maxHigh: Float = 0.7f,
 ) {
     Box(
         modifier = Modifier
@@ -37,7 +36,7 @@ fun OnBoardingImageCard(
             .clip(RoundedCornerShape(24.dp))
     ) {
         Image(
-            painter = rememberAsyncImagePainter(model = image),
+            painter = painterResource(image),
             contentDescription = "Pager Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()

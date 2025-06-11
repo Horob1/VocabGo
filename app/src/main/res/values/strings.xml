@@ -97,7 +97,7 @@
     <string name="enum_news_category_tech">Tech</string>
     <string name="enum_news_category_sport">Sport</string>
     <string name="enum_news_category_world">World</string>
-    <string name="enum_news_category_perpectives">Perpectives</string>
+    <string name="enum_news_category_perspectives">Perspectives</string>
 
     <string name="text_level" translatable="false">Level</string>
     <string name="text_search">Search</string>
@@ -150,4 +150,21 @@
     <string name="text_chat">Chat</string>
     <string name="text_call_ended">Call ended</string>
     <string name="text_call_duration">Call duration:</string>
+    <string name="title_practice">Practice</string>
+    <string name="related_articles">Related Articles</string>
+
+    <string name="submit">Submit</string>
+    <string name="more_content">More content</string>
+    <string name="text_score">Score: </string>
+
+    <string name="title_login_required">Login Required</string>
+    <string name="desc_login_required">You need to login to continue</string>
+
+    <string name="title_history">History</string>
+    <string name="title_bookmark">Bookmark</string>
+
+    <string name="tab_definition">Definition</string>
+    <string name="tab_idioms">Idioms</string>
+    <string name="tab_synonyms">Synonyms</string>
+    <string name="tab_antonyms">Antonyms</string>
 </resources>

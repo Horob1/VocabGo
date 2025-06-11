@@ -9,8 +9,10 @@ import com.acteam.vocago.presentation.screen.auth.verifyemail.VerifyEmailViewMod
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
+import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
+import com.acteam.vocago.presentation.screen.worddetail.WordDetailViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -63,12 +65,24 @@ val viewModelModule = module {
 
     viewModel {
         NewsDetailViewModel(
-            get(), get()
+            get(), get(), get(), get(), get()
         )
     }
     viewModel {
         ChatViewModel(
             get(), get()
+        )
+    }
+
+    viewModel {
+        NewsHistoryViewModel(
+            get()
+        )
+    }
+
+    viewModel {
+        WordDetailViewModel(
+            get()
         )
     }
 }

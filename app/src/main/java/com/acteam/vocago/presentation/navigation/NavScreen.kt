@@ -35,6 +35,12 @@ sealed class NavScreen {
     data object DictionaryNavScreen : NavScreen()
 
     @Serializable
+    data class WordDetailNavScreen(val word: String) : NavScreen()
+
+    @Serializable
+    data class ChooseVocaListNavScreen(val word: String) : NavScreen()
+
+    @Serializable
     data object SettingNavScreen : NavScreen()
 
     @Serializable

@@ -73,11 +73,13 @@ fun SettingScreen(
         label = "icon rotation"
     )
 
-    val languages = listOf(
-        ChooseLanguageData.System,
-        ChooseLanguageData.English,
-        ChooseLanguageData.Vietnamese
-    )
+    val languages = remember {
+        listOf(
+            ChooseLanguageData.System,
+            ChooseLanguageData.English,
+            ChooseLanguageData.Vietnamese
+        )
+    }
 
     val longHeightDp = responsiveDP(
         mobile = 24,
@@ -337,7 +339,11 @@ fun SettingScreen(
                                 .fillMaxWidth(),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            items(languages.size) { index ->
+                            items(
+                                languages.size,
+                                key = { index -> index },
+                                contentType = { "ChooseLanguageButton" }
+                            ) { index ->
                                 val lang = languages[index]
                                 ChooseLanguageButton(
                                     lang.flag,

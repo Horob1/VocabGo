@@ -1,6 +1,7 @@
-package com.acteam.vocago.presentation.screen.main.news
+package com.acteam.vocago.presentation.screen.main.news.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,11 +24,12 @@ import androidx.navigation.NavController
 import com.acteam.vocago.domain.model.FeatureBarItem
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.utils.responsiveDP
-import com.acteam.vocago.utils.safeClickable
 
 @Composable
 fun FeatureBar(
     rootNavController: NavController,
+    isAuth: Boolean,
+    runOnUnAuth: () -> Unit,
     shadowColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
 ) {
     val horizontalPadding = responsiveDP(
@@ -49,23 +52,33 @@ fun FeatureBar(
         tabletPortrait = 8,
         tabletLandscape = 12
     )
-    val items = listOf(
-        FeatureBarItem.TranslateCam(onClick = {
-            rootNavController.navigate(NavScreen.CameraNavScreen)
-        }),
-        FeatureBarItem.BookMark(onClick = {
-            rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = true))
-        }),
-        FeatureBarItem.History(onClick = {
-            rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = false))
-        }),
-        FeatureBarItem.Dictionary(onClick = {
-            rootNavController.navigate(NavScreen.DictionaryNavScreen)
-        }),
-        FeatureBarItem.Setting(onClick = {
-            rootNavController.navigate(NavScreen.SettingNavScreen)
-        }),
-    )
+    val items = remember {
+        listOf(
+            FeatureBarItem.TranslateCam(onClick = {
+                rootNavController.navigate(NavScreen.CameraNavScreen)
+            }),
+            FeatureBarItem.BookMark(onClick = {
+                if (!isAuth) {
+                    runOnUnAuth()
+                    return@BookMark
+                }
+                rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = true))
+            }),
+            FeatureBarItem.History(onClick = {
+                if (!isAuth) {
+                    runOnUnAuth()
+                    return@History
+                }
+                rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = false))
+            }),
+            FeatureBarItem.Dictionary(onClick = {
+                rootNavController.navigate(NavScreen.DictionaryNavScreen)
+            }),
+            FeatureBarItem.Setting(onClick = {
+                rootNavController.navigate(NavScreen.SettingNavScreen)
+            }),
+        )
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -112,7 +125,7 @@ fun FeatureItem(item: FeatureBarItem, modifier: Modifier = Modifier) {
             .clip(
                 MaterialTheme.shapes.medium
             )
-            .safeClickable(key = "feature_item") { item.onItemClick() }
+            .clickable { item.onItemClick() }
             .background(
                 MaterialTheme.colorScheme.onSurface.copy(
                     alpha = 0.3f

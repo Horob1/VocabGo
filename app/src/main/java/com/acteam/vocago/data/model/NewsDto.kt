@@ -1,6 +1,5 @@
 package com.acteam.vocago.data.model
 
-import com.acteam.vocago.data.local.entity.NewsEntity
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,6 +12,7 @@ data class WordNewsDto(
 data class QuestionNewsDto(
     val question: String,
     val answers: List<String>,
+    val correctAnswerIndex: Int,
     val explanation: String,
 )
 
@@ -75,5 +75,6 @@ data class NewsDetailDto(
     val translations: List<TranslationNewsDto>,
     val createdAt: String,
     val log: NewLogDto?,
+    val related: List<NewsDto>,
     val bookmarkCount: Int,
 )

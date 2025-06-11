@@ -1,6 +1,5 @@
 package com.acteam.vocago.data.paging
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -63,13 +62,6 @@ class NewsRemoteMediator(
                     }
                     appDatabase.newsDao().insertNews(entities)
                 }
-                Log.d("RemoteMediator", "meta: $meta")
-                Log.d(
-                    "RemoteMediator",
-                    "LoadType: $loadType, page: ${meta.page}, entities: ${entities.size}"
-                )
-
-                Log.d("RemoteMediator", "next page: ${meta.page < meta.totalPages}")
 
                 return MediatorResult.Success(endOfPaginationReached = meta.page >= meta.totalPages)
             } else {

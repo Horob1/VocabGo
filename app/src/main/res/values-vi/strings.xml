@@ -91,7 +91,7 @@
     <string name="enum_news_category_tech">Công nghệ</string>
     <string name="enum_news_category_sport">Thể thao</string>
     <string name="enum_news_category_world">Thế giới</string>
-    <string name="enum_news_category_perpectives">Chia sẻ kinh nghiệm</string>
+    <string name="enum_news_category_perspectives">Chia sẻ kinh nghiệm</string>
 
     <string name="text_search">Tìm kiếm</string>
     <string name="text_choose_categories">Chọn danh mục</string>
@@ -145,4 +145,20 @@
     <string name="text_call_ended">Cuộc gọi đã kết thúc</string>
     <string name="text_call_duration">Thời gian gọi:</string>
 
+    <string name="title_practice">Thực hành</string>
+    <string name="related_articles">Bài viết liên quan</string>
+    <string name="submit">Nộp bài</string>
+    <string name="more_content">Xem thêm</string>
+    <string name="text_score">Điểm: </string>
+
+    <string name="title_login_required">Yêu cầu đăng nhập</string>
+    <string name="desc_login_required">Bạn cần đăng nhập để tiếp tục</string>
+
+    <string name="title_history">Lịch sử</string>
+    <string name="title_bookmark">Đánh dấu</string>
+
+    <string name="tab_definition">Định nghĩa</string>
+    <string name="tab_idioms">Thành ngữ</string>
+    <string name="tab_synonyms">Từ đồng nghĩa</string>
+    <string name="tab_antonyms">Từ trái nghĩa</string>
 </resources>
