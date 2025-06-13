@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key // Import for key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,33 +37,43 @@ import com.acteam.vocago.presentation.screen.auth.register.RegisterViewModel
 import com.acteam.vocago.utils.responsiveSP
 import com.acteam.vocago.utils.responsiveValue
 
+// --- Optimizations: Define constants outside the Composable ---
+// These values do not change based on Composable inputs or state,
+// so defining them once avoids re-creation on every recomposition.
+private val GENDER_OPTIONS = listOf("Nam", "Nữ", "Khác")
+private val GENDER_MAP = mapOf(
+    "Nam" to "MALE",
+    "Nữ" to "FEMALE",
+    "Khác" to "OTHER"
+)
+
+// Inverting the map once and reusing it is more efficient than doing it on every recomposition.
+private val REVERSE_GENDER_MAP = GENDER_MAP.entries.associate { (k, v) -> v to k }
+
+private val GENDER_DROPDOWN_SHAPE = RoundedCornerShape(12.dp)
+private val GENDER_ICON_BACKGROUND_SHAPE = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
+
+
 @Composable
 fun GenderDropdown(
     viewModel: RegisterViewModel
 ) {
-    val genderOptions = listOf("Nam", "Nữ", "Khác")
-    val genderMap = mapOf(
-        "Nam" to "MALE",
-        "Nữ" to "FEMALE",
-        "Khác" to "OTHER"
-    )
-    val reverseGenderMap = genderMap.entries.associate { (k, v) -> v to k } // MALE -> Nam, ...
-
     val formState by viewModel.registerFormState.collectAsState()
-    val selectedGender = formState.gender // MALE, FEMALE, OTHER
+    val selectedGender = formState.gender
     var expanded by remember { mutableStateOf(false) }
+
     val textFieldFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
-            .clip(RoundedCornerShape(12.dp))
+            .clip(GENDER_DROPDOWN_SHAPE)
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .border(
                 1.dp,
                 MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                RoundedCornerShape(12.dp)
+                GENDER_DROPDOWN_SHAPE
             )
             .clickable { expanded = true }
     ) {
@@ -78,7 +89,7 @@ fun GenderDropdown(
                     .fillMaxHeight()
                     .background(
                         MaterialTheme.colorScheme.primary,
-                        RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
+                        GENDER_ICON_BACKGROUND_SHAPE
                     ),
                 contentAlignment = Alignment.Center
             ) {
@@ -98,7 +109,7 @@ fun GenderDropdown(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = reverseGenderMap[selectedGender] ?: "Chọn giới tính",
+                    text = REVERSE_GENDER_MAP[selectedGender] ?: "Chọn giới tính",
                     color = if (selectedGender.isNotEmpty()) MaterialTheme.colorScheme.onSurface else Color.Gray,
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = textFieldFontSize
@@ -106,7 +117,7 @@ fun GenderDropdown(
 
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = null
+                    contentDescription = "Mở danh sách chọn giới tính"
                 )
             }
         }
@@ -114,20 +125,20 @@ fun GenderDropdown(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            Modifier.fillMaxWidth(
-                responsiveValue(90, 90, 40) / 100f
-            )
+            modifier = Modifier.fillMaxWidth(responsiveValue(90, 90, 40) / 100f)
         ) {
-            genderOptions.forEach { gender ->
-                DropdownMenuItem(
-                    text = { Text(gender) },
-                    onClick = {
-                        val genderCode = genderMap[gender] ?: "OTHER"
-                        viewModel.setGender(genderCode)
-                        expanded = false
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
+            GENDER_OPTIONS.forEach { gender ->
+                key(gender) {
+                    DropdownMenuItem(
+                        text = { Text(gender) },
+                        onClick = {
+                            val genderCode = GENDER_MAP[gender] ?: "OTHER"
+                            viewModel.setGender(genderCode)
+                            expanded = false
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }

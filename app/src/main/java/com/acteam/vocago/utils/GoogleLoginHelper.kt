@@ -3,6 +3,7 @@ package com.acteam.vocago.utils
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -53,6 +54,7 @@ object GoogleLoginHelper {
                     onSuccess(idToken)
                 }
             } catch (e: GetCredentialException) {
+                Log.e("GoogleLoginHelper", "Error getting credential", e)
                 e.printStackTrace()
                 onError(context.getString(R.string.google_login_failed))
             } catch (e: GoogleIdTokenParsingException) {

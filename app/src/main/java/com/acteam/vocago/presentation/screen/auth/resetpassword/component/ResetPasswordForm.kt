@@ -41,182 +41,191 @@ import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.screen.auth.resetpassword.ResetPasswordViewModel
 import com.acteam.vocago.presentation.screen.common.data.UIState
+import kotlin.system.measureTimeMillis
+
+private val topRoundedCornerShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+private val bottomRoundedCornerShape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
 
 @Composable
 fun ResetPasswordForm(
     viewModel: ResetPasswordViewModel,
     onSaveChangeClick: () -> Unit
 ) {
-    val passwordFocusRequester = remember { FocusRequester() }
-    val confirmPasswordFocusRequester = remember { FocusRequester() }
+    measureTimeMillis {
 
-    val uiState by viewModel.resetPasswordUIState.collectAsState()
-    val formState by viewModel.resetPasswordFormState.collectAsState()
-    Column {
-        Column(
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .fillMaxWidth()
-                .shadow(
-                    6.dp,
-                    RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-                )
-        ) {
-            Row(
+        val passwordFocusRequester = remember { FocusRequester() }
+        val confirmPasswordFocusRequester = remember { FocusRequester() }
+
+        val uiState by viewModel.resetPasswordUIState.collectAsState()
+        val formState by viewModel.resetPasswordFormState.collectAsState()
+
+        val primaryBorderColor =
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+
+        val surfaceVariantColor = MaterialTheme.colorScheme.surfaceVariant
+        val primaryColor = MaterialTheme.colorScheme.primary
+        val onPrimaryColor = MaterialTheme.colorScheme.onPrimary
+
+        val textFieldColors =
+            OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = Color.Transparent,
+                focusedBorderColor = Color.Transparent,
+                disabledBorderColor = Color.Transparent
+            )
+
+
+        Column {
+            Column(
                 modifier = Modifier
+                    .padding(top = 8.dp)
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceVariant,
-                        RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
-                    )
-                    .border(
-                        1.dp, MaterialTheme.colorScheme.primary.copy(
-                            alpha = 0.5f
-                        ), RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+                    .shadow(
+                        elevation = 6.dp,
+                        shape = bottomRoundedCornerShape
                     )
             ) {
-                Box(
+                Row(
                     modifier = Modifier
-                        .width(48.dp)
-                        .fillMaxHeight()
+                        .fillMaxWidth()
+                        .height(56.dp)
                         .background(
-                            MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
+                            color = surfaceVariantColor,
+                            shape = topRoundedCornerShape
+                        )
+                        .border(
+                            width = 1.dp,
+                            color = primaryBorderColor,
+                            shape = topRoundedCornerShape
+                        )
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary
+                    Box(
+                        modifier = Modifier
+                            .width(48.dp)
+                            .fillMaxHeight()
+                            .background(
+                                color = primaryColor,
+                                shape = topRoundedCornerShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = null,
+                            tint = onPrimaryColor
+                        )
+                    }
+
+                    OutlinedTextField(
+                        value = formState.password,
+                        onValueChange = { viewModel.setPassword(it) }, // This is fine, delegates to ViewModel
+                        placeholder = {
+                            Text(stringResource(R.string.input_enter_password))
+                        },
+                        singleLine = true,
+                        modifier = Modifier
+                            .weight(1f)
+                            .focusRequester(passwordFocusRequester)
+                            .fillMaxHeight(),
+                        visualTransformation = if (formState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        colors = textFieldColors,
+                        trailingIcon = {
+                            PasswordTrailingIcon(
+                                isPasswordVisible = formState.isPasswordVisible,
+                                onToggleVisibility = { viewModel.togglePasswordVisibility() }
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Password
+                        ),
+                        keyboardActions = KeyboardActions(onNext = {
+                            confirmPasswordFocusRequester.requestFocus()
+                        }),
                     )
                 }
-
-                OutlinedTextField(
-                    value = formState.password,
-                    onValueChange = {
-                       viewModel.setPassword(it)
-                    },
-                    placeholder = {
-                        Text(stringResource(R.string.input_enter_password))
-                    },
-                    singleLine = true,
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .focusRequester(passwordFocusRequester)
-                        .fillMaxHeight(),
-                    visualTransformation = if (formState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent,
-                        disabledBorderColor = Color.Transparent
-                    ),
-                    trailingIcon = {
-                        val image =
-                            if (formState.isPasswordVisible) R.drawable.hidden else R.drawable.view
-                        val description =
-                            if (formState.isPasswordVisible) "Hidden password" else "Show password"
-
-                        IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
-                            Icon(
-                                painter = painterResource(id = image),
-                                contentDescription = description,
-                                modifier = Modifier
-                                    .height(24.dp)
-                                    .width(24.dp)
-                            )
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Next,
-                        keyboardType = KeyboardType.Password
-                    ),
-                    keyboardActions = KeyboardActions(onNext = {
-                        confirmPasswordFocusRequester.requestFocus()
-                    }),
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceVariant,
-                        RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-                    )
-                    .border(
-                        1.dp, MaterialTheme.colorScheme.primary.copy(
-                            alpha = 0.5f
-                        ), RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-                    )
-            ) {
-                Box(
-                    modifier = Modifier
-                        .width(48.dp)
-                        .fillMaxHeight()
+                        .fillMaxWidth()
+                        .height(56.dp)
                         .background(
-                            MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
+                            color = surfaceVariantColor,
+                            shape = bottomRoundedCornerShape
+                        )
+                        .border(
+                            width = 1.dp,
+                            color = primaryBorderColor,
+                            shape = bottomRoundedCornerShape
+                        )
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary
+                    Box(
+                        modifier = Modifier
+                            .width(48.dp)
+                            .fillMaxHeight()
+                            .background(
+                                color = primaryColor,
+                                shape = bottomRoundedCornerShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = null,
+                            tint = onPrimaryColor
+                        )
+                    }
+
+                    OutlinedTextField(
+                        value = formState.confirmPassword,
+                        onValueChange = { viewModel.setConfirmPassword(it) },
+                        placeholder = {
+                            Text(stringResource(R.string.input_confirm_password))
+                        },
+                        singleLine = true,
+                        modifier = Modifier
+                            .weight(1f)
+                            .focusRequester(confirmPasswordFocusRequester)
+                            .fillMaxHeight(),
+                        visualTransformation = if (formState.isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        colors = textFieldColors,
+                        trailingIcon = {
+                            PasswordTrailingIcon(
+                                isPasswordVisible = formState.isConfirmPasswordVisible,
+                                onToggleVisibility = { viewModel.toggleConfirmPasswordVisibility() }
+                            )
+                        },
+                        readOnly = uiState is UIState.UILoading,
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Password
+                        ),
+                        keyboardActions = KeyboardActions(onDone = {
+                            if (formState.isResetPasswordButtonEnabled && uiState !is UIState.UILoading) {
+                                onSaveChangeClick()
+                            }
+                        }),
                     )
                 }
-
-                OutlinedTextField(
-                    value = formState.confirmPassword,
-                    onValueChange = {
-                        viewModel.setConfirmPassword(it)
-                    },
-                    placeholder = {
-                        Text(stringResource(R.string.input_confirm_password))
-                    },
-                    singleLine = true,
-                    modifier = Modifier
-                        .weight(1f)
-                        .focusRequester(confirmPasswordFocusRequester)
-                        .fillMaxHeight(),
-                    visualTransformation = if (formState.isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent,
-                        disabledBorderColor = Color.Transparent
-                    ),
-                    trailingIcon = {
-                        val image =
-                            if (formState.isConfirmPasswordVisible) R.drawable.hidden else R.drawable.view
-                        val description =
-                            if (formState.isConfirmPasswordVisible) "Hidden password" else "Show password"
-
-                        IconButton(onClick = { viewModel.toggleConfirmPasswordVisibility() }) {
-                            Icon(
-                                painter = painterResource(id = image),
-                                contentDescription = description,
-                                modifier = Modifier
-                                    .height(24.dp)
-                                    .width(24.dp)
-                            )
-                        }
-                    },
-                    readOnly = uiState is UIState.UILoading,
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Password
-                    ),
-                    keyboardActions = KeyboardActions(onDone = {
-                        if (formState.isResetPasswordButtonEnabled && uiState !is UIState.UILoading) {
-                            onSaveChangeClick()
-                        }
-                    }),
-                )
             }
-
         }
+    }
+}
 
+@Composable
+private fun PasswordTrailingIcon(
+    isPasswordVisible: Boolean,
+    onToggleVisibility: () -> Unit
+) {
+    val imageResId = if (isPasswordVisible) R.drawable.hidden else R.drawable.view
+    val painter = painterResource(id = imageResId)
+    val description = if (isPasswordVisible) "Hide password" else "Show password"
+
+    IconButton(onClick = onToggleVisibility) {
+        Icon(
+            painter = painter,
+            contentDescription = description,
+            modifier = Modifier
+                .height(24.dp) // Consider using Dp values from a theme/constants file
+                .width(24.dp)
+        )
     }
 }

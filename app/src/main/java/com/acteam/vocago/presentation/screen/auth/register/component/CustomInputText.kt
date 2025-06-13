@@ -21,6 +21,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -36,46 +37,71 @@ import androidx.compose.ui.unit.dp
 import com.acteam.vocago.R
 import com.acteam.vocago.utils.responsiveSP
 
+private val TEXT_FIELD_HEIGHT = 56.dp
+private val ICON_BOX_WIDTH = 48.dp
+private val CORNER_RADIUS = 12.dp
+private val BORDER_WIDTH = 1.dp
+private val ICON_SIZE = 24.dp
+
 @Composable
 fun CommonTextField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
     icon: ImageVector,
+    modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Next,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
-    modifier: Modifier = Modifier
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
+
     val textFieldFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
+
+    val textStyle =
+        MaterialTheme.typography.bodyMedium.copy(
+            fontSize = textFieldFontSize
+        )
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val surfaceVariantColor = MaterialTheme.colorScheme.surfaceVariant
+    val onPrimaryColor = MaterialTheme.colorScheme.onPrimary
+    val borderColor = remember(primaryColor) { primaryColor.copy(alpha = 0.5f) }
+
+    val roundedCornerShape = remember { RoundedCornerShape(CORNER_RADIUS) }
+    val startRoundedCornerShape =
+        remember { RoundedCornerShape(topStart = CORNER_RADIUS, bottomStart = CORNER_RADIUS) }
+
+
+    val rowModifier = modifier
+        .fillMaxWidth()
+        .height(TEXT_FIELD_HEIGHT)
+        .background(
+            surfaceVariantColor,
+            roundedCornerShape
+        )
+        .border(
+            BORDER_WIDTH,
+            borderColor,
+            roundedCornerShape
+        )
+
+    val iconBoxModifier = Modifier
+        .width(ICON_BOX_WIDTH)
+        .fillMaxHeight()
+        .background(
+            primaryColor,
+            shape = startRoundedCornerShape
+        )
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .background(
-                MaterialTheme.colorScheme.surfaceVariant,
-                RoundedCornerShape(12.dp)
-            )
-            .border(
-                1.dp,
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                RoundedCornerShape(12.dp)
-            )
+        modifier = rowModifier
     ) {
         Box(
-            modifier = Modifier
-                .width(48.dp)
-                .fillMaxHeight()
-                .background(
-                    MaterialTheme.colorScheme.primary,
-                    shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
-                ),
+            modifier = iconBoxModifier,
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = onPrimaryColor
             )
         }
 
@@ -83,9 +109,7 @@ fun CommonTextField(
             value = value,
             onValueChange = onValueChange,
             placeholder = { Text(placeholder) },
-            textStyle = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = textFieldFontSize
-            ),
+            textStyle = textStyle,
             singleLine = true,
             modifier = Modifier
                 .weight(1f)
@@ -112,39 +136,56 @@ fun PasswordTextField(
     isPasswordVisible: Boolean,
     onVisibilityChange: () -> Unit,
     modifier: Modifier = Modifier,
-    focusRequester: FocusRequester = FocusRequester(),
+    focusRequester: FocusRequester = remember { FocusRequester() },
     keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     val textFieldFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
 
+    // Hoist TextStyle creation
+    val textStyle =
+        MaterialTheme.typography.bodyMedium.copy(
+            fontSize = textFieldFontSize
+        )
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val surfaceVariantColor = MaterialTheme.colorScheme.surfaceVariant
+    val onPrimaryColor = MaterialTheme.colorScheme.onPrimary
+    val borderColor = remember(primaryColor) { primaryColor.copy(alpha = 0.5f) }
+    val roundedCornerShape = remember { RoundedCornerShape(CORNER_RADIUS) }
+    val startRoundedCornerShape =
+        remember { RoundedCornerShape(topStart = CORNER_RADIUS, bottomStart = CORNER_RADIUS) }
+
+    val rowModifier = modifier
+        .fillMaxWidth()
+        .height(TEXT_FIELD_HEIGHT)
+        .background(
+            surfaceVariantColor,
+            roundedCornerShape
+        )
+        .border(
+            BORDER_WIDTH,
+            borderColor,
+            roundedCornerShape
+        )
+
+    val iconBoxModifier = Modifier
+        .width(ICON_BOX_WIDTH)
+        .fillMaxHeight()
+        .background(
+            primaryColor,
+            shape = startRoundedCornerShape
+        )
+
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .background(
-                MaterialTheme.colorScheme.surfaceVariant,
-                RoundedCornerShape(12.dp)
-            )
-            .border(
-                1.dp,
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                RoundedCornerShape(12.dp)
-            )
+        modifier = rowModifier
     ) {
         Box(
-            modifier = Modifier
-                .width(48.dp)
-                .fillMaxHeight()
-                .background(
-                    MaterialTheme.colorScheme.primary,
-                    shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
-                ),
+            modifier = iconBoxModifier,
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.Lock,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = onPrimaryColor
             )
         }
 
@@ -152,14 +193,13 @@ fun PasswordTextField(
             value = value,
             onValueChange = onValueChange,
             placeholder = { Text(placeholder) },
-            textStyle = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = textFieldFontSize
-            ),
+            textStyle = textStyle,
             singleLine = true,
-            modifier = Modifier
-                .weight(1f)
-                .focusRequester(focusRequester)
-                .fillMaxHeight(),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .focusRequester(focusRequester)
+                    .fillMaxHeight(),
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Transparent,
@@ -174,7 +214,7 @@ fun PasswordTextField(
                     Icon(
                         painter = painterResource(id = image),
                         contentDescription = description,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(ICON_SIZE)
                     )
                 }
             },

@@ -57,17 +57,21 @@ fun RegisterForm(
     val formState by viewModel.registerFormState.collectAsState()
     val focusManager = LocalFocusManager.current
     var passwordVisible by remember { mutableStateOf(false) }
-    val passwordFocusRequester = remember { FocusRequester() }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-    val deviceType = getDeviceType()
-    val textFieldFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
 
+    val deviceType = getDeviceType()
+    val textFieldFontSize =
+        responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
+    val columnSpacing =
+        responsiveDP(8, 16, 16)
     val lastNameFocusRequester = remember { FocusRequester() }
     val usernameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
     val addressFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
     val confirmPasswordFocusRequester = remember { FocusRequester() }
     val phoneFocusRequester = remember { FocusRequester() }
+
 
     Box(
         modifier = Modifier
@@ -77,13 +81,8 @@ fun RegisterForm(
             Column(
                 modifier = Modifier
                     .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(
-                    responsiveDP(
-                        8, 16, 16
-                    )
-                )
+                verticalArrangement = Arrangement.spacedBy(columnSpacing)
             ) {
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -98,7 +97,6 @@ fun RegisterForm(
                             ), RoundedCornerShape(12.dp)
                         )
                 ) {
-
                     Box(
                         modifier = Modifier
                             .width(48.dp)
@@ -182,7 +180,6 @@ fun RegisterForm(
                     },
                     placeholder = stringResource(R.string.input_enter_username),
                     icon = Icons.Default.Person,
-
                     keyboardActions = KeyboardActions(
                         onNext = { emailFocusRequester.requestFocus() }
                     ),
@@ -220,13 +217,14 @@ fun RegisterForm(
                     icon = Icons.Default.LocationOn,
                     keyboardType = KeyboardType.Text,
                     keyboardActions = KeyboardActions(
-                        onDone = {}
+                        onDone = { focusManager.clearFocus() }
                     ),
                     modifier = Modifier.focusRequester(addressFocusRequester)
                 )
                 DateInputField(viewModel)
 
                 GenderDropdown(viewModel)
+
                 PasswordTextField(
                     value = formState.password,
                     onValueChange = { viewModel.setPassword(it) },
@@ -236,8 +234,7 @@ fun RegisterForm(
                     focusRequester = passwordFocusRequester,
                     keyboardActions = KeyboardActions(
                         onNext = { confirmPasswordFocusRequester.requestFocus() }
-                    ),
-                    modifier = Modifier.focusRequester(passwordFocusRequester)
+                    )
                 )
                 PasswordTextField(
                     value = formState.confirmPassword,
@@ -250,7 +247,7 @@ fun RegisterForm(
                             focusManager.clearFocus()
                         }
                     ),
-                    modifier = Modifier.focusRequester(confirmPasswordFocusRequester)
+                    focusRequester = confirmPasswordFocusRequester
                 )
             }
         } else {
@@ -263,12 +260,10 @@ fun RegisterForm(
             ) {
                 Column(
                     modifier = Modifier
-                        .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(
-                        responsiveDP(
-                            8, 16, 16
-                        )
-                    )
+                        .weight(1f)
+                        .padding(end = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(columnSpacing)
+
                 ) {
                     CommonTextField(
                         value = formState.firstName,
@@ -325,24 +320,19 @@ fun RegisterForm(
                             onNext = { addressFocusRequester.requestFocus() }
                         )
                     )
-
                 }
                 VerticalDivider(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .width(24.dp),
-                    color = MaterialTheme.colorScheme.primary.copy(
-                        alpha = 1f
-                    )
+                        .width(1.dp),
+                    color = MaterialTheme.colorScheme.primary
                 )
+
                 Column(
                     modifier = Modifier
-                        .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(
-                        responsiveDP(
-                            8, 16, 16
-                        )
-                    )
+                        .weight(1f)
+                        .padding(start = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(columnSpacing)
                 ) {
                     CommonTextField(
                         value = formState.address,
@@ -351,10 +341,7 @@ fun RegisterForm(
                         icon = Icons.Default.LocationOn,
                         keyboardType = KeyboardType.Text,
                         keyboardActions = KeyboardActions(
-                            onNext =
-                                {
-                                    passwordFocusRequester.requestFocus()
-                                }
+                            onNext = { passwordFocusRequester.requestFocus() }
                         ),
                         modifier = Modifier.focusRequester(addressFocusRequester)
                     )
@@ -371,8 +358,7 @@ fun RegisterForm(
                         focusRequester = passwordFocusRequester,
                         keyboardActions = KeyboardActions(
                             onNext = { confirmPasswordFocusRequester.requestFocus() }
-                        ),
-                        modifier = Modifier.focusRequester(passwordFocusRequester)
+                        )
                     )
                     PasswordTextField(
                         value = formState.confirmPassword,
@@ -385,7 +371,7 @@ fun RegisterForm(
                                 focusManager.clearFocus()
                             }
                         ),
-                        modifier = Modifier.focusRequester(confirmPasswordFocusRequester)
+                        focusRequester = confirmPasswordFocusRequester
                     )
                 }
             }

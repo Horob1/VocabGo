@@ -16,6 +16,7 @@ import com.acteam.vocago.presentation.screen.dictionary.DictionaryScreen
 import com.acteam.vocago.presentation.screen.main.SetupMainNavGraph
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.chat.component.CommonChatScreen
+import com.acteam.vocago.presentation.screen.main.chat.component.VideoCallScreen
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailScreen
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryScreen
@@ -122,6 +123,15 @@ fun SetupNavGraph(
 
         composable<NavScreen.CameraNavScreen> {
 
+        }
+        composable<NavScreen.VideoCallNavScreen> {
+            val arg = it.toRoute<NavScreen.VideoCallNavScreen>()
+            VideoCallScreen(
+                receivedName = arg.receivedName,
+                avatarResId = arg.avatarResId,
+                videoResId = arg.videoResId,
+                rootNavController = navController
+            )
         }
 
         composable<NavScreen.SettingNavScreen> {
