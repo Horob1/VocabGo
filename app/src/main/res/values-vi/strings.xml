@@ -150,4 +150,9 @@
     <string name="tab_idioms">Thành ngữ</string>
     <string name="tab_synonyms">Từ đồng nghĩa</string>
     <string name="tab_antonyms">Từ trái nghĩa</string>
+
+    <string name="title_profile">Hồ sơ</string>
+    <string name="title_account">Tài khoản</string>
+    <string name="title_billing_payment">Gói trả phí</string>
+    <string name="title_alarm">Hẹn giờ</string>
 </resources>

@@ -11,6 +11,7 @@ import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingViewModel
+import com.acteam.vocago.presentation.screen.user.usernavigator.UserNavigatorViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import com.acteam.vocago.presentation.screen.worddetail.WordDetailViewModel
 import org.koin.core.module.dsl.viewModel
@@ -82,6 +83,12 @@ val viewModelModule = module {
 
     viewModel {
         WordDetailViewModel(
+            get()
+        )
+    }
+
+    viewModel {
+        UserNavigatorViewModel(
             get()
         )
     }

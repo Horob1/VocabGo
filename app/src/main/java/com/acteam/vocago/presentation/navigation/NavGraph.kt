@@ -22,6 +22,7 @@ import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryScreen
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingScreen
 import com.acteam.vocago.presentation.screen.setting.SettingViewModel
+import com.acteam.vocago.presentation.screen.user.SetupUserNavGraph
 import com.acteam.vocago.presentation.screen.welcome.WelcomeScreen
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import com.acteam.vocago.presentation.screen.worddetail.WordDetailScreen
@@ -58,7 +59,9 @@ fun SetupNavGraph(
             )
         }
         composable<NavScreen.UserNavScreen> {
-
+            SetupUserNavGraph(
+                rootNavController = navController
+            )
         }
         composable<NavScreen.CommonChatNavScreen> {
             val chatViewModel = koinViewModel<ChatViewModel>()

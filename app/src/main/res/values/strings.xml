@@ -157,4 +157,9 @@
     <string name="tab_idioms">Idioms</string>
     <string name="tab_synonyms">Synonyms</string>
     <string name="tab_antonyms">Antonyms</string>
+
+    <string name="title_profile">Profile</string>
+    <string name="title_account">Account</string>
+    <string name="title_billing_payment">Billing/Payment</string>
+    <string name="title_alarm">Alarm</string>
 </resources>

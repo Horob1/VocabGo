@@ -82,4 +82,11 @@ sealed class NavScreen {
     @Serializable
     data object ChatNavScreen : NavScreen()
 
+    // Mâm 2 của user
+    data object UserNavNavigatorScreen : NavScreen()
+    data object AlarmNavScreen : NavScreen()
+    data object ProfileNavScreen : NavScreen()
+    data object BillingNavScreen : NavScreen()
+    data object AnalyzeUserNavScreen : NavScreen()
+
 }
