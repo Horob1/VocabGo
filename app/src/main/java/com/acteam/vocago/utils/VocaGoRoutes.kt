@@ -10,6 +10,7 @@ sealed class VocaGoRoutes(val path: String) {
     data object ResendVerifyEmail : VocaGoRoutes("api/v1/user/resend-verification-email")
     data object VerifyTwoFA : VocaGoRoutes("api/v1/user/verify-2fa")
     data object LoginGoogle : VocaGoRoutes("api/v1/user/login-google")
+    data object Logout : VocaGoRoutes("api/v1/user/logout")
 
     data object GetProfile : VocaGoRoutes("api/v1/user/me")
 

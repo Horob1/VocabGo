@@ -170,6 +170,9 @@
 
     <string name="title_profile">Profile</string>
     <string name="title_account">Account</string>
+    <string name="title_analyze">Analyze User</string>
     <string name="title_billing_payment">Billing/Payment</string>
     <string name="title_alarm">Alarm</string>
+
+    <string name="title_logout">Sign Out</string>
 </resources>

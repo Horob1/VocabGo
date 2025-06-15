@@ -11,11 +11,12 @@ interface AuthRemoteDataSource {
     suspend fun register(
         username: String, email: String, password: String,
         firstname: String, lastname: String, phoneNumber: String,
-        address: String, dob: String, gender: String
+        address: String, dob: String, gender: String,
     )
 
     suspend fun verifyEmail(email: String, otp: String)
     suspend fun resendVerifyEmail(email: String)
     suspend fun verifyTwoFA(email: String, otpToken: String): VerifyTwoFARespose
     suspend fun loginGoogle(token: String): LoginGoogleResponse
+    suspend fun logout(credentialId: String)
 }

@@ -125,26 +125,27 @@ fun LoginScreen(
         {
             val activity = context as? ComponentActivity
             if (activity == null) {
-                Toast.makeText(context, "Cannot initiate Google Login.", Toast.LENGTH_SHORT).show()
-                return@remember
-            }
-            GoogleLoginHelper.loginWithGoogle(
-                activity = activity,
-                context = context,
-                scope = activity.lifecycleScope,
-                webClientId = BuildConfig.GOOGLE_CLIENT_ID,
-                onSuccess = { idToken ->
-                    viewModel.loginWithGoogle(idToken) {
-                        rootNavController.navigate(NavScreen.MainNavScreen) {
-                            popUpTo(NavScreen.AuthNavScreen) { inclusive = true }
-                            launchSingleTop = true
+                Toast.makeText(context, "Cannot initiate Google Login.", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                GoogleLoginHelper.loginWithGoogle(
+                    activity = activity,
+                    context = context,
+                    scope = activity.lifecycleScope,
+                    webClientId = BuildConfig.GOOGLE_CLIENT_ID,
+                    onSuccess = { idToken ->
+                        viewModel.loginWithGoogle(idToken) {
+                            rootNavController.navigate(NavScreen.MainNavScreen) {
+                                popUpTo(NavScreen.AuthNavScreen) { inclusive = true }
+                                launchSingleTop = true
+                            }
                         }
+                    },
+                    onError = { message ->
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                     }
-                },
-                onError = { message ->
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                }
-            )
+                )
+            }
         }
     }
 
@@ -207,16 +208,20 @@ fun LoginScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    HorizontalDivider(modifier = Modifier
-                        .weight(1f)
-                        .height(1.dp))
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(1.dp)
+                    )
                     Text(
                         text = stringResource(R.string.text_or).uppercase(),
                         modifier = Modifier.padding(horizontal = horizontalPadding / 3),
                     )
-                    HorizontalDivider(modifier = Modifier
-                        .weight(1f)
-                        .height(1.dp))
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(1.dp)
+                    )
                 }
 
                 Row(
@@ -293,17 +298,21 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        HorizontalDivider(Modifier
-                            .weight(1f)
-                            .height(1.dp))
+                        HorizontalDivider(
+                            Modifier
+                                .weight(1f)
+                                .height(1.dp)
+                        )
                         Text(
                             text = stringResource(R.string.text_or).uppercase(),
                             fontSize = descFontSize,
                             modifier = Modifier.padding(horizontal = horizontalPadding / 3)
                         )
-                        HorizontalDivider(Modifier
-                            .weight(1f)
-                            .height(1.dp))
+                        HorizontalDivider(
+                            Modifier
+                                .weight(1f)
+                                .height(1.dp)
+                        )
                     }
                     Row(
                         horizontalArrangement = Arrangement.SpaceAround,
@@ -354,7 +363,8 @@ fun LoginScreen(
                 val messageResId = when (errorType) {
                     UIErrorType.NotFoundError,
                     UIErrorType.UnauthorizedError,
-                    UIErrorType.UnexpectedEntityError -> R.string.text_username_or_password_incorrect
+                    UIErrorType.UnexpectedEntityError,
+                        -> R.string.text_username_or_password_incorrect
 
                     UIErrorType.ForbiddenError -> R.string.text_user_was_banned
                     else -> R.string.text_unknown_error

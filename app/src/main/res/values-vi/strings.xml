@@ -166,4 +166,9 @@
     <string name="title_account">Tài khoản</string>
     <string name="title_billing_payment">Gói trả phí</string>
     <string name="title_alarm">Hẹn giờ</string>
+    <string name="title_analyze">Phân tích người dùng</string>
+
+
+    <string name="title_logout">Đăng xuất</string>
+
 </resources>

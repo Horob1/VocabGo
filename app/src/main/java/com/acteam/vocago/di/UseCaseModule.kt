@@ -17,6 +17,7 @@ import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
 import com.acteam.vocago.domain.usecase.LoginGoogleUseCase
 import com.acteam.vocago.domain.usecase.LoginUseCase
+import com.acteam.vocago.domain.usecase.LogoutUseCase
 import com.acteam.vocago.domain.usecase.RegisterUseCase
 import com.acteam.vocago.domain.usecase.ResendVerifyEmailUseCase
 import com.acteam.vocago.domain.usecase.ResetPasswordUseCase
@@ -130,5 +131,11 @@ val useCaseModule = module {
 
     single {
         GetDictionaryWordUseCase(get())
+    }
+
+    single {
+        LogoutUseCase(
+            get(), get(), get()
+        )
     }
 }

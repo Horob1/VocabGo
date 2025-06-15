@@ -89,7 +89,7 @@ val viewModelModule = module {
 
     viewModel {
         UserNavigatorViewModel(
-            get()
+            get(), get()
         )
     }
 }

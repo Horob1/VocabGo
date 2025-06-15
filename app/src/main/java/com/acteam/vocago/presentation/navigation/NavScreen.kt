@@ -50,7 +50,7 @@ sealed class NavScreen {
     data class VideoCallNavScreen(
         val receivedName: String,
         val avatarResId: Int,
-        val videoResId: Int?
+        val videoResId: Int?,
     ) : NavScreen()
 
     // Mâm 2
@@ -90,10 +90,19 @@ sealed class NavScreen {
     data object ChatNavScreen : NavScreen()
 
     // Mâm 2 của user
+    @Serializable
     data object UserNavNavigatorScreen : NavScreen()
+
+    @Serializable
     data object AlarmNavScreen : NavScreen()
+
+    @Serializable
     data object ProfileNavScreen : NavScreen()
+
+    @Serializable
     data object BillingNavScreen : NavScreen()
+
+    @Serializable
     data object AnalyzeUserNavScreen : NavScreen()
 
 }

@@ -6,6 +6,7 @@ import com.acteam.vocago.data.model.LoginGoogleRequest
 import com.acteam.vocago.data.model.LoginGoogleResponse
 import com.acteam.vocago.data.model.LoginRequest
 import com.acteam.vocago.data.model.LoginResponse
+import com.acteam.vocago.data.model.LogoutRequest
 import com.acteam.vocago.data.model.RegisterRequest
 import com.acteam.vocago.data.model.ResendVerifyEmailRequest
 import com.acteam.vocago.data.model.ResetPasswordRequest
@@ -179,5 +180,23 @@ class AuthRemoteDataSourceImpl(
                 throw ApiException(response.status.value)
             }
         }
+    }
+
+    override suspend fun logout(credentialId: String) {
+        val response = client.post(VocaGoRoutes.Logout.path) {
+            contentType(ContentType.Application.Json)
+            setBody(LogoutRequest(credentialId))
+        }
+
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                return
+            }
+
+            else -> {
+                throw ApiException(response.status.value)
+            }
+        }
+
     }
 }
