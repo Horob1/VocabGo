@@ -221,4 +221,22 @@
     <string name="prompt_team_leader">Team Leader</string>
     <string name="prompt_streaming_mode">Streaming Mode</string>
     <string name="text_enter_message">Enter message</string>
+    <string name="alert_cannot_create_more_alarm">Cannot create more alarm! Do not spam this feature!</string>
+    <string name="title_sure_to_delete">Are you sure to delete?</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_save">Save</string>
+    <string name="title_label">Label</string>
+    <string name="title_no_label">No label</string>
+    <string name="title_enable_alarm">Enable alarm</string>
+    <string name="title_loop_alarm">Loop everyday</string>
+    <string name="title_add_alarm">Add Alarm</string>
+    <string name="title_edit_alarm">Edit Alarm</string>
+    <string name="btn_open">Open</string>
+
+
+    <string name="text_view_avatar">View Avatar</string>
+    <string name="text_pick_from_gallery">Pick from gallery</string>
+    <string name="text_take_a_photo">Take a photo</string>
+    <string name="permission_denied">Permission Denied! You must allow to use this feature!</string>
+    <string name="btn_edit">Edit</string>
 </resources>

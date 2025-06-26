@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Alarm
-import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -61,15 +60,15 @@ fun UserNavigatorScreen(
                 R.string.title_account,
                 Icons.Filled.Person
             ),
-            Triple(
-                {
-                    userNavController.navigate(
-                        NavScreen.BillingNavScreen
-                    )
-                },
-                R.string.title_billing_payment,
-                Icons.Filled.Payments
-            ),
+//            Triple(
+//                {
+//                    userNavController.navigate(
+//                        NavScreen.BillingNavScreen
+//                    )
+//                },
+//                R.string.title_billing_payment,
+//                Icons.Filled.Payments
+//            ),
             Triple(
                 {
                     userNavController.navigate(

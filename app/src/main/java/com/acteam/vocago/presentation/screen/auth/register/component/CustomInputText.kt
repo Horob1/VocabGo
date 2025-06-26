@@ -49,10 +49,11 @@ fun CommonTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     icon: ImageVector,
+    readOnly: Boolean = false,
     modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Next,
-    keyboardActions: KeyboardActions = KeyboardActions.Default
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
 
     val textFieldFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
@@ -118,6 +119,7 @@ fun CommonTextField(
                 keyboardType = keyboardType,
                 imeAction = imeAction
             ),
+            readOnly = readOnly,
             keyboardActions = keyboardActions,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Transparent,
@@ -137,7 +139,7 @@ fun PasswordTextField(
     onVisibilityChange: () -> Unit,
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester = remember { FocusRequester() },
-    keyboardActions: KeyboardActions = KeyboardActions.Default
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
     val textFieldFontSize = responsiveSP(mobile = 14, tabletPortrait = 20, tabletLandscape = 20)
 

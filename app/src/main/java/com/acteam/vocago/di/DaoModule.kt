@@ -25,4 +25,8 @@ val daoModule = module {
         get<AppDatabase>().newsHistoryDao()
     }
 
+    single {
+        get<AppDatabase>().alarmDao()
+    }
+
 }

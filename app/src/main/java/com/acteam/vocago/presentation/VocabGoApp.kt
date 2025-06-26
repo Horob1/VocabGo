@@ -8,6 +8,7 @@ import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import coil.util.DebugLogger
 import com.acteam.vocago.di.appModules
+import com.acteam.vocago.utils.NotificationChannelHelper
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -16,6 +17,8 @@ class VocabGoApp : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
+        // Khởi tạo các kênh thông báo
+        NotificationChannelHelper.createAllChannels(this)
         // Khởi tạo Koin
         startKoin {
             androidContext(this@VocabGoApp)
