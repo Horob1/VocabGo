@@ -2,7 +2,10 @@ package com.acteam.vocago.di
 
 import com.acteam.vocago.domain.usecase.AnswerNewsUseCase
 import com.acteam.vocago.domain.usecase.ChooseLanguageUserCase
+import com.acteam.vocago.domain.usecase.DeleteAlarmByIdUseCase
 import com.acteam.vocago.domain.usecase.ForgotPasswordUseCase
+import com.acteam.vocago.domain.usecase.GetAlarmByIdUseCase
+import com.acteam.vocago.domain.usecase.GetAlarmListUseCase
 import com.acteam.vocago.domain.usecase.GetChosenNewsCategoriesUseCase
 import com.acteam.vocago.domain.usecase.GetChosenNewsLevelUseCase
 import com.acteam.vocago.domain.usecase.GetDictionaryWordUseCase
@@ -15,6 +18,7 @@ import com.acteam.vocago.domain.usecase.GetNewsHistoryPagingUseCase
 import com.acteam.vocago.domain.usecase.GetNewsPagingUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
+import com.acteam.vocago.domain.usecase.InsertAlarmUseCase
 import com.acteam.vocago.domain.usecase.LoginGoogleUseCase
 import com.acteam.vocago.domain.usecase.LoginUseCase
 import com.acteam.vocago.domain.usecase.LogoutUseCase
@@ -26,8 +30,11 @@ import com.acteam.vocago.domain.usecase.SetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.SetThemeUseCase
 import com.acteam.vocago.domain.usecase.SyncProfileUseCase
 import com.acteam.vocago.domain.usecase.ToggleBookmarkNewsUseCase
+import com.acteam.vocago.domain.usecase.UpdateAlarmUseCase
+import com.acteam.vocago.domain.usecase.UpdateAvatarUseCase
 import com.acteam.vocago.domain.usecase.UpdateChosenCategoriesUseCase
 import com.acteam.vocago.domain.usecase.UpdateChosenNewsLevelUseCase
+import com.acteam.vocago.domain.usecase.UpdateProfileUseCase
 import com.acteam.vocago.domain.usecase.VerifyEmailUseCase
 import com.acteam.vocago.domain.usecase.VerifyTwoFAUseCase
 import org.koin.dsl.module
@@ -136,6 +143,32 @@ val useCaseModule = module {
     single {
         LogoutUseCase(
             get(), get(), get()
+        )
+    }
+    // alarm
+    single {
+        GetAlarmListUseCase(get())
+    }
+    single {
+        GetAlarmByIdUseCase(get())
+    }
+    single {
+        InsertAlarmUseCase(get(), get())
+    }
+    single {
+        UpdateAlarmUseCase(get(), get())
+    }
+    single {
+        DeleteAlarmByIdUseCase(get(), get())
+    }
+    single {
+        UpdateAvatarUseCase(
+            get(),
+        )
+    }
+    single {
+        UpdateProfileUseCase(
+            get()
         )
     }
 }

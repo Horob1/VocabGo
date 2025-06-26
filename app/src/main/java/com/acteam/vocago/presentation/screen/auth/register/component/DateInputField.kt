@@ -37,7 +37,7 @@ import java.util.Calendar
 
 @Composable
 fun DateInputField(
-    viewModel: RegisterViewModel
+    viewModel: RegisterViewModel,
 ) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
@@ -64,7 +64,10 @@ fun DateInputField(
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         ).apply {
-            setButton(DatePickerDialog.BUTTON_NEGATIVE, "Cancel") { _, _ ->
+            setButton(
+                DatePickerDialog.BUTTON_NEGATIVE,
+                context.getString(R.string.btn_cancel)
+            ) { _, _ ->
                 showDialog = false
             }
         }.show()

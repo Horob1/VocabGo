@@ -13,6 +13,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.acteam.vocago.presentation.navigation.NavScreen
+import com.acteam.vocago.presentation.screen.user.alarm.AlarmScreen
+import com.acteam.vocago.presentation.screen.user.alarm.AlarmViewModel
+import com.acteam.vocago.presentation.screen.user.profile.ProfileScreen
+import com.acteam.vocago.presentation.screen.user.profile.ProfileViewModel
 import com.acteam.vocago.presentation.screen.user.usernavigator.UserNavigatorScreen
 import com.acteam.vocago.presentation.screen.user.usernavigator.UserNavigatorViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -40,9 +44,21 @@ fun SetupUserNavGraph(
                 )
             }
 
-            composable<NavScreen.AlarmNavScreen> { }
+            composable<NavScreen.AlarmNavScreen> {
+                val alarmViewModel = koinViewModel<AlarmViewModel>()
+                AlarmScreen(
+                    viewModel = alarmViewModel,
+                    navController = userNavController
+                )
+            }
 
-            composable<NavScreen.ProfileNavScreen> { }
+            composable<NavScreen.ProfileNavScreen> {
+                val profileViewModel = koinViewModel<ProfileViewModel>()
+                ProfileScreen(
+                    viewModel = profileViewModel,
+                    navController = userNavController
+                )
+            }
 
             composable<NavScreen.BillingNavScreen> { }
 

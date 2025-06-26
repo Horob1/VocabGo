@@ -11,6 +11,8 @@ import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingViewModel
+import com.acteam.vocago.presentation.screen.user.alarm.AlarmViewModel
+import com.acteam.vocago.presentation.screen.user.profile.ProfileViewModel
 import com.acteam.vocago.presentation.screen.user.usernavigator.UserNavigatorViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import com.acteam.vocago.presentation.screen.worddetail.WordDetailViewModel
@@ -90,6 +92,18 @@ val viewModelModule = module {
     viewModel {
         UserNavigatorViewModel(
             get(), get()
+        )
+    }
+
+    viewModel {
+        AlarmViewModel(
+            get(), get(), get(), get(), get()
+        )
+    }
+
+    viewModel {
+        ProfileViewModel(
+            get(), get(), get(), get()
         )
     }
 }

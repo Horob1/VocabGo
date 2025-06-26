@@ -7,5 +7,6 @@ val appModules = listOf(
     useCaseModule,
     localDataModule,
     remoteModule,
-    daoModule
+    daoModule,
+    untilModule
 )

@@ -168,7 +168,24 @@
     <string name="title_alarm">Hẹn giờ</string>
     <string name="title_analyze">Phân tích người dùng</string>
 
-
     <string name="title_logout">Đăng xuất</string>
+
+    <string name="alert_cannot_create_more_alarm">Không thể tạo thêm hẹn giờ! Đừng lạm dụng chức năng này!</string>
+    <string name="title_sure_to_delete">Bạn có chắc chắn muốn xóa?</string>
+    <string name="btn_delete">Xoá</string>
+    <string name="btn_save">Lưu</string>
+    <string name="title_label">Nhãn</string>
+    <string name="title_enable_alarm">Bật báo thức</string>
+    <string name="title_loop_alarm">Lặp hàng ngày</string>
+    <string name="title_no_label">Không có nhãn</string>
+    <string name="title_add_alarm">Thêm hẹn giờ</string>
+    <string name="title_edit_alarm">Sửa hẹn giờ</string>
+    <string name="btn_open">Mở</string>
+
+    <string name="text_view_avatar">Xem ảnh đại diện</string>
+    <string name="text_pick_from_gallery">Chọn từ bộ sưu tập</string>
+    <string name="text_take_a_photo">Chụp một bức ảnh</string>
+    <string name="permission_denied">Quyền truy cập bị từ chối! Bạn phải cấp quyền để xử dụng tính năng này!</string>
+    <string name="btn_edit">Sửa</string>
 
 </resources>
