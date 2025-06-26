@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,6 +33,7 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -68,16 +71,14 @@ fun ResetPasswordScreen(
     val uiState by viewModel.resetPasswordUIState.collectAsState()
     val otpState by viewModel.otpState.collectAsState()
     val countDownState by viewModel.otpCountdown.collectAsState()
-
+    val imeBottomPx = WindowInsets.ime.getBottom(LocalDensity.current)
+    with(LocalDensity.current) { imeBottomPx.toDp() }
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     val configuration = LocalConfiguration.current
 
-    val deviceType =
-        getDeviceType()
-
-
+    val deviceType = getDeviceType()
     val buttonHeight = responsiveDP(48, 56, 60)
     val titleFontSize = responsiveSP(30, 36, 42)
     val textFontSize = responsiveSP(20, 24, 24)
@@ -215,7 +216,6 @@ fun ResetPasswordScreen(
                     .padding(horizontal = 16.dp)
             )
         }
-
         if (uiState is UIState.UILoading) {
             val picSize = responsiveValue(180, 360, 360)
             LoadingSurface(picSize = picSize)
@@ -238,6 +238,7 @@ private fun CommonContent(
     context: Context,
     deviceType: DeviceType
 ) {
+
     if (deviceType == DeviceType.Mobile) {
         Spacer(modifier = Modifier.height(verticalSpacing))
     }
@@ -277,25 +278,30 @@ private fun CommonContent(
         onSaveChangeClick = onSaveChangeClick
     )
 
-    Text(
-        text = stringResource(R.string.text_resend_email),
-        style = MaterialTheme.typography.bodyLarge.copy(
-            fontWeight = FontWeight.Bold,
-            fontSize = descFontSize
-        ),
-        color = MaterialTheme.colorScheme.primary,
+    Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .safeClickable(
-                "btn_resend_email_forgot_password",
-                onClick = remember(viewModel, email) {
-                    {
-                        viewModel.requestOtpAndStartCountdown(email)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.End
+    ) {
+        Text(
+            text = stringResource(R.string.text_resend_email),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = descFontSize
+            ),
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .safeClickable(
+                    "btn_resend_email_forgot_password",
+                    onClick = remember(viewModel, email) {
+                        {
+                            viewModel.requestOtpAndStartCountdown(email)
+                        }
                     }
-                })
-            .padding(8.dp),
-        textAlign = TextAlign.End
-    )
+                )
+                .padding(8.dp)
+        )
+    }
 
     if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
         Spacer(modifier = Modifier.height(verticalSpacing * 2))

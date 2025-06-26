@@ -198,14 +198,12 @@ private fun MobilePortraitContent(
     buttonHeight: Dp,
     onSendForgotPasswordAction: () -> Unit
 ) {
-    val imeBottomPx = WindowInsets.ime.getBottom(LocalDensity.current)
-    val imeBottomDp = with(LocalDensity.current) { imeBottomPx.toDp() }
+
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = horizontalPadding)
-            .padding(bottom = imeBottomDp),
+            .padding(horizontal = horizontalPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(verticalSpacing)
     ) {
@@ -224,17 +222,17 @@ private fun MobilePortraitContent(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        InputLabel(textFontSize)
-
-        EmailInputField(
+        LabeledEmailInputField(
             email = formState.email,
             onEmailChange = viewModel::setEmail,
             focusRequester = emailFocusRequester,
             focusManager = focusManager,
             isButtonEnabled = formState.isForgotPasswordButtonEnabled,
             isLoading = uiState is UIState.UILoading,
-            onSendClick = onSendForgotPasswordAction
+            onSendClick = onSendForgotPasswordAction,
+            fontSize = textFontSize
         )
+
 
         SendButton(
             isEnabled = formState.isForgotPasswordButtonEnabled,
@@ -306,17 +304,17 @@ private fun LandscapeContent(
                 color = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(verticalSpacing * 2))
-            InputLabel(textFontSize)
-
-            EmailInputField(
+            LabeledEmailInputField(
                 email = formState.email,
                 onEmailChange = viewModel::setEmail,
                 focusRequester = emailFocusRequester,
                 focusManager = focusManager,
                 isButtonEnabled = formState.isForgotPasswordButtonEnabled,
                 isLoading = uiState is UIState.UILoading,
-                onSendClick = onSendForgotPasswordAction
+                onSendClick = onSendForgotPasswordAction,
+                fontSize = textFontSize
             )
+
             Spacer(modifier = Modifier.height(verticalSpacing * 2))
             SendButton(
                 isEnabled = formState.isForgotPasswordButtonEnabled,
@@ -328,88 +326,93 @@ private fun LandscapeContent(
     }
 }
 
-
 @Composable
-fun InputLabel(fontSize: TextUnit) {
-    Text(
-        text = stringResource(R.string.text_input_your_email),
-        style = MaterialTheme.typography.bodyLarge.copy(
-            fontWeight = FontWeight.Bold,
-            fontSize = fontSize,
-            textAlign = TextAlign.Center
-        ),
-        color = MaterialTheme.colorScheme.primary
-    )
-}
-
-
-@Composable
-fun EmailInputField(
+fun LabeledEmailInputField(
     email: String,
     onEmailChange: (String) -> Unit,
     focusRequester: FocusRequester,
     focusManager: FocusManager,
     isButtonEnabled: Boolean,
     isLoading: Boolean,
-    onSendClick: () -> Unit
+    onSendClick: () -> Unit,
+    fontSize: TextUnit
 ) {
-    Row(
+    val imeBottomPx = WindowInsets.ime.getBottom(LocalDensity.current)
+    val imeBottomDp = with(LocalDensity.current) { imeBottomPx.toDp() }
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
-            .background(
-                MaterialTheme.colorScheme.surfaceVariant,
-                RoundedCornerShape(12.dp)
-            )
-            .border(
-                1.dp,
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                RoundedCornerShape(12.dp)
-            )
+            .padding(bottom = imeBottomDp)
     ) {
-        Box(
+        Text(
+            text = stringResource(R.string.text_input_your_email),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = fontSize,
+                textAlign = TextAlign.Center
+            ),
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Row(
             modifier = Modifier
-                .width(48.dp)
-                .fillMaxHeight()
-                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp)),
-            contentAlignment = Alignment.Center
+                .fillMaxWidth()
+                .height(56.dp)
+                .background(
+                    MaterialTheme.colorScheme.surfaceVariant,
+                    RoundedCornerShape(12.dp)
+                )
+                .border(
+                    1.dp,
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                    RoundedCornerShape(12.dp)
+                )
         ) {
-            Icon(
-                imageVector = Icons.Default.Email,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary
+            Box(
+                modifier = Modifier
+                    .width(48.dp)
+                    .fillMaxHeight()
+                    .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = onEmailChange,
+                placeholder = { Text(stringResource(R.string.input_enter_email)) },
+                singleLine = true,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .focusRequester(focusRequester),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Email
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    if (isButtonEnabled && !isLoading) {
+                        onSendClick()
+                        focusManager.clearFocus()
+                    }
+                }),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedBorderColor = Color.Transparent,
+                    disabledBorderColor = Color.Transparent
+                ),
+                textStyle = MaterialTheme.typography.bodyMedium
             )
         }
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = onEmailChange,
-            placeholder = { Text(stringResource(R.string.input_enter_email)) },
-            singleLine = true,
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()
-                .focusRequester(focusRequester),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Email
-            ),
-            keyboardActions = KeyboardActions(onDone = {
-                if (isButtonEnabled && !isLoading) {
-                    onSendClick()
-                    focusManager.clearFocus()
-                }
-            }),
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = Color.Transparent,
-                focusedBorderColor = Color.Transparent,
-                disabledBorderColor = Color.Transparent
-            ),
-            textStyle = MaterialTheme.typography.bodyMedium
-        )
     }
 }
-
 
 @Composable
 fun SendButton(

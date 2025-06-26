@@ -73,138 +73,135 @@ fun ResetPasswordForm(
                 disabledBorderColor = Color.Transparent
             )
 
-
-        Column {
-            Column(
+        Column(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth()
+                .shadow(
+                    elevation = 6.dp,
+                    shape = bottomRoundedCornerShape
+                )
+        ) {
+            Row(
                 modifier = Modifier
-                    .padding(top = 8.dp)
                     .fillMaxWidth()
-                    .shadow(
-                        elevation = 6.dp,
+                    .height(56.dp)
+                    .background(
+                        color = surfaceVariantColor,
+                        shape = topRoundedCornerShape
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = primaryBorderColor,
+                        shape = topRoundedCornerShape
+                    )
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(48.dp)
+                        .fillMaxHeight()
+                        .background(
+                            color = primaryColor,
+                            shape = topRoundedCornerShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = null,
+                        tint = onPrimaryColor
+                    )
+                }
+
+                OutlinedTextField(
+                    value = formState.password,
+                    onValueChange = { viewModel.setPassword(it) }, // This is fine, delegates to ViewModel
+                    placeholder = {
+                        Text(stringResource(R.string.input_enter_password))
+                    },
+                    singleLine = true,
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(passwordFocusRequester)
+                        .fillMaxHeight(),
+                    visualTransformation = if (formState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    colors = textFieldColors,
+                    trailingIcon = {
+                        PasswordTrailingIcon(
+                            isPasswordVisible = formState.isPasswordVisible,
+                            onToggleVisibility = { viewModel.togglePasswordVisibility() }
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Password
+                    ),
+                    keyboardActions = KeyboardActions(onNext = {
+                        confirmPasswordFocusRequester.requestFocus()
+                    }),
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .background(
+                        color = surfaceVariantColor,
+                        shape = bottomRoundedCornerShape
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = primaryBorderColor,
                         shape = bottomRoundedCornerShape
                     )
             ) {
-                Row(
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
+                        .width(48.dp)
+                        .fillMaxHeight()
                         .background(
-                            color = surfaceVariantColor,
-                            shape = topRoundedCornerShape
-                        )
-                        .border(
-                            width = 1.dp,
-                            color = primaryBorderColor,
-                            shape = topRoundedCornerShape
-                        )
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(48.dp)
-                            .fillMaxHeight()
-                            .background(
-                                color = primaryColor,
-                                shape = topRoundedCornerShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = null,
-                            tint = onPrimaryColor
-                        )
-                    }
-
-                    OutlinedTextField(
-                        value = formState.password,
-                        onValueChange = { viewModel.setPassword(it) }, // This is fine, delegates to ViewModel
-                        placeholder = {
-                            Text(stringResource(R.string.input_enter_password))
-                        },
-                        singleLine = true,
-                        modifier = Modifier
-                            .weight(1f)
-                            .focusRequester(passwordFocusRequester)
-                            .fillMaxHeight(),
-                        visualTransformation = if (formState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        colors = textFieldColors,
-                        trailingIcon = {
-                            PasswordTrailingIcon(
-                                isPasswordVisible = formState.isPasswordVisible,
-                                onToggleVisibility = { viewModel.togglePasswordVisibility() }
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Next,
-                            keyboardType = KeyboardType.Password
+                            color = primaryColor,
+                            shape = bottomRoundedCornerShape
                         ),
-                        keyboardActions = KeyboardActions(onNext = {
-                            confirmPasswordFocusRequester.requestFocus()
-                        }),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = null,
+                        tint = onPrimaryColor
                     )
                 }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .background(
-                            color = surfaceVariantColor,
-                            shape = bottomRoundedCornerShape
-                        )
-                        .border(
-                            width = 1.dp,
-                            color = primaryBorderColor,
-                            shape = bottomRoundedCornerShape
-                        )
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(48.dp)
-                            .fillMaxHeight()
-                            .background(
-                                color = primaryColor,
-                                shape = bottomRoundedCornerShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = null,
-                            tint = onPrimaryColor
-                        )
-                    }
 
-                    OutlinedTextField(
-                        value = formState.confirmPassword,
-                        onValueChange = { viewModel.setConfirmPassword(it) },
-                        placeholder = {
-                            Text(stringResource(R.string.input_confirm_password))
-                        },
-                        singleLine = true,
-                        modifier = Modifier
-                            .weight(1f)
-                            .focusRequester(confirmPasswordFocusRequester)
-                            .fillMaxHeight(),
-                        visualTransformation = if (formState.isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        colors = textFieldColors,
-                        trailingIcon = {
-                            PasswordTrailingIcon(
-                                isPasswordVisible = formState.isConfirmPasswordVisible,
-                                onToggleVisibility = { viewModel.toggleConfirmPasswordVisibility() }
-                            )
-                        },
-                        readOnly = uiState is UIState.UILoading,
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Password
-                        ),
-                        keyboardActions = KeyboardActions(onDone = {
-                            if (formState.isResetPasswordButtonEnabled && uiState !is UIState.UILoading) {
-                                onSaveChangeClick()
-                            }
-                        }),
-                    )
-                }
+                OutlinedTextField(
+                    value = formState.confirmPassword,
+                    onValueChange = { viewModel.setConfirmPassword(it) },
+                    placeholder = {
+                        Text(stringResource(R.string.input_confirm_password))
+                    },
+                    singleLine = true,
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(confirmPasswordFocusRequester)
+                        .fillMaxHeight(),
+                    visualTransformation = if (formState.isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    colors = textFieldColors,
+                    trailingIcon = {
+                        PasswordTrailingIcon(
+                            isPasswordVisible = formState.isConfirmPasswordVisible,
+                            onToggleVisibility = { viewModel.toggleConfirmPasswordVisibility() }
+                        )
+                    },
+                    readOnly = uiState is UIState.UILoading,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Password
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        if (formState.isResetPasswordButtonEnabled && uiState !is UIState.UILoading) {
+                            onSaveChangeClick()
+                        }
+                    }),
+                )
             }
         }
     }

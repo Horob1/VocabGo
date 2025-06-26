@@ -98,7 +98,7 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.weight(1f))
             }
 
-            RegisterForm(viewModel)
+            RegisterForm(viewModel, authNavController)
 
             Spacer(modifier = Modifier.height(verticalSpacing / 3)) // Use remembered verticalSpacing
             val currentEmailForNav = rememberUpdatedState(formState.email)
@@ -216,3 +216,4 @@ fun RegisterFooter(navController: NavController, descFontSize: TextUnit) {
         )
     }
 }
+

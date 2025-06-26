@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -24,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -60,6 +63,8 @@ fun VerifyEmailScreen(
     val uiState by viewModel.verifyEmailUIState.collectAsState()
     val otpState by viewModel.otpState.collectAsState()
     val countDownState by viewModel.otpCountdown.collectAsState()
+    val imeBottomPx = WindowInsets.ime.getBottom(LocalDensity.current)
+    val imeBottomDp = with(LocalDensity.current) { imeBottomPx.toDp() }
 
     val buttonHeight = responsiveDP(48, 56, 60)
     val focusManager = LocalFocusManager.current
@@ -86,7 +91,8 @@ fun VerifyEmailScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = horizontalPadding),
+                    .padding(horizontal = horizontalPadding)
+                    .padding(bottom = imeBottomDp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(verticalSpacing)
             ) {
@@ -242,15 +248,18 @@ fun VerifyOtpSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(responsiveDP(8, 12, 16))
     ) {
-        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+        if (deviceType == DeviceType.Mobile) {
             Spacer(modifier = Modifier.height(verticalSpacing * 3))
-
+        } else if (deviceType == DeviceType.TabletPortrait) {
+            Spacer(modifier = Modifier.height(verticalSpacing))
         }
         CountdownDisplay(timerText = countDownText)
-        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+        if (deviceType == DeviceType.Mobile) {
             Spacer(modifier = Modifier.height(verticalSpacing * 3))
-
+        } else if (deviceType == DeviceType.TabletPortrait) {
+            Spacer(modifier = Modifier.height(verticalSpacing))
         }
+
         Text(
             text = stringResource(R.string.text_send_otp),
             style = MaterialTheme.typography.bodyLarge.copy(
@@ -261,17 +270,19 @@ fun VerifyOtpSection(
             color = MaterialTheme.colorScheme.primary
         )
 
-        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+        if (deviceType == DeviceType.Mobile) {
             Spacer(modifier = Modifier.height(verticalSpacing * 2))
-
+        } else if (deviceType == DeviceType.TabletPortrait) {
+            Spacer(modifier = Modifier.height(verticalSpacing))
         }
         OTPInputField(
             otp = otp,
             onOtpChange = onOtpChange
         )
-        if (deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletPortrait) {
+        if (deviceType == DeviceType.Mobile) {
             Spacer(modifier = Modifier.height(verticalSpacing))
-
+        } else if (deviceType == DeviceType.TabletPortrait) {
+            Spacer(modifier = Modifier.height(verticalSpacing / 3))
         }
         Text(
             text = stringResource(R.string.text_resend_email),

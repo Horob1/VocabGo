@@ -215,9 +215,7 @@
     <string name="prompt_team_leader">Đội trưởng</string>
     <string name="prompt_streaming_mode">Trực tiếp</string>
     <string name="text_enter_message">Đang nhập</string>
-
-    <string name="title_logout">Đăng xuất</string>
-
+    
     <string name="alert_cannot_create_more_alarm">Không thể tạo thêm hẹn giờ! Đừng lạm dụng chức năng này!</string>
     <string name="title_sure_to_delete">Bạn có chắc chắn muốn xóa?</string>
     <string name="btn_delete">Xoá</string>

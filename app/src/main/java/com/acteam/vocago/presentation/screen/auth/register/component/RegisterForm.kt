@@ -43,7 +43,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.acteam.vocago.R
+import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.auth.register.RegisterViewModel
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
@@ -52,7 +54,8 @@ import com.acteam.vocago.utils.responsiveSP
 
 @Composable
 fun RegisterForm(
-    viewModel: RegisterViewModel
+    viewModel: RegisterViewModel,
+    authNavController: NavController,
 ) {
     val formState by viewModel.registerFormState.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -217,7 +220,16 @@ fun RegisterForm(
                     icon = Icons.Default.LocationOn,
                     keyboardType = KeyboardType.Text,
                     keyboardActions = KeyboardActions(
-                        onDone = { focusManager.clearFocus() }
+                        onDone = {
+                            viewModel.register {
+                                authNavController.navigate(
+                                    NavScreen.VerifyEmailNavScreen(email = formState.email)
+                                ) {
+                                    launchSingleTop = true
+                                }
+                            }
+                            focusManager.clearFocus()
+                        }
                     ),
                     modifier = Modifier.focusRequester(addressFocusRequester)
                 )
@@ -231,6 +243,7 @@ fun RegisterForm(
                     placeholder = stringResource(R.string.input_enter_password),
                     isPasswordVisible = passwordVisible,
                     onVisibilityChange = { passwordVisible = !passwordVisible },
+                    imeAction = ImeAction.Next,
                     focusRequester = passwordFocusRequester,
                     keyboardActions = KeyboardActions(
                         onNext = { confirmPasswordFocusRequester.requestFocus() }
@@ -242,8 +255,16 @@ fun RegisterForm(
                     placeholder = stringResource(R.string.input_confirm_password),
                     isPasswordVisible = confirmPasswordVisible,
                     onVisibilityChange = { confirmPasswordVisible = !confirmPasswordVisible },
+                    imeAction = ImeAction.Done,
                     keyboardActions = KeyboardActions(
                         onDone = {
+                            viewModel.register {
+                                authNavController.navigate(
+                                    NavScreen.VerifyEmailNavScreen(email = formState.email)
+                                ) {
+                                    launchSingleTop = true
+                                }
+                            }
                             focusManager.clearFocus()
                         }
                     ),
@@ -355,6 +376,7 @@ fun RegisterForm(
                         placeholder = stringResource(R.string.input_enter_password),
                         isPasswordVisible = passwordVisible,
                         onVisibilityChange = { passwordVisible = !passwordVisible },
+                        imeAction = ImeAction.Next,
                         focusRequester = passwordFocusRequester,
                         keyboardActions = KeyboardActions(
                             onNext = { confirmPasswordFocusRequester.requestFocus() }
@@ -366,8 +388,16 @@ fun RegisterForm(
                         placeholder = stringResource(R.string.input_confirm_password),
                         isPasswordVisible = confirmPasswordVisible,
                         onVisibilityChange = { confirmPasswordVisible = !confirmPasswordVisible },
+                        imeAction = ImeAction.Done,
                         keyboardActions = KeyboardActions(
                             onDone = {
+                                viewModel.register {
+                                    authNavController.navigate(
+                                        NavScreen.VerifyEmailNavScreen(email = formState.email)
+                                    ) {
+                                        launchSingleTop = true
+                                    }
+                                }
                                 focusManager.clearFocus()
                             }
                         ),

@@ -138,6 +138,8 @@ fun PasswordTextField(
     isPasswordVisible: Boolean,
     onVisibilityChange: () -> Unit,
     modifier: Modifier = Modifier,
+    keyboardType: KeyboardType = KeyboardType.Password,
+    imeAction: ImeAction,
     focusRequester: FocusRequester = remember { FocusRequester() },
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
@@ -221,7 +223,7 @@ fun PasswordTextField(
                 }
             },
             keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done,
+                imeAction = imeAction,
                 keyboardType = KeyboardType.Password
             ),
             keyboardActions = keyboardActions
