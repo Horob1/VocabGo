@@ -2,6 +2,7 @@ package com.acteam.vocago.presentation.screen.main.chat.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.acteam.vocago.R
@@ -36,6 +38,9 @@ fun ThinTopBar(
     title: String,
     onBackClick: () -> Unit,
     avatarRes: Int? = null,
+    onMoreClick: (() -> Unit)? = null,
+    customIcon: ImageVector? = null,
+    menuContent: (@Composable () -> Unit)? = null
 ) {
     val deviceType = getDeviceType()
 
@@ -64,7 +69,6 @@ fun ThinTopBar(
         DeviceType.TabletPortrait -> MaterialTheme.typography.titleLarge
         DeviceType.TabletLandscape -> MaterialTheme.typography.headlineSmall
     }
-
 
     Surface(
         color = MaterialTheme.colorScheme.background,
@@ -120,7 +124,22 @@ fun ThinTopBar(
                     color = MaterialTheme.colorScheme.primary
                 ),
                 maxLines = 1,
+                modifier = Modifier.weight(1f)
             )
+
+            if (onMoreClick != null && customIcon != null) {
+                Box {
+                    IconButton(onClick = onMoreClick) {
+                        Icon(
+                            imageVector = customIcon,
+                            contentDescription = "Select Mood",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    menuContent?.invoke()
+                }
+            }
+
         }
     }
 }

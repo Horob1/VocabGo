@@ -1,8 +1,11 @@
 package com.acteam.vocago.presentation.screen.dictionary
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DockedSearchBar
@@ -13,6 +16,7 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,10 +28,11 @@ import com.acteam.vocago.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
-fun DictionaryScreen() {
-    var searchText by remember { mutableStateOf("") }
+fun DictionaryScreen(viewModel: DictionaryViewModel) {
     var active by remember { mutableStateOf(false) }
+
+    val searchText by viewModel.searchText.collectAsState()
+    val suggestions by viewModel.suggestions.collectAsState()
 
     Scaffold { innerPadding ->
         Column(
@@ -39,12 +44,10 @@ fun DictionaryScreen() {
                 inputField = {
                     SearchBarDefaults.InputField(
                         query = searchText,
-                        onQueryChange = { searchText = it },
+                        onQueryChange = { viewModel.onSearchTextChange(it) },
                         onSearch = { active = false },
                         expanded = active,
-                        onExpandedChange = {
-                            active = it
-                        },
+                        onExpandedChange = { active = it },
                         enabled = true,
                         placeholder = { Text(stringResource(R.string.text_search)) },
                         leadingIcon = {
@@ -59,9 +62,7 @@ fun DictionaryScreen() {
                     )
                 },
                 expanded = active,
-                onExpandedChange = {
-                    active = it
-                },
+                onExpandedChange = { active = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -70,26 +71,34 @@ fun DictionaryScreen() {
                 tonalElevation = SearchBarDefaults.TonalElevation,
                 shadowElevation = SearchBarDefaults.ShadowElevation,
                 content = {
-                    // This content is displayed when the search bar is active/expanded
-                    Text(
-                        "Search suggestions or recent searches will appear here.",
-                        modifier = Modifier.padding(16.dp)
-                    )
-                    // You would typically have a LazyColumn or similar here to display actual results
+                    if (suggestions.isEmpty()) {
+                        Text(
+                            "No suggestions.",
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    } else {
+                        LazyColumn {
+                            items(suggestions) { word ->
+                                Text(
+                                    text = word,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            viewModel.onSearchTextChange(word)
+                                            active = false
+                                        }
+                                        .padding(16.dp)
+                                )
+                            }
+                        }
+                    }
                 },
             )
 
-            // Your main dictionary content goes here
             Text(
                 text = "Welcome to your dictionary!",
                 modifier = Modifier.padding(16.dp)
             )
-            // Example of a list of words or definitions
-            // LazyColumn {
-            //     items(yourDictionaryWords) { word ->
-            //         Text(word.name)
-            //     }
-            // }
         }
     }
 }

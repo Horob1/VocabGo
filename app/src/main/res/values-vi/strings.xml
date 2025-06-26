@@ -167,8 +167,53 @@
     <string name="title_billing_payment">Gói trả phí</string>
     <string name="title_alarm">Hẹn giờ</string>
     <string name="title_analyze">Phân tích người dùng</string>
-
-
     <string name="title_logout">Đăng xuất</string>
+
+    //promt
+    <string name="prompt_woman">Phụ nữ</string>
+    <string name="prompt_casual">Thư giãn</string>
+    <string name="prompt_trainer">Huấn luyện</string>
+    <string name="prompt_motivator">Truyền cảm hứng</string>
+    <string name="prompt_legend_talk">Hồi tưởng huyền thoại</string>
+    <string name="prompt_humble">Khiêm tốn</string>
+    <string name="prompt_family_man">Gia đình</string>
+    <string name="prompt_playful">Hài hước</string>
+    <string name="prompt_retrospective">Hồi tưởng</string>
+    <string name="prompt_political">Chính trị</string>
+    <string name="prompt_businessman">Doanh nhân</string>
+    <string name="prompt_tv_host">Người dẫn chương trình</string>
+    <string name="prompt_humorous">Hài hước</string>
+    <string name="prompt_campaign_mode">Vận động tranh cử</string>
+    <string name="prompt_tech">Công nghệ</string>
+    <string name="prompt_debug_mode">Sửa lỗi</string>
+    <string name="prompt_teacher">Giảng dạy</string>
+    <string name="prompt_architecture">Kiến trúc</string>
+    <string name="prompt_startup_dev">Lập trình khởi nghiệp</string>
+    <string name="prompt_friendly">Thân thiện</string>
+    <string name="prompt_joker">Hài hước</string>
+    <string name="prompt_philosopher">Triết lý</string>
+    <string name="prompt_supportive">Động viên</string>
+    <string name="prompt_productive">Hiệu quả</string>
+    <string name="prompt_grammar_expert">Chuyên gia ngữ pháp</string>
+    <string name="prompt_quiz_mode">Trắc nghiệm</string>
+    <string name="prompt_fixer">Sửa lỗi</string>
+    <string name="prompt_ielts_coach">Huấn luyện IELTS</string>
+    <string name="prompt_interactive_game">Học ngữ pháp vui nhộn</string>
+    <string name="prompt_technical">Kỹ thuật</string>
+    <string name="prompt_investor">Nhà đầu tư</string>
+    <string name="prompt_casual_zuck">Thư giãn</string>
+    <string name="prompt_visionary">Tầm nhìn</string>
+    <string name="prompt_qna_mode">Hỏi và Đáp</string>
+    <string name="prompt_emotional">Cảm xúc</string>
+    <string name="prompt_playful_jack">Vui nhộn</string>
+    <string name="prompt_performer">Biểu diễn</string>
+    <string name="prompt_poetic">Thơ mộng</string>
+    <string name="prompt_down_to_earth">Gần gũi</string>
+    <string name="prompt_analytical">Chiến lược</string>
+    <string name="prompt_coach">Huấn luyện game</string>
+    <string name="prompt_casual_faker">Thư giãn</string>
+    <string name="prompt_team_leader">Đội trưởng</string>
+    <string name="prompt_streaming_mode">Trực tiếp</string>
+    <string name="text_enter_message">Đang nhập</string>
 
 </resources>

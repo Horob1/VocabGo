@@ -1,5 +1,6 @@
 [versions]
 accompanistFlowlayoutVersion = "0.36.0"
+accompanistPermissions = "0.32.0"
 agp = "8.9.1"
 cameraCamera2Version = "1.4.2"
 coilCompose = "2.5.0"
@@ -34,6 +35,7 @@ materialIconsExtended = "1.7.8"
 
 pagingComposeVersion = "3.3.6"
 pagingRuntimeVersion = "3.3.6"
+playServicesMlkitTextRecognitionVersion = "19.0.1"
 roomCompilerVersion = "2.7.1"
 roomGuavaVersion = "2.7.1"
 roomKtxVersion = "2.7.1"
@@ -41,12 +43,16 @@ roomPagingVersion = "2.7.1"
 roomRuntimeVersion = "2.7.1"
 roomTestingVersion = "2.7.1"
 serialization = "1.6.3"
+textRecognitionVersion = "16.0.1"
+translateVersion = "17.0.3"
 
 [libraries]
 accompanist-flowlayout-v0360 = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayoutVersion" }
 android-lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieComposeVersion" }
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2Version" }
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraCamera2Version" }
 androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCamera2Version" }
+androidx-camera-mlkit-vision = { module = "androidx.camera:camera-mlkit-vision", version.ref = "cameraCamera2Version" }
 androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCamera2Version" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -66,6 +72,7 @@ androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coilGif" }
 generativeai-v060 = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "googleGenerativeai" }
+google-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleidVersion" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gsonVersion" }
 introshowcaseview = { module = "com.canopas.intro-showcase-view:introshowcaseview", version.ref = "introshowcaseview" }
@@ -92,6 +99,9 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorSerializationKotlinxJson" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+play-services-mlkit-text-recognition = { module = "com.google.android.gms:play-services-mlkit-text-recognition", version.ref = "playServicesMlkitTextRecognitionVersion" }
+text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "textRecognitionVersion" }
+translate = { module = "com.google.mlkit:translate", version.ref = "translateVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -2,6 +2,7 @@ package com.acteam.vocago.presentation.screen.main.chat.component
 
 import MessageItem
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,6 +39,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -51,7 +59,6 @@ fun CommonChatScreen(
     viewModel: ChatViewModel,
     rootNavController: NavController,
 ) {
-
     val userState = viewModel.userState.collectAsState()
     val messages = remember { viewModel.messageList }
     val isTyping by viewModel.isTyping.collectAsState()
@@ -60,8 +67,15 @@ fun CommonChatScreen(
     val imeBottomPx = WindowInsets.ime.getBottom(LocalDensity.current)
     val imeBottomDp = with(LocalDensity.current) { imeBottomPx.toDp() }
     val focusManager = LocalFocusManager.current
-    val promptDescription = viewModel.promptDescriptionMap[id] ?: "No description"
+    val selectedPromptIndex by viewModel.selectedPromptIndex.collectAsState()
+    val promptList = getLocalizedPromptOptions()[id].orEmpty()
+    val promptDescription = promptList.getOrNull(selectedPromptIndex)?.first ?: "No description"
+    val currentPrompt = promptList.getOrNull(selectedPromptIndex)?.second
     val shouldShowIntro = remember { mutableStateOf(true) }
+    var showPromptSelector by remember { mutableStateOf(false) }
+    val selectedIcon: ImageVector? = personaIcons[id]?.getOrNull(selectedPromptIndex)
+    remember { mutableStateOf<LayoutCoordinates?>(null) }
+
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) {
             shouldShowIntro.value = false
@@ -81,11 +95,46 @@ fun CommonChatScreen(
                     focusManager.clearFocus()
                 }
         ) {
-            ThinTopBar(
-                title = title,
-                onBackClick = { rootNavController.popBackStack() },
-                avatarRes = avatarRes
-            )
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                ThinTopBar(
+                    title = title,
+                    onBackClick = { rootNavController.popBackStack() },
+                    avatarRes = avatarRes,
+                    onMoreClick = { showPromptSelector = !showPromptSelector },
+                    customIcon = selectedIcon,
+                    menuContent = {
+                        DropdownMenu(
+                            expanded = showPromptSelector,
+                            onDismissRequest = { showPromptSelector = false },
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.surface)
+                                .align(Alignment.TopEnd)
+                        ) {
+                            promptList.forEachIndexed { index, (label, _) ->
+                                DropdownMenuItem(
+                                    text = { Text(label) },
+                                    leadingIcon = {
+                                        personaIcons[id]?.getOrNull(index)?.let {
+                                            Icon(it, contentDescription = label)
+                                        }
+                                    },
+                                    trailingIcon = {
+                                        if (index == selectedPromptIndex) {
+                                            Icon(Icons.Default.Check, contentDescription = null)
+                                        }
+                                    },
+                                    onClick = {
+                                        viewModel.selectPromptIndex(index)
+                                        showPromptSelector = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+                )
+            }
             if (shouldShowIntro.value) {
                 Column(
                     modifier = Modifier
@@ -152,7 +201,7 @@ fun CommonChatScreen(
                     onInputChange = { input = it },
                     onSendClick = {
                         if (input.isNotBlank()) {
-                            viewModel.sendMessageById(id, input)
+                            viewModel.sendMessageWithPrompt(currentPrompt, input)
                             viewModel.playSound()
                             input = ""
                         }
