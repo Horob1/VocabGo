@@ -60,59 +60,6 @@ fun ChatScreen(
 
     val userProfileList = listOf(
         UserProfileData(
-            R.drawable.ronaldo_avt, "Online", "Ronaldo",
-            stringResource(R.string.text_football_boat),
-            1,
-            location = "Riyard",
-            country = "Saudi Arabia",
-            locationImageRes = R.drawable.ronaldo_location,
-            videoResId = R.raw.ronaldo_videocall
-        ) { id ->
-            rootNavController.navigate(
-                NavScreen.CommonChatNavScreen(
-                    id,
-                    "Ronaldo",
-                    R.drawable.ronaldo_avt
-                )
-            )
-        },
-
-        UserProfileData(
-            R.drawable.messi_avatar, "Online", "Messi",
-            stringResource(R.string.text_football_goat),
-            2,
-            location = "Miami",
-            country = "USA",
-            locationImageRes = R.drawable.messi_location,
-            videoResId = R.raw.messi_callvideo
-        ) { id ->
-            rootNavController.navigate(
-                NavScreen.CommonChatNavScreen(
-                    id,
-                    "Messi",
-                    R.drawable.messi_avatar
-                )
-            )
-        },
-
-        UserProfileData(
-            R.drawable.dack_avatar, "Online", "Jack",
-            stringResource(R.string.text_singer),
-            8,
-            location = stringResource(R.string.text_bentre),
-            country = stringResource(R.string.text_vietnam),
-            locationImageRes = R.drawable.bentre,
-            videoResId = R.raw.jack_videocall
-        ) { id ->
-            rootNavController.navigate(
-                NavScreen.CommonChatNavScreen(
-                    id,
-                    "Jack",
-                    R.drawable.dack_avatar
-                )
-            )
-        },
-        UserProfileData(
             R.drawable.trum_avatar, "Online", "Trump",
             stringResource(R.string.text_us_president),
             3,
@@ -162,6 +109,58 @@ fun ChatScreen(
                     id,
                     "Van Cong",
                     R.drawable.daily_chatbot
+                )
+            )
+        },
+        UserProfileData(
+            R.drawable.dack_avatar, "Online", "Jack",
+            stringResource(R.string.text_singer),
+            8,
+            location = stringResource(R.string.text_bentre),
+            country = stringResource(R.string.text_vietnam),
+            locationImageRes = R.drawable.bentre,
+            videoResId = R.raw.jack_videocall
+        ) { id ->
+            rootNavController.navigate(
+                NavScreen.CommonChatNavScreen(
+                    id,
+                    "Jack",
+                    R.drawable.dack_avatar
+                )
+            )
+        },
+        UserProfileData(
+            R.drawable.ronaldo_avt, "Online", "Ronaldo",
+            stringResource(R.string.text_football_boat),
+            1,
+            location = "Riyard",
+            country = "Saudi Arabia",
+            locationImageRes = R.drawable.ronaldo_location,
+            videoResId = R.raw.ronaldo_videocall
+        ) { id ->
+            rootNavController.navigate(
+                NavScreen.CommonChatNavScreen(
+                    id,
+                    "Ronaldo",
+                    R.drawable.ronaldo_avt
+                )
+            )
+        },
+
+        UserProfileData(
+            R.drawable.messi_avatar, "Online", "Messi",
+            stringResource(R.string.text_football_goat),
+            2,
+            location = "Miami",
+            country = "USA",
+            locationImageRes = R.drawable.messi_location,
+            videoResId = R.raw.messi_callvideo
+        ) { id ->
+            rootNavController.navigate(
+                NavScreen.CommonChatNavScreen(
+                    id,
+                    "Messi",
+                    R.drawable.messi_avatar
                 )
             )
         },
@@ -222,7 +221,9 @@ fun ChatScreen(
         },
     )
 
-    val pagerState = rememberPagerState(initialPage = 0) { userProfileList.size }
+    val pagerState = rememberPagerState(
+        initialPage = userProfileList.size / 2
+    ) { userProfileList.size }
 
     val cardWidth = when (deviceType) {
         DeviceType.TabletLandscape -> screenWidth * 0.5f

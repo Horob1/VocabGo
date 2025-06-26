@@ -11,8 +11,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.acteam.vocago.presentation.screen.auth.SetupAuthNavGraph
+import com.acteam.vocago.presentation.screen.camera.CameraScreen
 import com.acteam.vocago.presentation.screen.choosevoca.ChooseVocaListScreen
 import com.acteam.vocago.presentation.screen.dictionary.DictionaryScreen
+import com.acteam.vocago.presentation.screen.dictionary.DictionaryViewModel
 import com.acteam.vocago.presentation.screen.main.SetupMainNavGraph
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.chat.component.CommonChatScreen
@@ -118,11 +120,14 @@ fun SetupNavGraph(
         }
 
         composable<NavScreen.DictionaryNavScreen> {
-            DictionaryScreen()
+            val dictionaryViewModel = koinViewModel<DictionaryViewModel>()
+            DictionaryScreen(
+                viewModel = dictionaryViewModel
+            )
         }
 
         composable<NavScreen.CameraNavScreen> {
-
+            CameraScreen(rootNavController = navController)
         }
         composable<NavScreen.VideoCallNavScreen> {
             val arg = it.toRoute<NavScreen.VideoCallNavScreen>()

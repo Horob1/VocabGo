@@ -6,6 +6,7 @@ import com.acteam.vocago.presentation.screen.auth.register.RegisterViewModel
 import com.acteam.vocago.presentation.screen.auth.resetpassword.ResetPasswordViewModel
 import com.acteam.vocago.presentation.screen.auth.verify2fa.VerifyTwoFAViewModel
 import com.acteam.vocago.presentation.screen.auth.verifyemail.VerifyEmailViewModel
+import com.acteam.vocago.presentation.screen.dictionary.DictionaryViewModel
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
@@ -93,6 +94,9 @@ val viewModelModule = module {
         UserNavigatorViewModel(
             get(), get()
         )
+    }
+    viewModel {
+        DictionaryViewModel()
     }
 
     viewModel {
