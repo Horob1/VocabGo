@@ -16,6 +16,9 @@ import com.acteam.vocago.domain.usecase.GetLoginStateUseCase
 import com.acteam.vocago.domain.usecase.GetNewsDetailUseCase
 import com.acteam.vocago.domain.usecase.GetNewsHistoryPagingUseCase
 import com.acteam.vocago.domain.usecase.GetNewsPagingUseCase
+import com.acteam.vocago.domain.usecase.GetNovelDetailUseCase
+import com.acteam.vocago.domain.usecase.GetNovelFirstPageUseCase
+import com.acteam.vocago.domain.usecase.GetSearchNovelPagingFlowUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
 import com.acteam.vocago.domain.usecase.InsertAlarmUseCase
@@ -170,5 +173,17 @@ val useCaseModule = module {
         UpdateProfileUseCase(
             get()
         )
+    }
+
+    single {
+        GetNovelFirstPageUseCase(get())
+    }
+
+    single {
+        GetSearchNovelPagingFlowUseCase(get())
+    }
+
+    single {
+        GetNovelDetailUseCase(get())
     }
 }

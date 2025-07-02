@@ -53,7 +53,17 @@ sealed class NavScreen {
         val videoResId: Int?,
     ) : NavScreen()
 
+    @Serializable
+    data class SearchNovelNavScreen(val keySearch: String) : NavScreen()
+
+    @Serializable
+    data class NovelDetailNavScreen(val novelId: String) : NavScreen()
+
+    @Serializable
+    data class ReadNovelNavScreen(val novelId: String, val chapterId: String) : NavScreen()
+
     // Mâm 2
+
     // Mân 2 của Auth
     @Serializable
     data object LoginNavScreen : NavScreen()

@@ -1,15 +1,19 @@
 package com.acteam.vocago.presentation.navigation
 
+import android.os.Build
+import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.acteam.vocago.R
 import com.acteam.vocago.presentation.screen.auth.SetupAuthNavGraph
 import com.acteam.vocago.presentation.screen.camera.CameraScreen
 import com.acteam.vocago.presentation.screen.choosevoca.ChooseVocaListScreen
@@ -23,6 +27,10 @@ import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailScreen
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryScreen
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryViewModel
+import com.acteam.vocago.presentation.screen.noveldetail.NovelDetailScreen
+import com.acteam.vocago.presentation.screen.noveldetail.NovelDetailViewModel
+import com.acteam.vocago.presentation.screen.searchnovel.SearchNovelScreen
+import com.acteam.vocago.presentation.screen.searchnovel.SearchNovelViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingScreen
 import com.acteam.vocago.presentation.screen.setting.SettingViewModel
 import com.acteam.vocago.presentation.screen.user.SetupUserNavGraph
@@ -66,6 +74,7 @@ fun SetupNavGraph(
                 rootNavController = navController
             )
         }
+
         composable<NavScreen.CommonChatNavScreen> {
             val chatViewModel = koinViewModel<ChatViewModel>()
             val arg = it.toRoute<NavScreen.CommonChatNavScreen>()
@@ -127,7 +136,17 @@ fun SetupNavGraph(
         }
 
         composable<NavScreen.CameraNavScreen> {
-            CameraScreen(rootNavController = navController)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                CameraScreen(rootNavController = navController)
+            } else {
+                val context = LocalContext.current
+                Toast.makeText(
+                    context,
+                    R.string.alert_your_device_is_not_support_this_feature,
+                    Toast.LENGTH_SHORT
+                ).show()
+                navController.popBackStack()
+            }
         }
         composable<NavScreen.VideoCallNavScreen> {
             val arg = it.toRoute<NavScreen.VideoCallNavScreen>()
@@ -145,6 +164,31 @@ fun SetupNavGraph(
                 viewModel = settingViewModel,
                 rootNavController = navController
             )
+        }
+
+        composable<NavScreen.SearchNovelNavScreen> {
+            val searchNovelViewModel = koinViewModel<SearchNovelViewModel>()
+            val arg = it.toRoute<NavScreen.SearchNovelNavScreen>()
+            SearchNovelScreen(
+                viewModel = searchNovelViewModel,
+                navController = navController,
+                keySearch = arg.keySearch
+            )
+        }
+
+        composable<NavScreen.NovelDetailNavScreen> {
+            val novelDetailViewModel = koinViewModel<NovelDetailViewModel>()
+            val arg = it.toRoute<NavScreen.NovelDetailNavScreen>()
+            NovelDetailScreen(
+                novelId = arg.novelId,
+                viewModel = novelDetailViewModel,
+                navController = navController
+            )
+        }
+
+        composable<NavScreen.ReadNovelNavScreen> {
+            val arg = it.toRoute<NavScreen.ReadNovelNavScreen>()
+            
         }
     }
 }

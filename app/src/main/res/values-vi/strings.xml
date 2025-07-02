@@ -215,7 +215,7 @@
     <string name="prompt_team_leader">Đội trưởng</string>
     <string name="prompt_streaming_mode">Trực tiếp</string>
     <string name="text_enter_message">Đang nhập</string>
-    
+
     <string name="alert_cannot_create_more_alarm">Không thể tạo thêm hẹn giờ! Đừng lạm dụng chức năng này!</string>
     <string name="title_sure_to_delete">Bạn có chắc chắn muốn xóa?</string>
     <string name="btn_delete">Xoá</string>
@@ -234,4 +234,16 @@
     <string name="permission_denied">Quyền truy cập bị từ chối! Bạn phải cấp quyền để xử dụng tính năng này!</string>
     <string name="btn_edit">Sửa</string>
 
+    <string name="alert_you_are_offline">Bạn đang offline! Hãy kiểm tra kết nối internet!</string>
+    <string name="title_novel_center">Trung tâm truyện</string>
+    <string name="title_learn_voca_by_novel">Học từ vựng qua truyện</string>
+    <string name="chapters">chương</string>
+    <string name="title_new_novel">Truyện mới</string>
+    <string name="createdAt">Ngày tạo</string>
+    <string name="updatedAt">Cập nhật</string>
+    <string name="btn_read_now">Đọc ngay</string>
+    <string name="alert_your_device_is_not_support_this_feature">Thiết bị của bạn không hỗ trợ tính năng này!</string>
+
+    <string name="btn_dowload">Tải xuống</string>
+    <string name="btn_read">Đọc</string>
 </resources>

@@ -71,6 +71,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -129,8 +130,8 @@ fun ProfileScreen(
     var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
 
 
-    val (year, month, dayOfMonth) = remember {
-        val dob = if (editMode) userUpdate.dob else user?.dob
+    val (year, month, dayOfMonth) = remember(userUpdate.dob, user?.dob) {
+        val dob = (if (editMode) userUpdate.dob else user?.dob)?.split("T")?.get(0)
 
         if (!dob.isNullOrBlank()) {
             try {
@@ -185,6 +186,7 @@ fun ProfileScreen(
     val firstNameFocusRequester = remember { FocusRequester() }
     val lastNameFocusRequester = remember { FocusRequester() }
     val addressFocusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     val requestGalleryPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -510,6 +512,10 @@ fun ProfileScreen(
                 placeholder = stringResource(R.string.input_enter_address),
                 icon = Icons.Default.LocationOn,
                 keyboardType = KeyboardType.Text,
+                keyboardActions = KeyboardActions(onDone = {
+                    focusManager.clearFocus()
+                }),
+                imeAction = ImeAction.Done,
                 readOnly = !editMode,
                 modifier = Modifier.focusRequester(
                     addressFocusRequester
@@ -557,9 +563,9 @@ fun ProfileScreen(
                     text = stringResource(R.string.btn_edit),
                     icon = Icons.Default.Edit,
                     onClick = {
-                        editMode = true
                         firstNameFocusRequester.requestFocus()
                         viewModel.resetUpdateProfile()
+                        editMode = true
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
@@ -581,6 +587,7 @@ fun ProfileScreen(
                     onClick = {
                         // Xử lý lưu dữ liệu tại đây
                         editMode = false // Quay lại chế độ xem
+                        focusManager.clearFocus()
                         viewModel.updateProfileToServer()
                     },
                     modifier = Modifier.fillMaxWidth(),

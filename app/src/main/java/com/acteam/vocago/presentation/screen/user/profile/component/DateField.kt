@@ -37,6 +37,7 @@ import java.util.Calendar
 
 @Composable
 fun DateField(
+    modifier: Modifier = Modifier,
     year: Int,
     month: Int,
     dayOfMonth: Int,
@@ -77,7 +78,7 @@ fun DateField(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(56.dp)
             .clip(RoundedCornerShape(12.dp))

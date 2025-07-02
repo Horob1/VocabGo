@@ -239,4 +239,17 @@
     <string name="text_take_a_photo">Take a photo</string>
     <string name="permission_denied">Permission Denied! You must allow to use this feature!</string>
     <string name="btn_edit">Edit</string>
+    <string name="alert_you_are_offline">You are offline! Please check your internet connection!</string>
+
+    <string name="title_novel_center">Novel center</string>
+    <string name="title_learn_voca_by_novel">Learn voca by reading novel</string>
+    <string name="chapters">chapter</string>
+    <string name="title_new_novel">New novel</string>
+    <string name="createdAt">Created at</string>
+    <string name="updatedAt">Updated at</string>
+    <string name="btn_read_now">Read Now</string>
+    <string name="alert_your_device_is_not_support_this_feature">Your device is not support this feature!</string>
+
+    <string name="btn_dowload">Download</string>
+    <string name="btn_read">Read</string>
 </resources>

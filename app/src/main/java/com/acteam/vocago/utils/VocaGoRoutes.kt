@@ -20,4 +20,7 @@ sealed class VocaGoRoutes(val path: String) {
     data class ToggleBookmark(val id: String) : VocaGoRoutes("api/v1/news/$id/bookmark")
 
     data object GetDictionaryWord : VocaGoRoutes("/api/v1/dictionary/")
+
+    //novel
+    data object GetNovel : VocaGoRoutes("/api/v1/fiction")
 }

@@ -97,6 +97,7 @@ class AlarmReceiver : BroadcastReceiver() {
                     context.getString(R.string.btn_cancel),
                     stopPendingIntent
                 )
+                .setDeleteIntent(stopPendingIntent)
                 .build()
 
         NotificationManagerCompat.from(context).notify(alarmId.hashCode(), notification)

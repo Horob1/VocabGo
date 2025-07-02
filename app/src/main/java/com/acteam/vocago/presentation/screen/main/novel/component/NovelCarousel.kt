@@ -1,4 +1,4 @@
-package com.acteam.vocago.presentation.screen.main.novel
+package com.acteam.vocago.presentation.screen.main.novel.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -47,6 +48,7 @@ import androidx.compose.ui.util.lerp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.acteam.vocago.R
+import com.acteam.vocago.domain.model.Novel
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 import kotlinx.coroutines.delay
@@ -55,13 +57,10 @@ import kotlin.math.absoluteValue
 @Composable
 fun NovelCarousel(
     modifier: Modifier = Modifier,
+    novel: List<Novel>,
+    onItemClick: (String) -> Unit,
 ) {
-    val items = listOf(
-        "https://lh3.googleusercontent.com/pw/AP1GczOBBMpnlwmU1GA7TI-h_DpHyDQu2Nb7m2B8tm4ryQQL3XL-cO93XgNQK31C1cY0SsGRc69NeLQvtLlgoA7_qq5C2umsl1YQrFTc0UCdDL85IHE5DBTvSwpdtY4sZo1GsIVpvI8vPFPjra_ped343sV2=w215-h322-s-no-gm?authuser=4",
-        "https://lh3.googleusercontent.com/pw/AP1GczOBBMpnlwmU1GA7TI-h_DpHyDQu2Nb7m2B8tm4ryQQL3XL-cO93XgNQK31C1cY0SsGRc69NeLQvtLlgoA7_qq5C2umsl1YQrFTc0UCdDL85IHE5DBTvSwpdtY4sZo1GsIVpvI8vPFPjra_ped343sV2=w215-h322-s-no-gm?authuser=4",
-        "https://lh3.googleusercontent.com/pw/AP1GczOBBMpnlwmU1GA7TI-h_DpHyDQu2Nb7m2B8tm4ryQQL3XL-cO93XgNQK31C1cY0SsGRc69NeLQvtLlgoA7_qq5C2umsl1YQrFTc0UCdDL85IHE5DBTvSwpdtY4sZo1GsIVpvI8vPFPjra_ped343sV2=w215-h322-s-no-gm?authuser=4"
-    )
-    val realSize = items.size
+    val realSize = novel.size
     val startIndex = Int.MAX_VALUE / 2 // Start from middle to allow left/right scroll
 
     val pageState = rememberPagerState(initialPage = startIndex) {
@@ -104,12 +103,13 @@ fun NovelCarousel(
                 NovelCarouselItem(
                     index = index,
                     pageState = pageState,
-                    url = items[realIndex],
+                    url = novel[realIndex].image,
                 )
             }
         }
-        val currentPage = pageState.currentPage % realSize
 
+        val currentPage = pageState.currentPage % realSize
+        val currentNovel = novel[currentPage]
         Spacer(
             modifier = Modifier.size(
                 responsiveDP(
@@ -121,7 +121,7 @@ fun NovelCarousel(
         )
 
         Text(
-            "The Fellowship Of The Ring $currentPage",
+            currentNovel.fictionTitle,
             style = MaterialTheme.typography.titleSmall.copy(
                 fontSize = responsiveSP(
                     mobile = 16,
@@ -131,7 +131,7 @@ fun NovelCarousel(
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
             ),
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.width(
                 responsiveDP(
@@ -153,7 +153,7 @@ fun NovelCarousel(
         )
 
         Text(
-            "J.R.R Token", style = MaterialTheme.typography.bodySmall.copy(
+            currentNovel.author, style = MaterialTheme.typography.bodySmall.copy(
                 color = MaterialTheme.colorScheme.onSurface.copy(
                     0.7f
                 ),
@@ -172,7 +172,9 @@ fun NovelCarousel(
         )
 
         Button(
-            onClick = {},
+            onClick = {
+                onItemClick(currentNovel._id)
+            },
             modifier = Modifier
                 .clip(
                     MaterialTheme.shapes.medium
@@ -206,14 +208,12 @@ fun NovelCarousel(
 }
 
 @Composable
-fun TabletCarousel() {
-
-    val items = listOf(
-        "https://lh3.googleusercontent.com/pw/AP1GczOBBMpnlwmU1GA7TI-h_DpHyDQu2Nb7m2B8tm4ryQQL3XL-cO93XgNQK31C1cY0SsGRc69NeLQvtLlgoA7_qq5C2umsl1YQrFTc0UCdDL85IHE5DBTvSwpdtY4sZo1GsIVpvI8vPFPjra_ped343sV2=w215-h322-s-no-gm?authuser=4",
-        "https://lh3.googleusercontent.com/pw/AP1GczOBBMpnlwmU1GA7TI-h_DpHyDQu2Nb7m2B8tm4ryQQL3XL-cO93XgNQK31C1cY0SsGRc69NeLQvtLlgoA7_qq5C2umsl1YQrFTc0UCdDL85IHE5DBTvSwpdtY4sZo1GsIVpvI8vPFPjra_ped343sV2=w215-h322-s-no-gm?authuser=4",
-        "https://lh3.googleusercontent.com/pw/AP1GczOBBMpnlwmU1GA7TI-h_DpHyDQu2Nb7m2B8tm4ryQQL3XL-cO93XgNQK31C1cY0SsGRc69NeLQvtLlgoA7_qq5C2umsl1YQrFTc0UCdDL85IHE5DBTvSwpdtY4sZo1GsIVpvI8vPFPjra_ped343sV2=w215-h322-s-no-gm?authuser=4"
-    )
-    val realSize = items.size
+fun TabletCarousel(
+    modifier: Modifier = Modifier,
+    novel: List<Novel>,
+    onItemClick: (String) -> Unit,
+) {
+    val realSize = novel.size
     val startIndex = Int.MAX_VALUE / 2 // Start from middle to allow left/right scroll
 
     val pageState = rememberPagerState(initialPage = startIndex) {
@@ -230,7 +230,7 @@ fun TabletCarousel() {
 
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(580.dp),
         contentAlignment = Alignment.Center
@@ -250,9 +250,7 @@ fun TabletCarousel() {
             pageSpacing = 40.dp
         ) { index ->
             val realIndex = index % realSize
-            val context = LocalContext.current
-            val pageOffset =
-                ((pageState.currentPage - index) + pageState.currentPageOffsetFraction).absoluteValue
+            val currentNovel = novel[realIndex]
 
             Row(
                 modifier = Modifier
@@ -289,7 +287,7 @@ fun TabletCarousel() {
                 ) {
                     SubcomposeAsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(items[realIndex])
+                            .data(novel[realIndex].image)
                             .crossfade(true)
                             .build(),
                         contentDescription = "Book Image",
@@ -318,26 +316,30 @@ fun TabletCarousel() {
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
-                            text = "The Fellowship of the Ring $realIndex",
+                            text = currentNovel.fictionTitle,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = MaterialTheme.colorScheme.primary
                             ),
-                            maxLines = 2,
+                            maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
 
                         Text(
-                            text = "J.R.R. Tolkien",
+                            text = currentNovel.author,
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
 
                         Button(
-                            onClick = { /* TODO */ },
+                            onClick = {
+                                onItemClick(currentNovel._id)
+                            },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Read Now")
+                            Text(
+                                text = stringResource(R.string.btn_read_now),
+                            )
                         }
                     }
                 }

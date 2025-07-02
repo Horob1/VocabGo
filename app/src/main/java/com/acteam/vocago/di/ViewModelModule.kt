@@ -9,8 +9,11 @@ import com.acteam.vocago.presentation.screen.auth.verifyemail.VerifyEmailViewMod
 import com.acteam.vocago.presentation.screen.dictionary.DictionaryViewModel
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
+import com.acteam.vocago.presentation.screen.main.novel.NovelViewModel
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryViewModel
+import com.acteam.vocago.presentation.screen.noveldetail.NovelDetailViewModel
+import com.acteam.vocago.presentation.screen.searchnovel.SearchNovelViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingViewModel
 import com.acteam.vocago.presentation.screen.user.alarm.AlarmViewModel
 import com.acteam.vocago.presentation.screen.user.profile.ProfileViewModel
@@ -108,6 +111,22 @@ val viewModelModule = module {
     viewModel {
         ProfileViewModel(
             get(), get(), get(), get()
+        )
+    }
+
+    viewModel {
+        NovelViewModel(
+            get()
+        )
+    }
+
+    viewModel {
+        SearchNovelViewModel(get())
+    }
+
+    viewModel {
+        NovelDetailViewModel(
+            get()
         )
     }
 }
