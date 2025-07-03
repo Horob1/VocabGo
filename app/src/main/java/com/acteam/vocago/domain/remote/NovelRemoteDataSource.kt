@@ -1,5 +1,6 @@
 package com.acteam.vocago.domain.remote
 
+import com.acteam.vocago.data.model.ChapterDto
 import com.acteam.vocago.data.model.NovelDetailDto
 import com.acteam.vocago.data.model.NovelDto
 import com.acteam.vocago.data.model.PaginatedResponse
@@ -11,4 +12,6 @@ interface NovelRemoteDataSource {
     suspend fun getNovelList(page: Int, keySearch: String): Result<PaginatedResponse<NovelDto>>
 
     suspend fun getNovelDetail(id: String): Result<NovelDetailDto>
+
+    suspend fun getChapterDetail(chapterId: String): Result<ChapterDto>
 }

@@ -40,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.acteam.vocago.R
+import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.presentation.screen.noveldetail.component.StoryCard
@@ -221,7 +222,14 @@ fun NovelDetailScreen(
                                     Row(
                                         Modifier
                                             .fillMaxWidth()
-                                            .clickable { }
+                                            .clickable {
+                                                navController.navigate(
+                                                    NavScreen.ReadNovelNavScreen(
+                                                        novelId = novelId,
+                                                        chapterId = novel.chapters[index]._id
+                                                    )
+                                                )
+                                            }
                                             .padding(vertical = 8.dp, horizontal = 16.dp)
                                     ) {
                                         Text(

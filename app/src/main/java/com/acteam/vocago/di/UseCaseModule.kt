@@ -6,6 +6,7 @@ import com.acteam.vocago.domain.usecase.DeleteAlarmByIdUseCase
 import com.acteam.vocago.domain.usecase.ForgotPasswordUseCase
 import com.acteam.vocago.domain.usecase.GetAlarmByIdUseCase
 import com.acteam.vocago.domain.usecase.GetAlarmListUseCase
+import com.acteam.vocago.domain.usecase.GetChapterUseCase
 import com.acteam.vocago.domain.usecase.GetChosenNewsCategoriesUseCase
 import com.acteam.vocago.domain.usecase.GetChosenNewsLevelUseCase
 import com.acteam.vocago.domain.usecase.GetDictionaryWordUseCase
@@ -185,5 +186,9 @@ val useCaseModule = module {
 
     single {
         GetNovelDetailUseCase(get())
+    }
+
+    single {
+        GetChapterUseCase(get())
     }
 }

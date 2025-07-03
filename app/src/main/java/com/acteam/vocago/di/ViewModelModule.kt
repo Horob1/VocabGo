@@ -13,6 +13,7 @@ import com.acteam.vocago.presentation.screen.main.novel.NovelViewModel
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryViewModel
 import com.acteam.vocago.presentation.screen.noveldetail.NovelDetailViewModel
+import com.acteam.vocago.presentation.screen.readnovel.ReadNovelViewModel
 import com.acteam.vocago.presentation.screen.searchnovel.SearchNovelViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingViewModel
 import com.acteam.vocago.presentation.screen.user.alarm.AlarmViewModel
@@ -127,6 +128,12 @@ val viewModelModule = module {
     viewModel {
         NovelDetailViewModel(
             get()
+        )
+    }
+
+    viewModel {
+        ReadNovelViewModel(
+            get(), get()
         )
     }
 }

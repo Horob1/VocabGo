@@ -23,4 +23,7 @@ sealed class VocaGoRoutes(val path: String) {
 
     //novel
     data object GetNovel : VocaGoRoutes("/api/v1/fiction")
+
+    //Chapter
+    data class GetChapter(val id: String) : VocaGoRoutes("/api/v1/chapter/$id")
 }

@@ -1,6 +1,7 @@
 package com.acteam.vocago.data.remote
 
 import com.acteam.vocago.data.model.ApiException
+import com.acteam.vocago.data.model.ChapterDto
 import com.acteam.vocago.data.model.NovelDetailDto
 import com.acteam.vocago.data.model.NovelDto
 import com.acteam.vocago.data.model.PaginatedResponse
@@ -90,4 +91,24 @@ class NovelRemoteDataSourceImpl(
         }
     }
 
+    override suspend fun getChapterDetail(chapterId: String): Result<ChapterDto> {
+        return try {
+            val response = client.get(VocaGoRoutes.GetChapter(chapterId).path)
+
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    val data = response.body<SuccessResponse<ChapterDto>>()
+                    return Result.success(data.data)
+                }
+
+                else -> {
+                    Result.failure(ApiException(response.status.value))
+                }
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
 }

@@ -29,6 +29,8 @@ import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryScreen
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryViewModel
 import com.acteam.vocago.presentation.screen.noveldetail.NovelDetailScreen
 import com.acteam.vocago.presentation.screen.noveldetail.NovelDetailViewModel
+import com.acteam.vocago.presentation.screen.readnovel.ReadNovelScreen
+import com.acteam.vocago.presentation.screen.readnovel.ReadNovelViewModel
 import com.acteam.vocago.presentation.screen.searchnovel.SearchNovelScreen
 import com.acteam.vocago.presentation.screen.searchnovel.SearchNovelViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingScreen
@@ -187,8 +189,14 @@ fun SetupNavGraph(
         }
 
         composable<NavScreen.ReadNovelNavScreen> {
+            val readNovelViewModel = koinViewModel<ReadNovelViewModel>()
             val arg = it.toRoute<NavScreen.ReadNovelNavScreen>()
-            
+            ReadNovelScreen(
+                chapterId = arg.chapterId,
+                novelId = arg.novelId,
+                viewModel = readNovelViewModel,
+                rootNavController = navController
+            )
         }
     }
 }
