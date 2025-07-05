@@ -3,6 +3,7 @@ package com.acteam.vocago.presentation.screen.main.novel.component
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -85,7 +86,20 @@ fun NovelList(
         }
 
         if (novelList.isEmpty()) {
-            EmptySurface()
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = responsiveDP(
+                            mobile = 16,
+                            tabletPortrait = 24,
+                            tabletLandscape = 32
+                        )
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                EmptySurface()
+            }
         }
 
         novelList.forEach { novel ->

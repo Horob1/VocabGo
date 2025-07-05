@@ -84,5 +84,9 @@ data class NovelTheme(
             Light, Dark, Sepia, Midnight, Forest, Ocean,
             Sand, Lavender, NightBlue, DimGray, Rose, CoolMint
         )
+
+        fun getThemeByName(name: String): NovelTheme {
+            return allThemes.find { it.name == name } ?: Light
+        }
     }
 }

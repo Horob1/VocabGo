@@ -250,6 +250,40 @@
     <string name="btn_read_now">Read Now</string>
     <string name="alert_your_device_is_not_support_this_feature">Your device is not support this feature!</string>
 
-    <string name="btn_dowload">Download</string>
+    <string name="btn_download">Download</string>
     <string name="btn_read">Read</string>
+    <string name="color">Color</string>
+    <string name="font_family">Font family</string>
+    <string name="font_size">Font size</string>
+    <string name="btn_exit">Exit</string>
+    <string name="title_confirm_to_exit">Confirm to exit!</string>
+    <string name="desc_confirm_to_exit">Are you sure to exit?</string>"
+    <string name="title_read_novels">Read novels</string>
+
+    <string name="title_voca_center">Voca center</string>
+    <string name="desc_voca_center">Your vocabulary notebook</string>
+    <string name="vocalist_title">Voca List title</string>
+    <string name="title_add_voca_list">Add new voca list</string>
+    <string name="desc_sync_voca_list_to_server">Sync from server</string>
+    <string name="desc_sync_voca_list_from_server">Sync to server</string>
+    <string name="tap_to_view_detail">Tap to view detail</string>
+    <string name="title_sync_voca_list">Sync options</string>
+    <string name="tap_to_choose">Tap to choose</string>
+
+    <string name="learn">Learn</string>
+    <string name="flashcard">Flashcard</string>
+    <string name="btn_add_word">Add word</string>
+    <string name="word">Word</string>
+    <string name="phonetic">Phonetic</string>
+    <string name="type">Type</string>
+    <string name="meaning">Meaning</string>
+    <string name="img_url">Image URL</string>
+    <string name="alert_please_enter_a_word_first">Please enter a word first!</string>
+    <string name="alert_please_fill_in_all_fields">Please fill in all fields!</string>
+    <string name="choose_image_for">Choose image for</string>
+    <string name="tap_to_see_word">Tap to see word</string>
+    <string name="tap_to_see_meaning">Tap to see meaning</string>
+    <string name="not_enough_words">Not enough words to learn</string>
+    <string name="too_many_words">Too many words to learn</string>
+
 </resources>

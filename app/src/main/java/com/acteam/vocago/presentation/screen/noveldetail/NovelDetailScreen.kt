@@ -1,11 +1,7 @@
 package com.acteam.vocago.presentation.screen.noveldetail
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,17 +10,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.FormatAlignLeft
 import androidx.compose.material.icons.automirrored.filled.FormatAlignRight
-import androidx.compose.material.icons.automirrored.filled.LibraryBooks
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,8 +38,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
@@ -54,7 +61,7 @@ fun NovelDetailScreen(
     navController: NavController,
 ) {
     val novelDetail by viewModel.novelDetail.collectAsState()
-
+    val readChapter by viewModel.readChapter.collectAsState()
     LaunchedEffect(Unit) {
         if (novelDetail !is UIState.UISuccess) {
             viewModel.loadNovel(novelId)
@@ -64,75 +71,7 @@ fun NovelDetailScreen(
 
     val tabs = listOf(R.string.chapters)
 
-    Scaffold(
-        bottomBar = {
-            AnimatedVisibility(
-                visible = novelDetail is UIState.UISuccess,
-                enter = slideInVertically { it },
-            ) {
-                Surface(
-                    tonalElevation = 8.dp,
-                    shadowElevation = 8.dp
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        // Nút Download
-//                        Box(
-//                            modifier = Modifier
-//                                .weight(1f)
-//                                .background(MaterialTheme.colorScheme.primary)
-//                                .clickable {
-//
-//                                }
-//                                .padding(16.dp),
-//
-//                            contentAlignment = Alignment.Center
-//                        ) {
-//                            Row(verticalAlignment = Alignment.CenterVertically) {
-//                                Icon(
-//                                    imageVector = Icons.Filled.DownloadForOffline,
-//                                    contentDescription = "Download",
-//                                    tint = MaterialTheme.colorScheme.onPrimary
-//                                )
-//                                Spacer(modifier = Modifier.width(8.dp))
-//                                Text(
-//                                    stringResource(R.string.btn_dowload),
-//                                    color = MaterialTheme.colorScheme.onPrimary
-//                                )
-//                            }
-//                        }
-
-                        // Nút Đọc
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .background(MaterialTheme.colorScheme.surfaceVariant)
-                                .clickable {
-
-                                }
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.LibraryBooks,
-                                    contentDescription = "Read",
-                                    tint = MaterialTheme.colorScheme.onSurface // Tuỳ chỉnh màu icon khác
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    stringResource(R.string.btn_read),
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    ) { padding ->
+    Scaffold { padding ->
         when (novelDetail) {
             is UIState.UILoading -> {
                 LoadingSurface()
@@ -151,33 +90,66 @@ fun NovelDetailScreen(
                         imageUrl = novel.image,
                         onBackClick = { navController.popBackStack() },
                         onReadClick = {
-
+                            if (readChapter.isEmpty() && novel.chapters.isNotEmpty()) {
+                                navController.navigate(
+                                    NavScreen.ReadNovelNavScreen(
+                                        novelId = novelId,
+                                        chapterId = novel.chapters[0]._id
+                                    )
+                                )
+                            } else if (readChapter.isNotEmpty()) {
+                                navController.navigate(
+                                    NavScreen.ReadNovelNavScreen(
+                                        novelId = novelId,
+                                        chapterId = readChapter
+                                    )
+                                )
+                            }
                         }
                     )
+
+                    // Enhanced TabRow
+
                     TabRow(
                         selectedTabIndex = selectedTabIndex,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        containerColor = Color.Transparent,
+                        indicator = { tabPositions ->
+                            TabRowDefaults.SecondaryIndicator(
+                                modifier = Modifier
+                                    .tabIndicatorOffset(tabPositions[selectedTabIndex]),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     ) {
                         tabs.forEachIndexed { index, title ->
                             Tab(
                                 selected = selectedTabIndex == index,
                                 onClick = { selectedTabIndex = index },
-                                text = { Text(text = stringResource(title).uppercase()) }
+                                text = {
+                                    Text(
+                                        text = stringResource(title).uppercase(),
+                                        fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Medium,
+                                        fontSize = 14.sp
+                                    )
+                                }
                             )
                         }
                     }
+
 
                     when (selectedTabIndex) {
                         0 -> {
                             val sort = remember {
                                 mutableStateOf(false)
                             }
+
+                            // Enhanced header section
+
                             Row(
-                                Modifier
+                                modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(
-                                        16.dp
-                                    ),
+                                    .padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
@@ -185,43 +157,58 @@ fun NovelDetailScreen(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        stringResource(R.string.chapters).replaceFirstChar {
+                                        text = stringResource(R.string.chapters).replaceFirstChar {
                                             if (it.isLowerCase()) it.titlecase(
                                                 Locale.getDefault()
                                             ) else it.toString()
                                         },
-                                        style = MaterialTheme.typography.titleSmall
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
 
                                     Text(
-                                        " (${novel.chapters.size})"
+                                        text = " (${novel.chapters.size})",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                                     )
                                 }
 
                                 IconButton(
                                     onClick = {
                                         sort.value = !sort.value
-                                    }
+                                    },
+                                    modifier = Modifier
+                                        .clip(CircleShape),
+                                    colors = IconButtonDefaults.iconButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.primary.copy(
+                                            alpha = 0.1f
+                                        )
+                                    )
                                 ) {
                                     Icon(
                                         imageVector = if (sort.value) Icons.AutoMirrored.Filled.FormatAlignRight else Icons.AutoMirrored.Filled.FormatAlignLeft,
-                                        contentDescription = "Sort"
+                                        contentDescription = "Sort",
+                                        tint = MaterialTheme.colorScheme.primary
                                     )
                                 }
                             }
 
+
                             LazyColumn(
                                 modifier = Modifier.fillMaxSize()
                             ) {
-
                                 items(
                                     novel.chapters.size,
                                     key = { index -> novel.chapters[index]._id }) { currentIndex ->
                                     val index =
                                         if (sort.value) novel.chapters.size - 1 - currentIndex else currentIndex
-                                    Row(
-                                        Modifier
+
+                                    // Enhanced chapter item
+                                    Card(
+                                        modifier = Modifier
                                             .fillMaxWidth()
+                                            .padding(horizontal = 16.dp, vertical = 4.dp)
                                             .clickable {
                                                 navController.navigate(
                                                     NavScreen.ReadNovelNavScreen(
@@ -229,25 +216,72 @@ fun NovelDetailScreen(
                                                         chapterId = novel.chapters[index]._id
                                                     )
                                                 )
-                                            }
-                                            .padding(vertical = 8.dp, horizontal = 16.dp)
+                                            },
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = MaterialTheme.colorScheme.surface
+                                        ),
+                                        elevation = CardDefaults.cardElevation(
+                                            defaultElevation = 2.dp,
+                                            pressedElevation = 4.dp
+                                        ),
+                                        shape = RoundedCornerShape(12.dp)
                                     ) {
-                                        Text(
-                                            text = novel.chapters[index].chapterNumber.toString()
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Column(
-                                            Modifier.weight(1f)
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                            verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                            Text(
-                                                text = "${
-                                                    stringResource(R.string.chapters).replaceFirstChar {
-                                                        if (it.isLowerCase()) it.titlecase(
-                                                            Locale.getDefault()
-                                                        ) else it.toString()
-                                                    }
-                                                } ${novel.chapters[index].chapterNumber}: ${novel.chapters[index].chapterTitle}")
-                                            Text("(${DateDisplayHelper.formatDateString(dateString = novel.chapters[index].createdAt)})")
+                                            // Chapter number badge
+                                            Surface(
+                                                modifier = Modifier
+                                                    .clip(CircleShape),
+                                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                                contentColor = MaterialTheme.colorScheme.primary
+                                            ) {
+                                                Text(
+                                                    text = novel.chapters[index].chapterNumber.toString(),
+                                                    modifier = Modifier.padding(
+                                                        horizontal = 12.dp,
+                                                        vertical = 6.dp
+                                                    ),
+                                                    fontWeight = FontWeight.Bold,
+                                                    fontSize = 14.sp
+                                                )
+                                            }
+
+                                            Spacer(modifier = Modifier.width(12.dp))
+
+                                            Column(
+                                                modifier = Modifier.weight(1f)
+                                            ) {
+                                                Text(
+                                                    text = "${
+                                                        stringResource(R.string.chapters).replaceFirstChar {
+                                                            if (it.isLowerCase()) it.titlecase(
+                                                                Locale.getDefault()
+                                                            ) else it.toString()
+                                                        }
+                                                    } ${novel.chapters[index].chapterNumber}: ${novel.chapters[index].chapterTitle}",
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    fontWeight = FontWeight.Medium,
+                                                    color = MaterialTheme.colorScheme.onSurface,
+                                                    maxLines = 2,
+                                                    overflow = TextOverflow.Ellipsis
+                                                )
+
+                                                Spacer(modifier = Modifier.padding(2.dp))
+
+                                                Text(
+                                                    text = DateDisplayHelper.formatDateString(
+                                                        dateString = novel.chapters[index].createdAt
+                                                    ),
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    color = MaterialTheme.colorScheme.onSurface.copy(
+                                                        alpha = 0.6f
+                                                    )
+                                                )
+                                            }
                                         }
                                     }
                                 }
@@ -263,4 +297,3 @@ fun NovelDetailScreen(
         }
     }
 }
-

@@ -111,4 +111,52 @@ class NovelRemoteDataSourceImpl(
             Result.failure(e)
         }
     }
+
+    override suspend fun getReadNovelList(page: Int): Result<PaginatedResponse<NovelDto>> {
+        return try {
+            val response = client.get(VocaGoRoutes.GetReadNovel.path) {
+                parameter("page", page)
+                parameter("limit", 5)
+            }
+
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    val data = response.body<PaginatedResponse<NovelDto>>()
+                    return Result.success(data)
+                }
+
+                else -> {
+                    Result.failure(ApiException(response.status.value))
+                }
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getReadNovelFirstPage(): Result<List<Novel>> {
+        return try {
+            val response = client.get(VocaGoRoutes.GetReadNovel.path) {
+                parameter("page", 1)
+                parameter("limit", 5)
+            }
+
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    val data = response.body<PaginatedResponse<NovelDto>>()
+                    Result.success(data.data.map { it.toNovel() })
+                }
+
+                else -> {
+                    Result.failure(ApiException(response.status.value))
+                }
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
 }

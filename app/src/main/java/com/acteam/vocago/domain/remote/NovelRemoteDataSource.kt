@@ -14,4 +14,8 @@ interface NovelRemoteDataSource {
     suspend fun getNovelDetail(id: String): Result<NovelDetailDto>
 
     suspend fun getChapterDetail(chapterId: String): Result<ChapterDto>
+
+    suspend fun getReadNovelList(page: Int): Result<PaginatedResponse<NovelDto>>
+
+    suspend fun getReadNovelFirstPage(): Result<List<Novel>>
 }

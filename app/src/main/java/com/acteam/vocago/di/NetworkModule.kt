@@ -55,6 +55,22 @@ val networkModule = module {
             }
         }
     }
+    single(named(GOOGLE_IMAGE)) {
+        HttpClient(
+            OkHttp
+        ) {
+            defaultRequest {
+                url("https://www.googleapis.com/customsearch/v1")
+            }
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
+            install(Logging) {
+                level = LogLevel.ALL
+            }
+        }
+    }
 }
 
 const val VOCAB_GO_BE_QUALIFIER = "VOCAB_GO_BE_QUALIFIER"
+const val GOOGLE_IMAGE = "GOOGLE_IMAGE"

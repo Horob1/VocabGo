@@ -29,4 +29,12 @@ val daoModule = module {
         get<AppDatabase>().alarmDao()
     }
 
+    single {
+        get<AppDatabase>().localNovelHistoryDao()
+    }
+
+    single {
+        get<AppDatabase>().vocaDao()
+    }
+
 }

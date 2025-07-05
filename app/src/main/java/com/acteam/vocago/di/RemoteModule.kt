@@ -4,11 +4,13 @@ import com.acteam.vocago.data.remote.AuthRemoteDataSourceImpl
 import com.acteam.vocago.data.remote.NewsRemoteDataSourceImpl
 import com.acteam.vocago.data.remote.NovelRemoteDataSourceImpl
 import com.acteam.vocago.data.remote.UserRemoteDataSourceImpl
+import com.acteam.vocago.data.remote.VocaRemoteDataSourceImpl
 import com.acteam.vocago.data.remote.WordRemoteDataSourceImpl
 import com.acteam.vocago.domain.remote.AuthRemoteDataSource
 import com.acteam.vocago.domain.remote.NewsRemoteDataSource
 import com.acteam.vocago.domain.remote.NovelRemoteDataSource
 import com.acteam.vocago.domain.remote.UserRemoteDataSource
+import com.acteam.vocago.domain.remote.VocaRemoteDataSource
 import com.acteam.vocago.domain.remote.WordRemoteDataSource
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -32,5 +34,9 @@ val remoteModule = module {
 
     single<NovelRemoteDataSource> {
         NovelRemoteDataSourceImpl(get(named(VOCAB_GO_BE_QUALIFIER)))
+    }
+
+    single<VocaRemoteDataSource> {
+        VocaRemoteDataSourceImpl(get(named(VOCAB_GO_BE_QUALIFIER)), get(named(GOOGLE_IMAGE)))
     }
 }

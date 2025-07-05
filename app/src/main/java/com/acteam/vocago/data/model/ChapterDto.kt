@@ -9,6 +9,7 @@ data class ChapterPayload(
     val chapterNumber: Int,
     val chapterTitle: String,
     val content: String,
+    val createdAt: String,
 )
 
 @Serializable

@@ -38,7 +38,18 @@ sealed class NavScreen {
     data class WordDetailNavScreen(val word: String) : NavScreen()
 
     @Serializable
-    data class ChooseVocaListNavScreen(val word: String) : NavScreen()
+    data class ChooseVocaListNavScreen(
+        val word: String,
+        val meaning: String,
+        val pronunciation: String,
+        val type: String,
+    ) : NavScreen()
+
+    @Serializable
+    data class VocaListDetailNavScreen(val listId: Int) : NavScreen()
+
+    @Serializable
+    data class FlashCardNavScreen(val listId: Int) : NavScreen()
 
     @Serializable
     data object SettingNavScreen : NavScreen()
@@ -61,6 +72,12 @@ sealed class NavScreen {
 
     @Serializable
     data class ReadNovelNavScreen(val novelId: String, val chapterId: String) : NavScreen()
+
+    @Serializable
+    data class LearnVocaNavScreen(val listId: Int) : NavScreen()
+
+    @Serializable
+    data object NovelHistoryNavScreen : NavScreen()
 
     // Mâm 2
 

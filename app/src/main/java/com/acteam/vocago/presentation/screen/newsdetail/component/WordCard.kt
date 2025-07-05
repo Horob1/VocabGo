@@ -163,7 +163,19 @@ fun WordCard(
                         onClick = {
                             if (wordUiState is UIState.UISuccess) {
                                 onHideCard()
-                                rootNavController.navigate(NavScreen.ChooseVocaListNavScreen(word))
+                                rootNavController.navigate(
+                                    NavScreen.ChooseVocaListNavScreen(
+                                        word = word,
+                                        pronunciation = (wordUiState as UIState.UISuccess<WordDto>).data.phonetics.joinToString(
+                                            " "
+                                        ) { it.pronunciation },
+                                        meaning = (wordUiState as UIState.UISuccess<WordDto>).data.translations.find { it.targetLanguage == tabTitles[selectedTabIndex].third }?.translation
+                                            ?: "",
+                                        type = (wordUiState as UIState.UISuccess<WordDto>).data.types.find { it.targetLanguage == tabTitles[selectedTabIndex].third }?.type?.joinToString(
+                                            ", "
+                                        ) ?: ""
+                                    )
+                                )
                             }
                         }
                     ) {

@@ -6,4 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface NovelRepository {
     fun getNovelPagingFlow(keySearch: String): Flow<PagingData<Novel>>
+
+    fun getReadNovelPagingFlow(): Flow<PagingData<Novel>>
 }
