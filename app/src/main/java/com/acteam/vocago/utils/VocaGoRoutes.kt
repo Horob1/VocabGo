@@ -33,4 +33,13 @@ sealed class VocaGoRoutes(val path: String) {
 
     data object GetDevicesList : VocaGoRoutes("/api/v1/user/me/devices")
     data object LogoutUserDevice : VocaGoRoutes("/api/v1/user/me/devices")
+
+
+    //novel
+    data object GetNovel : VocaGoRoutes("/api/v1/fiction")
+    data object GetReadNovel : VocaGoRoutes("/api/v1/fiction/read")
+
+    //Chapter
+    data class GetChapter(val id: String) : VocaGoRoutes("/api/v1/chapter/$id")
+
 }

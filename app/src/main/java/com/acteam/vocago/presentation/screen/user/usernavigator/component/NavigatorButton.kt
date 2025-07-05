@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,6 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,57 +37,99 @@ fun NavigatorButton(
     @StringRes stringId: Int,
     icon: ImageVector,
 ) {
-    Box(
+    Card(
         modifier = modifier
-            .padding(8.dp)
-
+            .padding(horizontal = 16.dp, vertical = 6.dp)
             .fillMaxWidth()
-            .background(
-                MaterialTheme.colorScheme.surfaceVariant,
-                MaterialTheme.shapes.medium
-            )
-            .clip(MaterialTheme.shapes.medium)
-            .safeClickable(key = "navigate_${stringId}}") {
-                onClick()
-            }
-            .padding(horizontal = 16.dp, vertical = 16.dp)
-
-
+            .shadow(
+                elevation = 2.dp,
+                shape = MaterialTheme.shapes.medium,
+                spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+            ),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
-        Row(
-            modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.surface,
+                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                        )
+                    )
+                )
+                .safeClickable(key = "navigate_${stringId}}") {
+                    onClick()
+                }
+                .padding(horizontal = 20.dp, vertical = 18.dp)
         ) {
             Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(44.dp)
+                            .background(
+                                brush = Brush.radialGradient(
+                                    colors = listOf(
+                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
+                                    ),
+                                    radius = 50f
+                                ),
+                                shape = CircleShape
+                            )
+                            .clip(CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = "navigate_${stringId}}",
+                            modifier = Modifier.size(20.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(14.dp))
+
+                    Text(
+                        text = stringResource(stringId),
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(32.dp)
                         .background(
-                            MaterialTheme.colorScheme.primary.copy(0.3f),
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
                             CircleShape
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(icon, contentDescription = "navigate_${stringId}}")
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    stringResource(stringId), style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.SemiBold
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                        contentDescription = "go to point",
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
                     )
-                )
+                }
             }
-
-            Spacer(modifier.weight(1f))
-
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowForwardIos,
-                contentDescription = "go to point"
-            )
         }
     }
 }

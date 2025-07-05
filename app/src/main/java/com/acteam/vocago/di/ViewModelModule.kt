@@ -9,12 +9,24 @@ import com.acteam.vocago.presentation.screen.auth.verifyemail.VerifyEmailViewMod
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.main.toeictest.ToeicViewModel
+import com.acteam.vocago.presentation.screen.choosevoca.ChooseVocaViewModel
+import com.acteam.vocago.presentation.screen.dictionary.DictionaryViewModel
+import com.acteam.vocago.presentation.screen.flashcard.FlashCardViewModel
+import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
+import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
+import com.acteam.vocago.presentation.screen.main.novel.NovelViewModel
+import com.acteam.vocago.presentation.screen.main.voca.VocaViewModel
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryViewModel
+import com.acteam.vocago.presentation.screen.noveldetail.NovelDetailViewModel
+import com.acteam.vocago.presentation.screen.novelhistory.NovelHistoryViewModel
+import com.acteam.vocago.presentation.screen.readnovel.ReadNovelViewModel
+import com.acteam.vocago.presentation.screen.searchnovel.SearchNovelViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingViewModel
 import com.acteam.vocago.presentation.screen.user.alarm.AlarmViewModel
 import com.acteam.vocago.presentation.screen.user.profile.ProfileViewModel
 import com.acteam.vocago.presentation.screen.user.usernavigator.UserNavigatorViewModel
+import com.acteam.vocago.presentation.screen.vocalistdetail.VocaListDetailViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import com.acteam.vocago.presentation.screen.worddetail.WordDetailViewModel
 import org.koin.core.module.dsl.viewModel
@@ -112,4 +124,75 @@ val viewModelModule = module {
             get(), get(), get(), get(), get(), get()
         )
     }
+
+    viewModel {
+        NovelViewModel(
+            get(),
+            get()
+        )
+    }
+
+    viewModel {
+        SearchNovelViewModel(get())
+    }
+
+    viewModel {
+        NovelDetailViewModel(
+            get(),
+            get(),
+            get()
+        )
+    }
+
+    viewModel {
+        ReadNovelViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
+
+    viewModel {
+        NovelHistoryViewModel(
+            get()
+        )
+    }
+
+    viewModel {
+        VocaViewModel(
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
+
+    viewModel {
+        ChooseVocaViewModel(
+            get(),
+            get()
+        )
+    }
+
+    viewModel {
+        VocaListDetailViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+        )
+    }
+
+    viewModel {
+        FlashCardViewModel(get())
+    }
+
+
 }

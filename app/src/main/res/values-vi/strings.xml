@@ -281,4 +281,50 @@
     <string name="input_confirm_new_password">Xác nhận mật khẩu</string>
     <string name="text_change_password_success">Đổi mật khẩu thành công</string>
 
+    <string name="alert_you_are_offline">Bạn đang offline! Hãy kiểm tra kết nối internet!</string>
+    <string name="title_novel_center">Trung tâm truyện</string>
+    <string name="title_learn_voca_by_novel">Học từ vựng qua truyện</string>
+    <string name="chapters">chương</string>
+    <string name="title_new_novel">Truyện mới</string>
+    <string name="createdAt">Ngày tạo</string>
+    <string name="updatedAt">Cập nhật</string>
+    <string name="btn_read_now">Đọc ngay</string>
+    <string name="alert_your_device_is_not_support_this_feature">Thiết bị của bạn không hỗ trợ tính năng này!</string>
+
+    <string name="btn_download">Tải xuống</string>
+    <string name="btn_read">Đọc</string>
+    <string name="color">Màu</string>
+    <string name="font_family">Font chữ</string>
+    <string name="font_size">Cơ chữ</string>
+    <string name="btn_exit">Thoát</string>
+    <string name="title_confirm_to_exit">Xác nhận thoát!</string>
+    <string name="desc_confirm_to_exit">Bạn có chắc sẽ thoát không?</string>
+    <string name="title_read_novels">Truyện đã đọc</string>
+
+    <string name="title_voca_center">Voca center</string>
+    <string name="desc_voca_center">Sổ tay từ vựng của bạn</string>
+    <string name="vocalist_title">Tên sổ tay</string>
+    <string name="title_add_voca_list">Thêm sổ tay mới</string>
+    <string name="desc_sync_voca_list_to_server">Đồng bộ từ server</string>
+    <string name="desc_sync_voca_list_from_server">Đồng bộ lên server</string>
+    <string name="tap_to_view_detail">Nhấn để xem chi tiết</string>
+    <string name="title_sync_voca_list">Lựa chọn đồng bộ</string>
+    <string name="tap_to_choose">Nhấn để chọn</string>
+
+    <string name="learn">Học</string>
+    <string name="flashcard">Flashcard</string>
+    <string name="btn_add_word">Thêm từ</string>
+    <string name="word">Từ vựng</string>
+    <string name="phonetic">Phát âm</string>
+    <string name="type">Loại từ</string>
+    <string name="meaning">Nghĩa</string>
+    <string name="img_url">Ảnh</string>
+    <string name="alert_please_enter_a_word_first">Hãy nhập từ vựng trước!</string>
+    <string name="alert_please_fill_in_all_fields">hãy nhập đủ các trường!</string>
+    <string name="choose_image_for">Chọn ảnh cho</string>
+    <string name="tap_to_see_word">Chạm để xem từ</string>
+    <string name="tap_to_see_meaning">Chạm để xem nghĩa</string>
+    <string name="not_enough_words">Không đủ từ để học!</string>
+    <string name="too_many_words">Qua nhiều từ để học! Học sẽ không hiệu quả</string>
+
 </resources>

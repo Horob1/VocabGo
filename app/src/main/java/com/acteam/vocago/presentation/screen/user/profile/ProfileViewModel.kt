@@ -56,7 +56,7 @@ class ProfileViewModel(
 
     val updateUserState = _updateUser
 
-    private val _uiState = MutableStateFlow<UIState<Unit>>(UIState.UILoading)
+    private val _uiState = MutableStateFlow<UIState<Unit>>(UIState.UISuccess(Unit))
     val uiState = _uiState
 
     val userProfile = _userProfile
@@ -69,17 +69,13 @@ class ProfileViewModel(
 
     fun updateProfileToServer() {
         viewModelScope.launch {
-            _uiState.value = UIState.UILoading
             updateProfileUseCase(_updateUser.value)
             syncProfileUseCase()
-            _uiState.value = UIState.UISuccess(Unit)
         }
     }
 
     suspend fun syncProfile() {
-        _uiState.value = UIState.UILoading
         syncProfileUseCase()
-        _uiState.value = UIState.UISuccess(Unit)
     }
 
     fun resetUpdateProfile() {
@@ -128,11 +124,9 @@ class ProfileViewModel(
     fun updateAvatar(uri: Uri, context: Context) {
         viewModelScope.launch {
             try {
-                uiState.value = UIState.UILoading
                 val file = uriToFile(uri, context)
                 updateAvatarUseCase(file)
                 syncProfileUseCase()
-                uiState.value = UIState.UISuccess(Unit)
             } catch (e: Exception) {
                 e.printStackTrace()
                 uiState.value = UIState.UIError(UIErrorType.UnknownError)

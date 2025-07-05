@@ -1,7 +1,9 @@
-package com.acteam.vocago.presentation.screen.main.novel
+package com.acteam.vocago.presentation.screen.main.novel.component
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,14 +17,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import com.acteam.vocago.domain.model.Novel
+import com.acteam.vocago.presentation.screen.common.EmptySurface
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 
 @Composable
 fun NovelList(
     modifier: Modifier = Modifier,
+    @StringRes title: Int,
+    novelList: List<Novel> = emptyList(),
     bgColorAlpha: Float = 0f,
+    onNovelClick: (String) -> Unit = {},
+    onGoToFullNovelList: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -53,7 +62,7 @@ fun NovelList(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                "Novel List",
+                stringResource(title),
                 style = MaterialTheme.typography.titleSmall.copy(
                     fontSize = responsiveSP(
                         mobile = 16,
@@ -66,7 +75,7 @@ fun NovelList(
             )
 
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = onGoToFullNovelList,
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowForward,
@@ -76,9 +85,28 @@ fun NovelList(
             }
         }
 
-        NovelCard()
-        NovelCard()
-        NovelCard()
-    }
+        if (novelList.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = responsiveDP(
+                            mobile = 16,
+                            tabletPortrait = 24,
+                            tabletLandscape = 32
+                        )
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                EmptySurface()
+            }
+        }
 
+        novelList.forEach { novel ->
+            NovelCard(
+                novel = novel,
+                onClick = onNovelClick
+            )
+        }
+    }
 }
