@@ -39,8 +39,8 @@ import com.acteam.vocago.domain.usecase.GetThemeUseCase
 import com.acteam.vocago.domain.usecase.GetToeicDetailUseCase
 import com.acteam.vocago.domain.usecase.GetToeicListUseCase
 import com.acteam.vocago.domain.usecase.GetToeicResultUseCase
-import com.acteam.vocago.domain.usecase.GetWordOfTheDayUseCase
 import com.acteam.vocago.domain.usecase.GetVocaListDetailUseCase
+import com.acteam.vocago.domain.usecase.GetWordOfTheDayUseCase
 import com.acteam.vocago.domain.usecase.InsertAlarmUseCase
 import com.acteam.vocago.domain.usecase.LoadImageUseCase
 import com.acteam.vocago.domain.usecase.LoginGoogleUseCase
@@ -251,7 +251,7 @@ val useCaseModule = module {
         LogoutDeviceUseCase(
             get()
         )
-
+    }
     single {
         GetNovelFirstPageUseCase(get())
     }

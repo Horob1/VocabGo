@@ -6,15 +6,13 @@ import com.acteam.vocago.presentation.screen.auth.register.RegisterViewModel
 import com.acteam.vocago.presentation.screen.auth.resetpassword.ResetPasswordViewModel
 import com.acteam.vocago.presentation.screen.auth.verify2fa.VerifyTwoFAViewModel
 import com.acteam.vocago.presentation.screen.auth.verifyemail.VerifyEmailViewModel
-import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
-import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
-import com.acteam.vocago.presentation.screen.main.toeictest.ToeicViewModel
 import com.acteam.vocago.presentation.screen.choosevoca.ChooseVocaViewModel
-import com.acteam.vocago.presentation.screen.dictionary.DictionaryViewModel
 import com.acteam.vocago.presentation.screen.flashcard.FlashCardViewModel
+import com.acteam.vocago.presentation.screen.learn.LearnViewModel
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.main.novel.NovelViewModel
+import com.acteam.vocago.presentation.screen.main.toeictest.ToeicViewModel
 import com.acteam.vocago.presentation.screen.main.voca.VocaViewModel
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryViewModel
@@ -193,6 +191,8 @@ val viewModelModule = module {
     viewModel {
         FlashCardViewModel(get())
     }
-
+    viewModel {
+        LearnViewModel(get())
+    }
 
 }

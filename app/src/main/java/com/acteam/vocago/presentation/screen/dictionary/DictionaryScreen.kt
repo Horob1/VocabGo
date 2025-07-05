@@ -160,7 +160,7 @@ fun DictionaryScreen(
                                 rootNavController.navigate(NavScreen.WordDetailNavScreen(wordData.word))
                             },
                             onNavigateToChooseVocaList = { word ->
-                                rootNavController.navigate(NavScreen.ChooseVocaListNavScreen(word))
+                                //rootNavController.navigate(NavScreen.ChooseVocaListNavScreen(word))
                             },
                         )
                     }

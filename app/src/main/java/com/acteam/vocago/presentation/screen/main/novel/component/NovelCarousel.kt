@@ -107,7 +107,6 @@ fun NovelCarousel(
                 )
             }
         }
-
         val currentPage = pageState.currentPage % realSize
         val currentNovel = novel[currentPage]
         Spacer(

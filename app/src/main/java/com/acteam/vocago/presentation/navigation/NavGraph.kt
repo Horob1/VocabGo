@@ -20,9 +20,10 @@ import com.acteam.vocago.presentation.screen.camera.CameraScreen
 import com.acteam.vocago.presentation.screen.choosevoca.ChooseVocaListScreen
 import com.acteam.vocago.presentation.screen.choosevoca.ChooseVocaViewModel
 import com.acteam.vocago.presentation.screen.dictionary.DictionaryScreen
-import com.acteam.vocago.presentation.screen.dictionary.DictionaryViewModel
 import com.acteam.vocago.presentation.screen.flashcard.FlashCardScreen
 import com.acteam.vocago.presentation.screen.flashcard.FlashCardViewModel
+import com.acteam.vocago.presentation.screen.learn.LearnScreen
+import com.acteam.vocago.presentation.screen.learn.LearnViewModel
 import com.acteam.vocago.presentation.screen.main.SetupMainNavGraph
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.chat.component.CommonChatScreen
@@ -307,7 +308,13 @@ fun SetupNavGraph(
         }
 
         composable<NavScreen.LearnVocaNavScreen> {
-
+            val learnViewModel = koinViewModel<LearnViewModel>()
+            val arg = it.toRoute<NavScreen.LearnVocaNavScreen>()
+            LearnScreen(
+                vocaListId = arg.listId,
+                viewModel = learnViewModel,
+                navController = navController
+            )
         }
     }
 }

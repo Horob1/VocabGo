@@ -52,6 +52,9 @@ sealed class NavScreen {
     data class FlashCardNavScreen(val listId: Int) : NavScreen()
 
     @Serializable
+    data object LearnNavScreen : NavScreen()
+
+    @Serializable
     data object SettingNavScreen : NavScreen()
 
     @Serializable
