@@ -59,6 +59,8 @@ import com.acteam.vocago.domain.usecase.SetReadNovelFontSizeUseCase
 import com.acteam.vocago.domain.usecase.SetThemeUseCase
 import com.acteam.vocago.domain.usecase.SubmitToeicUseCase
 import com.acteam.vocago.domain.usecase.SyncProfileUseCase
+import com.acteam.vocago.domain.usecase.SyncVocaFromServeUseCase
+import com.acteam.vocago.domain.usecase.SyncVocaToServerUseCase
 import com.acteam.vocago.domain.usecase.ToggleBookmarkNewsUseCase
 import com.acteam.vocago.domain.usecase.UpdateAlarmUseCase
 import com.acteam.vocago.domain.usecase.UpdateAvatarUseCase
@@ -335,4 +337,13 @@ val useCaseModule = module {
     single {
         DeleteVocaListUseCase(get())
     }
+
+    single {
+        SyncVocaToServerUseCase(get(), get())
+    }
+
+    single {
+        SyncVocaFromServeUseCase(get(), get())
+    }
+
 }

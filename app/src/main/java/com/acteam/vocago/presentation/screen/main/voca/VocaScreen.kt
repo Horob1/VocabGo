@@ -533,7 +533,10 @@ fun VocaScreen(
                         Card(
                             modifier = Modifier
                                 .weight(1f)
-                                .clickable { /* Handle download sync */ },
+                                .clickable {
+                                    viewModel.syncVocaFromServer()
+                                    showSyncDialog = false
+                                },
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer
                             ),
@@ -566,7 +569,10 @@ fun VocaScreen(
                         Card(
                             modifier = Modifier
                                 .weight(1f)
-                                .clickable { /* Handle upload sync */ },
+                                .clickable {
+                                    viewModel.syncVocaToServer()
+                                    showSyncDialog = false
+                                },
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.tertiaryContainer
                             ),

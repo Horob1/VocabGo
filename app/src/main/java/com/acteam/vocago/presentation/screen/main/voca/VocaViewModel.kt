@@ -7,6 +7,8 @@ import com.acteam.vocago.domain.usecase.CreateVocaListUseCase
 import com.acteam.vocago.domain.usecase.DeleteVocaListUseCase
 import com.acteam.vocago.domain.usecase.GetAllVocaListUseCase
 import com.acteam.vocago.domain.usecase.GetLoginStateUseCase
+import com.acteam.vocago.domain.usecase.SyncVocaFromServeUseCase
+import com.acteam.vocago.domain.usecase.SyncVocaToServerUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -16,6 +18,8 @@ class VocaViewModel(
     private val createVocaListUseCase: CreateVocaListUseCase,
     getLoginStateUseCase: GetLoginStateUseCase,
     private val deleteVocaListUseCase: DeleteVocaListUseCase,
+    private val syncVocaToServerUseCase: SyncVocaToServerUseCase,
+    private val syncVocaFromServerUseCase: SyncVocaFromServeUseCase,
 ) : ViewModel() {
     val isLogin = getLoginStateUseCase()
     val vocaLists = getAllVocaListUseCase().stateIn(
@@ -42,6 +46,27 @@ class VocaViewModel(
         viewModelScope.launch {
             try {
                 deleteVocaListUseCase(vocaList)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+
+    fun syncVocaToServer() {
+        viewModelScope.launch {
+            try {
+                syncVocaToServerUseCase()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun syncVocaFromServer() {
+        viewModelScope.launch {
+            try {
+                syncVocaFromServerUseCase()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

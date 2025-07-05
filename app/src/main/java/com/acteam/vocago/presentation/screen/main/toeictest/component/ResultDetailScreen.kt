@@ -19,13 +19,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Headset
-import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -270,7 +270,7 @@ fun ScoreOverviewCard(testResult: TestResultListDto) {
                     color = Brush.linearGradient(
                         colors = listOf(Color(0xFF4CAF50), Color(0xFF009688))
                     ),
-                    icon = Icons.Default.MenuBook
+                    icon = Icons.AutoMirrored.Filled.MenuBook
                 )
 
                 ScoreItem(
@@ -291,7 +291,7 @@ fun ScoreItem(
     title: String,
     score: String,
     color: Brush,
-    icon: ImageVector
+    icon: ImageVector,
 ) {
     Card(
         modifier = Modifier
@@ -339,7 +339,7 @@ fun PartResultCard(
     isExpanded: Boolean,
     onExpandClick: () -> Unit,
     expandedExplanations: Set<String>,
-    onExplanationToggle: (String) -> Unit
+    onExplanationToggle: (String) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -373,7 +373,7 @@ fun PartResultCard(
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            imageVector = if (part.partNumber <= 4) Icons.Default.Headset else Icons.Default.MenuBook,
+                            imageVector = if (part.partNumber <= 4) Icons.Default.Headset else Icons.AutoMirrored.Filled.MenuBook,
                             contentDescription = "${stringResource(R.string.text_part)} ${part.partNumber}",
                             tint = Color.White,
                             modifier = Modifier.size(20.dp)
@@ -447,7 +447,7 @@ fun PartResultCard(
 fun QuestionResultItem(
     question: QuestionResult,
     isExplanationExpanded: Boolean,
-    onExplanationToggle: () -> Unit
+    onExplanationToggle: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),

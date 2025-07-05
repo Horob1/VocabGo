@@ -25,6 +25,12 @@ interface VocaDao {
     @Query("SELECT * FROM voca_list")
     fun getAllVocaLists(): Flow<List<VocaListEntity>>
 
+    @Query("DELETE FROM voca_list")
+    suspend fun deleteAllVocaList()
+
+    @Query("SELECT * FROM voca_list")
+    suspend fun getAllVocaList(): List<VocaListEntity>
+
     @Insert
     suspend fun insertVoca(voca: VocaEntity): Long
 
@@ -37,4 +43,14 @@ interface VocaDao {
     @Transaction
     @Query("SELECT * FROM voca_list WHERE id = :listId")
     fun getVocaListWithWords(listId: Int): Flow<VocaListWithVocas>
+
+    @Query("SELECT * FROM voca")
+    suspend fun getAllVoca(): List<VocaEntity>
+
+    //delete all voca in a list by listId
+    @Query("DELETE FROM voca WHERE list_id = :listId")
+    suspend fun deleteVocaByListId(listId: Int)
+
+    @Query("DELETE FROM voca")
+    suspend fun deleteVocas()
 }

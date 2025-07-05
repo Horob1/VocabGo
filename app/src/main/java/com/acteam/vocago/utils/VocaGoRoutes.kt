@@ -42,4 +42,8 @@ sealed class VocaGoRoutes(val path: String) {
     //Chapter
     data class GetChapter(val id: String) : VocaGoRoutes("/api/v1/chapter/$id")
 
+    //voca
+    data object GetVoca : VocaGoRoutes("/api/v1/voca/me")
+    data object VocaSync : VocaGoRoutes("/api/v1/voca/sync")
+
 }

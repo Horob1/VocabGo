@@ -13,9 +13,18 @@ class VocaRepositoryImpl(private val dao: VocaDao) : VocaRepository {
 
     override suspend fun updateVocaList(list: VocaListEntity) = dao.updateVocaList(list)
 
-    override suspend fun deleteVocaList(list: VocaListEntity) = dao.deleteVocaList(list)
+    override suspend fun deleteVocaList(list: VocaListEntity) {
+        dao.deleteVocaByListId(list.id)
+        dao.deleteVocaList(list)
+    }
+
+    override suspend fun deleteAllVocaList() {
+        dao.deleteAllVocaList()
+    }
 
     override fun getAllVocaLists(): Flow<List<VocaListEntity>> = dao.getAllVocaLists()
+
+    override suspend fun getAllVocaList(): List<VocaListEntity> = dao.getAllVocaList()
 
     override suspend fun insertVoca(voca: VocaEntity): Long = dao.insertVoca(voca)
 
@@ -23,6 +32,10 @@ class VocaRepositoryImpl(private val dao: VocaDao) : VocaRepository {
 
     override fun getVocasByListId(listId: Int): Flow<List<VocaEntity>> =
         dao.getVocasByListId(listId)
+
+    override suspend fun getAllVoca(): List<VocaEntity> = dao.getAllVoca()
+
+    override suspend fun deleteVoca() = dao.deleteVocas()
 
     override fun getVocaListWithVocas(listId: Int): Flow<VocaListWithVocas> =
         dao.getVocaListWithWords(listId)

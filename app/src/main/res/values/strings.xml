@@ -313,8 +313,8 @@
     <string name="desc_voca_center">Your vocabulary notebook</string>
     <string name="vocalist_title">Voca List title</string>
     <string name="title_add_voca_list">Add new voca list</string>
-    <string name="desc_sync_voca_list_to_server">Sync from server</string>
-    <string name="desc_sync_voca_list_from_server">Sync to server</string>
+    <string name="desc_sync_voca_list_to_server">Sync to server</string>
+    <string name="desc_sync_voca_list_from_server">Sync from server</string>
     <string name="tap_to_view_detail">Tap to view detail</string>
     <string name="title_sync_voca_list">Sync options</string>
     <string name="tap_to_choose">Tap to choose</string>
