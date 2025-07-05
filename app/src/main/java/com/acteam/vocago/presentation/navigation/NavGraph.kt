@@ -27,6 +27,12 @@ import com.acteam.vocago.presentation.screen.main.SetupMainNavGraph
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.chat.component.CommonChatScreen
 import com.acteam.vocago.presentation.screen.main.chat.component.VideoCallScreen
+import com.acteam.vocago.presentation.screen.main.toeictest.ToeicViewModel
+import com.acteam.vocago.presentation.screen.main.toeictest.component.ResultDetailScreen
+import com.acteam.vocago.presentation.screen.main.toeictest.component.TOEICPartSelectionScreen
+import com.acteam.vocago.presentation.screen.main.toeictest.component.ToeicDetailScreen
+import com.acteam.vocago.presentation.screen.main.toeictest.component.ToeicPracticeScreen
+import com.acteam.vocago.presentation.screen.main.toeictest.component.ToeicResultsScreen
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailScreen
 import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryScreen
@@ -146,15 +152,19 @@ fun SetupNavGraph(
         }
 
         composable<NavScreen.DictionaryNavScreen> {
-            val dictionaryViewModel = koinViewModel<DictionaryViewModel>()
-            DictionaryScreen(
-                viewModel = dictionaryViewModel
-            )
+            val wordDetailViewModel = koinViewModel<WordDetailViewModel>()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                DictionaryScreen(
+                    viewModel = wordDetailViewModel,
+                    rootNavController = navController
+                )
+            }
         }
 
         composable<NavScreen.CameraNavScreen> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 CameraScreen(rootNavController = navController)
+
             } else {
                 val context = LocalContext.current
                 Toast.makeText(
@@ -181,6 +191,60 @@ fun SetupNavGraph(
                 viewModel = settingViewModel,
                 rootNavController = navController
             )
+        }
+
+        composable<NavScreen.ToeicDetailNavScreen> {
+            val toeicViewModel = koinViewModel<ToeicViewModel>()
+            val arg = it.toRoute<NavScreen.ToeicDetailNavScreen>()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ToeicDetailScreen(
+                    id = arg.id,
+                    viewModel = toeicViewModel,
+                    rootNavController = navController
+                )
+            }
+        }
+
+        composable<NavScreen.ToeicPartSelectionNavScreen> {
+            val arg = it.toRoute<NavScreen.ToeicPartSelectionNavScreen>()
+            TOEICPartSelectionScreen(
+                rootNavController = navController,
+                id = arg.id
+            )
+        }
+        composable<NavScreen.ToeicPracticeNavScreen> {
+            val toeicViewModel = koinViewModel<ToeicViewModel>()
+            val arg = it.toRoute<NavScreen.ToeicPracticeNavScreen>()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ToeicPracticeScreen(
+                    id = arg.id,
+                    selectedParts = arg.selectedParts,
+                    viewModel = toeicViewModel,
+                    rootNavController = navController
+                )
+            }
+        }
+        composable<NavScreen.ToeicResultsNavScreen> {
+            val arg = it.toRoute<NavScreen.ToeicResultsNavScreen>()
+            val toeicViewModel = koinViewModel<ToeicViewModel>()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ToeicResultsScreen(
+                    id = arg.id,
+                    viewModel = toeicViewModel,
+                    rootNavController = navController
+                )
+            }
+        }
+        composable<NavScreen.ToeicResultDetailNavScreen> {
+            val arg = it.toRoute<NavScreen.ToeicResultDetailNavScreen>()
+            val toeicViewModel = koinViewModel<ToeicViewModel>()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ResultDetailScreen(
+                    id = arg.id,
+                    viewModel = toeicViewModel,
+                    rootNavController = navController
+                )
+            }
         }
 
         composable<NavScreen.SearchNovelNavScreen> {

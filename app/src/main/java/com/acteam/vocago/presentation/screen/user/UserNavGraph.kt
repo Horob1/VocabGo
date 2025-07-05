@@ -1,5 +1,6 @@
 package com.acteam.vocago.presentation.screen.user
 
+import android.os.Build
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
@@ -15,6 +16,8 @@ import androidx.navigation.compose.rememberNavController
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.user.alarm.AlarmScreen
 import com.acteam.vocago.presentation.screen.user.alarm.AlarmViewModel
+import com.acteam.vocago.presentation.screen.user.profile.ChangePasswordScreen
+import com.acteam.vocago.presentation.screen.user.profile.DeviceManagementScreen
 import com.acteam.vocago.presentation.screen.user.profile.ProfileScreen
 import com.acteam.vocago.presentation.screen.user.profile.ProfileViewModel
 import com.acteam.vocago.presentation.screen.user.usernavigator.UserNavigatorScreen
@@ -54,7 +57,25 @@ fun SetupUserNavGraph(
 
             composable<NavScreen.ProfileNavScreen> {
                 val profileViewModel = koinViewModel<ProfileViewModel>()
-                ProfileScreen(
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    ProfileScreen(
+                        viewModel = profileViewModel,
+                        navController = userNavController
+                    )
+                }
+            }
+
+            composable<NavScreen.ChangePasswordNavScreen> {
+                val profileViewModel = koinViewModel<ProfileViewModel>()
+                ChangePasswordScreen(
+                    viewModel = profileViewModel,
+                    navController = userNavController
+                )
+            }
+
+            composable<NavScreen.DeviceManagementNavScreen> {
+                val profileViewModel = koinViewModel<ProfileViewModel>()
+                DeviceManagementScreen(
                     viewModel = profileViewModel,
                     navController = userNavController
                 )

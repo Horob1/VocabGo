@@ -1,49 +1,78 @@
 package com.acteam.vocago.presentation.screen.main.toeictest
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import ToeicItem
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.acteam.vocago.presentation.screen.main.toeictest.component.TestItem
+import androidx.navigation.NavController
+import com.acteam.vocago.presentation.navigation.NavScreen
+import com.acteam.vocago.presentation.screen.common.LoadingSurface
+import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.presentation.screen.main.toeictest.component.ToeicHeader
-import com.acteam.vocago.utils.DeviceType
-import com.acteam.vocago.utils.getDeviceType
+import com.acteam.vocago.utils.responsiveValue
 
 @Composable
-fun ToeicScreen() {
-    val deviceType = getDeviceType()
-    val isTabletLandscape = deviceType == DeviceType.TabletLandscape
+fun ToeicScreen(
+    viewModel: ToeicViewModel,
+    rootNavController: NavController,
+) {
+    val uiState by viewModel.toeicListState.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
+    LaunchedEffect(Unit) {
+        viewModel.getToeicList()
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
         ToeicHeader()
+        Spacer(modifier = Modifier.height(12.dp))
 
-        LazyVerticalGrid(
-            columns = if (isTabletLandscape) GridCells.Fixed(2) else GridCells.Fixed(1),
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(16.dp)
-        ) {
-            items(4) { index ->
-                TestItem(
-                    test = TestData(title = "Sample Test #${index + 1}"),
-                    onClick = {},
-                    isOdd = index % 2 == 0
-                )
+        when (val state = uiState) {
+            is UIState.UILoading -> {
+                LoadingSurface(picSize = responsiveValue(180, 360, 360))
+            }
+
+            is UIState.UISuccess -> {
+                val dto = state.data
+                LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                    items(dto.data) { test ->
+                        ToeicItem(
+                            title = test.title,
+                            onStartTest = {
+                                rootNavController.navigate(
+                                    NavScreen.ToeicDetailNavScreen(
+                                        test._id
+                                    )
+                                )
+                            },
+                            onViewResults = {
+                                rootNavController.navigate(
+                                    NavScreen.ToeicResultsNavScreen(test._id)
+                                )
+                            },
+                            onPractice = {
+                                rootNavController.navigate(
+                                    NavScreen.ToeicPartSelectionNavScreen(
+                                        test._id
+                                    )
+                                )
+                            },
+                        )
+                    }
+                }
+            }
+
+            is UIState.UIError -> {
             }
         }
     }
 }
-
-data class TestData(val title: String)

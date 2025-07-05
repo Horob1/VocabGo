@@ -86,6 +86,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.acteam.vocago.R
+import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.auth.register.component.CommonTextField
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.common.data.UIState
@@ -281,7 +282,7 @@ fun ProfileScreen(
                     DropdownMenuItem(
                         text = { Text("Devices") },
                         onClick = {
-
+                            navController.navigate(NavScreen.DeviceManagementNavScreen)
                         },
                         leadingIcon = {
                             Icon(Icons.Default.Devices, contentDescription = "Devices")
@@ -290,7 +291,7 @@ fun ProfileScreen(
                     DropdownMenuItem(
                         text = { Text("Change Password") },
                         onClick = {
-
+                            navController.navigate(NavScreen.ChangePasswordNavScreen)
                         },
                         leadingIcon = {
                             Icon(

@@ -20,6 +20,8 @@ import com.acteam.vocago.presentation.screen.main.common.NavBottomBar
 import com.acteam.vocago.presentation.screen.main.news.NewsScreen
 import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.main.novel.NovelScreen
+import com.acteam.vocago.presentation.screen.main.toeictest.ToeicScreen
+import com.acteam.vocago.presentation.screen.main.toeictest.ToeicViewModel
 import com.acteam.vocago.presentation.screen.main.novel.NovelViewModel
 import com.acteam.vocago.presentation.screen.main.voca.VocaScreen
 import com.acteam.vocago.presentation.screen.main.voca.VocaViewModel
@@ -64,7 +66,11 @@ fun SetupMainNavGraph(rootNavController: NavController) {
                 )
             }
             composable<NavScreen.ToeicNavScreen> {
-                Text(text = "Toeic")
+                val toeicViewModel = koinViewModel<ToeicViewModel>()
+                ToeicScreen(
+                    viewModel = toeicViewModel,
+                    rootNavController = rootNavController
+                )
             }
             composable<NavScreen.ChatNavScreen> {
                 ChatScreen(
