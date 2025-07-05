@@ -334,5 +334,12 @@
     <string name="tap_to_see_meaning">Tap to see meaning</string>
     <string name="not_enough_words">Not enough words to learn</string>
     <string name="too_many_words">Too many words to learn</string>
+    <string name="login_require">Please login to use</string>
+    <string name="text_exit">Exit</string>
+    <string name="text_confirm">Confirm</string>
+    <string name="text_learn_out">Are you sure you want to exit the test?</string>
+    <string name="text_excellent">Excellent!</string>
+    <string name="text_keep_trying">Keep trying!</string>
+    <string name="text_replay">Replay</string>
 
 </resources>

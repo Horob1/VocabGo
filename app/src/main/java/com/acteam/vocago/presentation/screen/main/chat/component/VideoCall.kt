@@ -284,7 +284,7 @@ fun VideoCallScreen(
             }
         }
 
-        if (permissionGranted && callState != CallState.END && videoResId != null) {
+        if (permissionGranted && callState != CallState.END) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

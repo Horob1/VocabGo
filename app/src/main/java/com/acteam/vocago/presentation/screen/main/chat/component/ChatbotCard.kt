@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Videocam
@@ -26,6 +27,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -63,7 +65,9 @@ fun UserProfileCard(
     val statusFontSize = if (isCompact) 13.sp else 16.sp
     val jobFontSize = if (isCompact) 14.sp else 18.sp
     if (isCompact) 20.dp else 32.dp
-    val iconSize = if (isCompact) 18.dp else 24.dp
+    if (isCompact) 44.dp else 52.dp
+    val iconSize = if (isCompact) 28.dp else 32.dp
+    val buttonSize = if (isCompact) 36.dp else 52.dp
     val buttonHeight = if (isCompact) 44.dp else 52.dp
     val sectionSpacing = if (isCompact) 6.dp else 10.dp
     val imageHeight =
@@ -249,59 +253,61 @@ fun UserProfileCard(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 8.dp)
-                                .padding(bottom = 4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            // Nút Location
                             IconButton(
-                                onClick = { onToggleLocationClick() },
+                                onClick = onToggleLocationClick,
                                 modifier = Modifier
-                                    .size(buttonHeight)
-                                    .background(Color(0xFFF0F0F0), shape = CircleShape)
+                                    .size(buttonSize)
+                                    .background(
+                                        MaterialTheme.colorScheme.background,
+                                        CircleShape
+                                    )
                             ) {
                                 Icon(
                                     Icons.Default.LocationOn,
                                     contentDescription = "Map",
-                                    tint = Color(0xFF616161),
+                                    tint = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier.size(iconSize)
                                 )
                             }
 
-                            Spacer(modifier = Modifier.width(16.dp))
-
+                            // Nút Video
                             IconButton(
                                 onClick = onVideoCallClick,
                                 modifier = Modifier
-                                    .size(buttonHeight)
-                                    .background(Color(0xFFF0F0F0), shape = CircleShape)
+                                    .size(buttonSize)
+                                    .background(
+                                        MaterialTheme.colorScheme.background,
+                                        CircleShape
+                                    )
                             ) {
                                 Icon(
                                     Icons.Default.Videocam,
                                     contentDescription = "Call",
-                                    tint = Color(0xFF616161),
+                                    tint = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier.size(iconSize)
                                 )
                             }
 
-                            Button(
-                                onClick = onclick,
-                                shape = RoundedCornerShape(28.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(
-                                        0xFF000000
-                                    )
-                                ),
+                            // Nút Chat
+                            IconButton(
+                                onClick = onVideoCallClick,
                                 modifier = Modifier
-                                    .height(buttonHeight)
-                                    .weight(1f)
-                                    .padding(start = 8.dp)
+                                    .size(buttonSize)
+                                    .background(
+                                        MaterialTheme.colorScheme.background,
+                                        CircleShape
+                                    )
                             ) {
-                                Text(
-                                    stringResource(R.string.text_chat),
-                                    color = Color.White,
-                                    fontSize = if (deviceType == DeviceType.Mobile) 14.sp else 18.sp,
-                                    fontWeight = FontWeight.SemiBold
+                                Icon(
+                                    Icons.AutoMirrored.Filled.Chat,
+                                    contentDescription = "Chat",
+                                    tint = MaterialTheme.colorScheme.onBackground,
+                                    modifier = Modifier.size(iconSize)
                                 )
                             }
                         }

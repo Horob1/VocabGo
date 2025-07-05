@@ -63,7 +63,7 @@ fun OTPInputField(
                 modifier = Modifier
                     .focusRequester(focusRequesters[index])
                     .weight(1f)
-                    .aspectRatio(1f)
+                    .aspectRatio(0.85f)
             )
         }
     }
@@ -90,7 +90,7 @@ fun OTPDigitField(
             .shadow(8.dp, shape = RoundedCornerShape(0.dp))
             .clip(RoundedCornerShape(0.dp)),
         textStyle = MaterialTheme.typography.bodyMedium.copy(
-            fontSize = if (deviceType == DeviceType.Mobile) 20.sp else 30.sp,
+            fontSize = if (deviceType == DeviceType.Mobile) 14.sp else 30.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold
         ),

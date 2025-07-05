@@ -26,6 +26,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -39,11 +40,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.acteam.vocago.R
 
 @Composable
 fun LearnScreen(
@@ -97,10 +100,10 @@ fun QuizletQuizScreen(
         }
     }
 
+    val colorScheme = MaterialTheme.colorScheme
+
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFFF8FAFF))
+        modifier = modifier.background(colorScheme.background)
     ) {
         TopAppBar(
             title = {
@@ -108,7 +111,7 @@ fun QuizletQuizScreen(
                     text = "${currentQuestionIndex + 1} / ${questions.size}",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF1A1D29)
+                    color = colorScheme.onSurface
                 )
             },
             navigationIcon = {
@@ -116,13 +119,13 @@ fun QuizletQuizScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = Color(0xFF1A1D29)
+                        tint = colorScheme.onSurface
                     )
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFFFFFFFF),
-                titleContentColor = Color(0xFF1A1D29)
+                containerColor = colorScheme.surface,
+                titleContentColor = colorScheme.onSurface
             )
         )
 
@@ -131,8 +134,8 @@ fun QuizletQuizScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(6.dp),
-            color = Color(0xFF6366F1),
-            trackColor = Color(0xFFE2E8F0),
+            color = colorScheme.primary,
+            trackColor = colorScheme.outlineVariant,
         )
 
         Column(
@@ -149,7 +152,7 @@ fun QuizletQuizScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 32.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)),
+                    colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     shape = RoundedCornerShape(16.dp)
                 ) {
@@ -162,7 +165,7 @@ fun QuizletQuizScreen(
                         fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Center,
                         lineHeight = 32.sp,
-                        color = Color(0xFF1A1D29)
+                        color = colorScheme.onSurface
                     )
                 }
 
@@ -173,10 +176,10 @@ fun QuizletQuizScreen(
 
                     val backgroundColor by animateColorAsState(
                         targetValue = when {
-                            isShowingResult && isCorrect -> Color(0xFF10B981)
-                            isShowingResult && isSelected && !isCorrect -> Color(0xFFEF4444)
-                            isSelected && !isShowingResult -> Color(0xFF6366F1)
-                            else -> Color(0xFFFFFFFF)
+                            isShowingResult && isCorrect -> colorScheme.tertiary
+                            isShowingResult && isSelected && !isCorrect -> colorScheme.error
+                            isSelected && !isShowingResult -> colorScheme.primary
+                            else -> colorScheme.surface
                         },
                         animationSpec = tween(300)
                     )
@@ -185,16 +188,16 @@ fun QuizletQuizScreen(
                         targetValue = when {
                             isShowingResult && (isCorrect || (isSelected && !isCorrect)) -> Color.White
                             isSelected && !isShowingResult -> Color.White
-                            else -> Color(0xFF1F2937)
+                            else -> colorScheme.onSurface
                         },
                         animationSpec = tween(300)
                     )
 
                     val borderColor = when {
-                        isShowingResult && isCorrect -> Color(0xFF10B981)
-                        isShowingResult && isSelected && !isCorrect -> Color(0xFFEF4444)
-                        isSelected && !isShowingResult -> Color(0xFF6366F1)
-                        else -> Color(0xFFE5E7EB)
+                        isShowingResult && isCorrect -> colorScheme.tertiary
+                        isShowingResult && isSelected && !isCorrect -> colorScheme.error
+                        isSelected && !isShowingResult -> colorScheme.primary
+                        else -> colorScheme.outlineVariant
                     }
 
                     Card(
@@ -230,7 +233,6 @@ fun QuizletQuizScreen(
                             currentQuestionIndex++
                             selectedAnswer = null
                             showResult = false
-                        } else {
                         }
                     } else {
                         if (selectedAnswer != null) {
@@ -245,16 +247,16 @@ fun QuizletQuizScreen(
                     .fillMaxWidth()
                     .height(56.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF6366F1),
-                    disabledContainerColor = Color(0xFFD1D5DB)
+                    containerColor = colorScheme.primary,
+                    disabledContainerColor = colorScheme.outlineVariant
                 ),
                 enabled = selectedAnswer != null,
                 shape = RoundedCornerShape(14.dp)
             ) {
                 Text(
                     text = when {
-                        showResult && currentQuestionIndex < questions.size - 1 -> "Tiếp tục"
-                        showResult && currentQuestionIndex == questions.size - 1 -> "Hoàn thành"
+                        showResult && currentQuestionIndex < questions.size - 1 -> stringResource(R.string.btn_continue)
+                        showResult && currentQuestionIndex == questions.size - 1 -> stringResource(R.string.text_complete)
                         else -> "Kiểm tra"
                     },
                     fontSize = 17.sp,
@@ -263,6 +265,7 @@ fun QuizletQuizScreen(
             }
         }
     }
+
     if (showConfirmDialog) {
         AlertDialog(
             onDismissRequest = { showConfirmDialog = false },
@@ -271,31 +274,31 @@ fun QuizletQuizScreen(
                     showConfirmDialog = false
                     onBackClick()
                 }) {
-                    Text("Thoát")
+                    Text(stringResource(R.string.text_exit))
                 }
             },
             dismissButton = {
                 Button(onClick = { showConfirmDialog = false }) {
-                    Text("Hủy")
+                    Text(stringResource(R.string.btn_cancel))
                 }
             },
-            title = { Text("Xác nhận") },
-            text = { Text("Bạn có chắc muốn thoát khỏi bài kiểm tra không?") }
+            title = { Text(stringResource(R.string.text_confirm)) },
+            text = { Text(stringResource(R.string.text_learn_out)) }
         )
     }
+
     if (showResult && currentQuestionIndex == questions.size - 1) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.7f))
-                .clickable { /* Prevent clicks behind overlay */ },
+                .background(colorScheme.scrim),
             contentAlignment = Alignment.Center
         ) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(24.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
                 shape = RoundedCornerShape(20.dp)
             ) {
@@ -303,7 +306,6 @@ fun QuizletQuizScreen(
                     modifier = Modifier.padding(32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Icon kết quả
                     val resultIcon = if (score >= questions.size * 0.7) "🎉" else "💪"
                     Text(
                         text = resultIcon,
@@ -311,20 +313,20 @@ fun QuizletQuizScreen(
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
 
-                    // Tiêu đề
                     Text(
-                        text = if (score >= questions.size * 0.7) "Xuất sắc!" else "Cố gắng thêm!",
+                        text = if (score >= questions.size * 0.7) stringResource(R.string.text_excellent) else stringResource(
+                            R.string.text_keep_trying
+                        ),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1A1D29),
+                        color = colorScheme.onSurface,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
 
-                    // Điểm số
                     Text(
-                        text = "Điểm của bạn",
+                        text = stringResource(R.string.text_total_score),
                         fontSize = 16.sp,
-                        color = Color(0xFF64748B),
+                        color = colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
 
@@ -332,21 +334,19 @@ fun QuizletQuizScreen(
                         text = "$score/${questions.size}",
                         fontSize = 48.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF6366F1),
+                        color = colorScheme.primary,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
 
-                    // Phần trăm
                     val percentage = (score.toFloat() / questions.size * 100).toInt()
                     Text(
                         text = "$percentage%",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF64748B),
+                        color = colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(bottom = 24.dp)
                     )
 
-                    // Thanh tiến trình
                     LinearProgressIndicator(
                         progress = { score.toFloat() / questions.size },
                         modifier = Modifier
@@ -354,15 +354,14 @@ fun QuizletQuizScreen(
                             .height(8.dp)
                             .padding(bottom = 32.dp),
                         color = when {
-                            percentage >= 90 -> Color(0xFF10B981)
-                            percentage >= 70 -> Color(0xFF6366F1)
-                            percentage >= 50 -> Color(0xFFF59E0B)
-                            else -> Color(0xFFEF4444)
+                            percentage >= 90 -> colorScheme.tertiary
+                            percentage >= 70 -> colorScheme.primary
+                            percentage >= 50 -> colorScheme.secondary
+                            else -> colorScheme.error
                         },
-                        trackColor = Color(0xFFE2E8F0),
+                        trackColor = colorScheme.outlineVariant
                     )
 
-                    // Buttons
                     Button(
                         onClick = { onBackClick() },
                         modifier = Modifier
@@ -370,12 +369,12 @@ fun QuizletQuizScreen(
                             .height(56.dp)
                             .padding(bottom = 12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF6366F1)
+                            containerColor = colorScheme.primary
                         ),
                         shape = RoundedCornerShape(14.dp)
                     ) {
                         Text(
-                            text = "Hoàn thành",
+                            text = stringResource(R.string.text_complete),
                             fontSize = 17.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.White
@@ -384,7 +383,6 @@ fun QuizletQuizScreen(
 
                     Button(
                         onClick = {
-                            // Reset quiz
                             currentQuestionIndex = 0
                             selectedAnswer = null
                             showResult = false
@@ -399,15 +397,14 @@ fun QuizletQuizScreen(
                         shape = RoundedCornerShape(14.dp)
                     ) {
                         Text(
-                            text = "Làm lại",
+                            text = stringResource(R.string.text_replay),
                             fontSize = 17.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFF6366F1)
+                            color = colorScheme.primary
                         )
                     }
                 }
             }
         }
     }
-
 }

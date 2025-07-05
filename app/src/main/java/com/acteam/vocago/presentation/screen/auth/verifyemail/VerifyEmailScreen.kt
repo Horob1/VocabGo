@@ -114,6 +114,7 @@ fun VerifyEmailScreen(
                         Modifier.height(verticalSpacing / 3)
                 )
                 VerifyOtpSection(
+                    email = email,
                     otp = otpState.otp,
                     onOtpChange = { viewModel.setOtpValue(it) },
                     onResendClick = { viewModel.resendVerifyEmail(email) },
@@ -179,6 +180,7 @@ fun VerifyEmailScreen(
                     )
                     Spacer(modifier = Modifier.height(verticalSpacing))
                     VerifyOtpSection(
+                        email = email,
                         otp = otpState.otp,
                         onOtpChange = { viewModel.setOtpValue(it) },
                         onResendClick = { viewModel.resendVerifyEmail(email) },
@@ -231,6 +233,7 @@ fun VerifyEmailScreen(
 
 @Composable
 fun VerifyOtpSection(
+    email: String,
     otp: String,
     onOtpChange: (String) -> Unit,
     onResendClick: () -> Unit,
@@ -249,19 +252,19 @@ fun VerifyOtpSection(
         verticalArrangement = Arrangement.spacedBy(responsiveDP(8, 12, 16))
     ) {
         if (deviceType == DeviceType.Mobile) {
-            Spacer(modifier = Modifier.height(verticalSpacing * 3))
+            Spacer(modifier = Modifier.height(verticalSpacing))
         } else if (deviceType == DeviceType.TabletPortrait) {
             Spacer(modifier = Modifier.height(verticalSpacing))
         }
         CountdownDisplay(timerText = countDownText)
         if (deviceType == DeviceType.Mobile) {
-            Spacer(modifier = Modifier.height(verticalSpacing * 3))
+            Spacer(modifier = Modifier.height(verticalSpacing))
         } else if (deviceType == DeviceType.TabletPortrait) {
             Spacer(modifier = Modifier.height(verticalSpacing))
         }
 
         Text(
-            text = stringResource(R.string.text_send_otp),
+            text = "${stringResource(R.string.text_send_otp)} $email",
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontWeight = FontWeight.Bold,
                 fontSize = textFontSize,
@@ -271,7 +274,7 @@ fun VerifyOtpSection(
         )
 
         if (deviceType == DeviceType.Mobile) {
-            Spacer(modifier = Modifier.height(verticalSpacing * 2))
+            Spacer(modifier = Modifier.height(verticalSpacing))
         } else if (deviceType == DeviceType.TabletPortrait) {
             Spacer(modifier = Modifier.height(verticalSpacing))
         }

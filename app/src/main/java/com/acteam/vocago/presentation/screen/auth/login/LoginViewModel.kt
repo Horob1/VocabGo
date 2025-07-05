@@ -44,46 +44,48 @@ class LoginViewModel(
     }
 
     fun login(afterLoginSuccess: suspend () -> Unit) {
-        if (!_loginFormState.value.isLoginButtonEnabled) return
+        if (!_loginFormState.value.isLoginButtonEnabled) {
+            Log.d("login", "❌ Login button disabled → abort login")
+            return
+        }
 
         viewModelScope.launch {
             _loginUIState.value = UIState.UILoading
+            val username = _loginFormState.value.username
+            val password = _loginFormState.value.password
+
+            Log.d("login", "🚀 Sending login request for user: $username")
+
             try {
-                loginUseCase(
-                    username = _loginFormState.value.username,
-                    password = _loginFormState.value.password
-                )
+                loginUseCase(username = username, password = password)
+
+                Log.d("login", "✅ Login successful for user: $username")
+
                 afterLoginSuccess()
                 _loginUIState.value = UIState.UISuccess(Unit)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                if (e is ApiException) {
-                    when (e.code) {
-                        // truyền lên sai định dạng
-                        422 -> _loginUIState.value =
-                            UIState.UIError(UIErrorType.UnexpectedEntityError)
-                        // Tài khoản chưa verify
-                        400 -> _loginUIState.value =
-                            UIState.UIError(UIErrorType.BadRequestError)
-                        // Sai mật khẩu
-                        401 -> _loginUIState.value =
-                            UIState.UIError(UIErrorType.UnauthorizedError)
-                        // Tài khoản or mật khẩu ko tồn tại :V
-                        404 -> _loginUIState.value =
-                            UIState.UIError(UIErrorType.NotFoundError)
-                        // User bị ban rồi
-                        403 -> _loginUIState.value = UIState.UIError(UIErrorType.ForbiddenError)
-                        // Xac thuc 2 buoc
-                        428 -> _loginUIState.value =
-                            UIState.UIError(UIErrorType.PreconditionFailedError)
 
-                        else -> _loginUIState.value = UIState.UIError(UIErrorType.UnknownError)
+            } catch (e: Exception) {
+                Log.e("login", "❌ Login failed: ${e.message}", e)
+
+                if (e is ApiException) {
+                    Log.w("login", "📡 Server returned error code: ${e.code}")
+
+                    _loginUIState.value = when (e.code) {
+                        422 -> UIState.UIError(UIErrorType.UnexpectedEntityError)
+                        400 -> UIState.UIError(UIErrorType.BadRequestError)
+                        401 -> UIState.UIError(UIErrorType.UnauthorizedError)
+                        404 -> UIState.UIError(UIErrorType.NotFoundError)
+                        403 -> UIState.UIError(UIErrorType.ForbiddenError)
+                        428 -> UIState.UIError(UIErrorType.PreconditionFailedError)
+                        else -> UIState.UIError(UIErrorType.UnknownError)
                     }
-                } else
+                } else {
                     _loginUIState.value = UIState.UIError(UIErrorType.UnknownError)
+                }
             }
         }
     }
+
 
     fun loginWithGoogle(token: String, afterLoginSuccess: suspend () -> Unit) {
         viewModelScope.launch {

@@ -326,5 +326,12 @@
     <string name="tap_to_see_meaning">Chạm để xem nghĩa</string>
     <string name="not_enough_words">Không đủ từ để học!</string>
     <string name="too_many_words">Qua nhiều từ để học! Học sẽ không hiệu quả</string>
+    <string name="login_require">Vui lòng đăng nhập để sử dụng</string>
+    <string name="text_exit">Thoát</string>
+    <string name="text_confirm">Xác nhận</string>
+    <string name="text_learn_out">Bạn có chắc muốn thoát khỏi bài kiểm tra không?</string>
+    <string name="text_excellent">Xuất sắc!</string>
+    <string name="text_keep_trying">Cố gắng thêm!</string>
+    <string name="text_replay">Làm laại</string>
 
 </resources>
