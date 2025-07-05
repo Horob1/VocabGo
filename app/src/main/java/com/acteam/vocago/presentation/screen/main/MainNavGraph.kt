@@ -20,6 +20,8 @@ import com.acteam.vocago.presentation.screen.main.common.NavBottomBar
 import com.acteam.vocago.presentation.screen.main.news.NewsScreen
 import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.main.novel.NovelScreen
+import com.acteam.vocago.presentation.screen.main.toeictest.ToeicScreen
+import com.acteam.vocago.presentation.screen.main.toeictest.ToeicViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -52,7 +54,11 @@ fun SetupMainNavGraph(rootNavController: NavController) {
                 Text(text = "Voca")
             }
             composable<NavScreen.ToeicNavScreen> {
-                Text(text = "Toeic")
+                val toeicViewModel = koinViewModel<ToeicViewModel>()
+                ToeicScreen(
+                    viewModel = toeicViewModel,
+                    rootNavController = rootNavController
+                )
             }
             composable<NavScreen.ChatNavScreen> {
                 ChatScreen(

@@ -13,14 +13,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.acteam.vocago.R
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
 import com.acteam.vocago.utils.responsiveSP
 
+
 @Composable
-fun ToeicHeader() {
+fun ToeicHeader(
+) {
+
     val deviceType = getDeviceType()
 
     val headerHeight = when (deviceType) {
@@ -28,6 +33,7 @@ fun ToeicHeader() {
         DeviceType.TabletPortrait -> 90.dp
         DeviceType.TabletLandscape -> 80.dp
     }
+
 
     val horizontalPadding = when (deviceType) {
         DeviceType.Mobile -> 16.dp
@@ -46,7 +52,7 @@ fun ToeicHeader() {
     ) {
         Column {
             Text(
-                text = "TOEIC Test",
+                text = "TOEIC TEST",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = responsiveSP(
                         mobile = 20,
@@ -59,7 +65,7 @@ fun ToeicHeader() {
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Practice and challenge yourself!",
+                text = stringResource(R.string.text_toeic_banner),
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 ),

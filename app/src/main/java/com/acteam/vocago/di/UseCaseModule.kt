@@ -1,6 +1,7 @@
 package com.acteam.vocago.di
 
 import com.acteam.vocago.domain.usecase.AnswerNewsUseCase
+import com.acteam.vocago.domain.usecase.ChangePasswordUseCase
 import com.acteam.vocago.domain.usecase.ChooseLanguageUserCase
 import com.acteam.vocago.domain.usecase.DeleteAlarmByIdUseCase
 import com.acteam.vocago.domain.usecase.ForgotPasswordUseCase
@@ -8,6 +9,7 @@ import com.acteam.vocago.domain.usecase.GetAlarmByIdUseCase
 import com.acteam.vocago.domain.usecase.GetAlarmListUseCase
 import com.acteam.vocago.domain.usecase.GetChosenNewsCategoriesUseCase
 import com.acteam.vocago.domain.usecase.GetChosenNewsLevelUseCase
+import com.acteam.vocago.domain.usecase.GetDevicesListUseCase
 import com.acteam.vocago.domain.usecase.GetDictionaryWordUseCase
 import com.acteam.vocago.domain.usecase.GetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.GetLanguageUseCase
@@ -17,10 +19,17 @@ import com.acteam.vocago.domain.usecase.GetNewsDetailUseCase
 import com.acteam.vocago.domain.usecase.GetNewsHistoryPagingUseCase
 import com.acteam.vocago.domain.usecase.GetNewsPagingUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
+import com.acteam.vocago.domain.usecase.GetSuggestWordUseCase
+import com.acteam.vocago.domain.usecase.GetTestResultDetailUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
+import com.acteam.vocago.domain.usecase.GetToeicDetailUseCase
+import com.acteam.vocago.domain.usecase.GetToeicListUseCase
+import com.acteam.vocago.domain.usecase.GetToeicResultUseCase
+import com.acteam.vocago.domain.usecase.GetWordOfTheDayUseCase
 import com.acteam.vocago.domain.usecase.InsertAlarmUseCase
 import com.acteam.vocago.domain.usecase.LoginGoogleUseCase
 import com.acteam.vocago.domain.usecase.LoginUseCase
+import com.acteam.vocago.domain.usecase.LogoutDeviceUseCase
 import com.acteam.vocago.domain.usecase.LogoutUseCase
 import com.acteam.vocago.domain.usecase.RegisterUseCase
 import com.acteam.vocago.domain.usecase.ResendVerifyEmailUseCase
@@ -28,6 +37,7 @@ import com.acteam.vocago.domain.usecase.ResetPasswordUseCase
 import com.acteam.vocago.domain.usecase.SaveOnBoardingStateUseCase
 import com.acteam.vocago.domain.usecase.SetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.SetThemeUseCase
+import com.acteam.vocago.domain.usecase.SubmitToeicUseCase
 import com.acteam.vocago.domain.usecase.SyncProfileUseCase
 import com.acteam.vocago.domain.usecase.ToggleBookmarkNewsUseCase
 import com.acteam.vocago.domain.usecase.UpdateAlarmUseCase
@@ -168,6 +178,56 @@ val useCaseModule = module {
     }
     single {
         UpdateProfileUseCase(
+            get()
+        )
+    }
+    single {
+        GetSuggestWordUseCase(
+            get()
+        )
+    }
+    single {
+        GetWordOfTheDayUseCase(
+            get()
+        )
+    }
+    single {
+        GetToeicListUseCase(
+            get()
+        )
+    }
+    single {
+        GetToeicDetailUseCase(
+            get()
+        )
+    }
+    single {
+        SubmitToeicUseCase(
+            get()
+        )
+    }
+    single {
+        GetToeicResultUseCase(
+            get()
+        )
+    }
+    single {
+        GetTestResultDetailUseCase(
+            get()
+        )
+    }
+    single {
+        ChangePasswordUseCase(
+            get()
+        )
+    }
+    single {
+        GetDevicesListUseCase(
+            get()
+        )
+    }
+    single {
+        LogoutDeviceUseCase(
             get()
         )
     }

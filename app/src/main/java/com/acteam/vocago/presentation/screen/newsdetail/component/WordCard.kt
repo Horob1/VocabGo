@@ -293,10 +293,8 @@ fun WordCard(
             if (wordUiState is UIState.UISuccess)
                 Button(
                     onClick = {
-
                         onHideCard()
                         rootNavController.navigate(NavScreen.WordDetailNavScreen(word))
-
                     },
                     modifier = Modifier
                         .fillMaxWidth()

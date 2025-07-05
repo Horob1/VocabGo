@@ -13,6 +13,7 @@ sealed class VocaGoRoutes(val path: String) {
     data object Logout : VocaGoRoutes("api/v1/user/logout")
 
     data object GetProfile : VocaGoRoutes("api/v1/user/me")
+    data object ChangePassword : VocaGoRoutes("api/v1/user/change-password")
 
     data object GetNews : VocaGoRoutes("api/v1/news")
     data object GetNewsHistories : VocaGoRoutes("api/v1/news/history")
@@ -20,4 +21,16 @@ sealed class VocaGoRoutes(val path: String) {
     data class ToggleBookmark(val id: String) : VocaGoRoutes("api/v1/news/$id/bookmark")
 
     data object GetDictionaryWord : VocaGoRoutes("/api/v1/dictionary/")
+    data object GetSuggestWord : VocaGoRoutes("/api/v1/word/suggest")
+    data object GetWordOfTheDay : VocaGoRoutes("/api/v1/dictionary/wordoftheday")
+
+    data object GetToeicList : VocaGoRoutes("/api/v1/admin/toeic/tests")
+    data class GetToeicDetail(val id: String) : VocaGoRoutes("/api/v1/admin/toeic/test/$id")
+    data object SubmitTest : VocaGoRoutes("/api/v1/admin/toeic/test/submit")
+    data class GetToeicResult(val id: String) : VocaGoRoutes("/api/v1/admin/toeic/test/result/$id")
+    data class GetToeicResultDetail(val id: String) :
+        VocaGoRoutes("/api/v1/admin/toeic/test/result_detail/$id")
+
+    data object GetDevicesList : VocaGoRoutes("/api/v1/user/me/devices")
+    data object LogoutUserDevice : VocaGoRoutes("/api/v1/user/me/devices")
 }

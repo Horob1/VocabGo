@@ -47,6 +47,27 @@ sealed class NavScreen {
     data object CameraNavScreen : NavScreen()
 
     @Serializable
+    data class ToeicDetailNavScreen(val id: String) : NavScreen()
+
+    @Serializable
+    data class ToeicPartSelectionNavScreen(val id: String) : NavScreen()
+
+    @Serializable
+    data class ToeicPracticeNavScreen(val id: String, val selectedParts: String) : NavScreen()
+
+    @Serializable
+    data class ToeicResultsNavScreen(val id: String) : NavScreen()
+
+    @Serializable
+    data class ToeicResultDetailNavScreen(val id: String) : NavScreen()
+
+    @Serializable
+    data object ChangePasswordNavScreen : NavScreen()
+
+    @Serializable
+    data object DeviceManagementNavScreen : NavScreen()
+
+    @Serializable
     data class VideoCallNavScreen(
         val receivedName: String,
         val avatarResId: Int,
