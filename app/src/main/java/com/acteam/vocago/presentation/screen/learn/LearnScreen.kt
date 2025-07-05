@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -112,9 +112,9 @@ fun QuizletQuizScreen(
                 )
             },
             navigationIcon = {
-                IconButton(onClick = onBackClick) {
+                IconButton(onClick = { showConfirmDialog = true }) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
                         tint = Color(0xFF1A1D29)
                     )
@@ -282,6 +282,132 @@ fun QuizletQuizScreen(
             title = { Text("Xác nhận") },
             text = { Text("Bạn có chắc muốn thoát khỏi bài kiểm tra không?") }
         )
+    }
+    if (showResult && currentQuestionIndex == questions.size - 1) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.7f))
+                .clickable { /* Prevent clicks behind overlay */ },
+            contentAlignment = Alignment.Center
+        ) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Icon kết quả
+                    val resultIcon = if (score >= questions.size * 0.7) "🎉" else "💪"
+                    Text(
+                        text = resultIcon,
+                        fontSize = 64.sp,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
+                    // Tiêu đề
+                    Text(
+                        text = if (score >= questions.size * 0.7) "Xuất sắc!" else "Cố gắng thêm!",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1A1D29),
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    // Điểm số
+                    Text(
+                        text = "Điểm của bạn",
+                        fontSize = 16.sp,
+                        color = Color(0xFF64748B),
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+
+                    Text(
+                        text = "$score/${questions.size}",
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF6366F1),
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    // Phần trăm
+                    val percentage = (score.toFloat() / questions.size * 100).toInt()
+                    Text(
+                        text = "$percentage%",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF64748B),
+                        modifier = Modifier.padding(bottom = 24.dp)
+                    )
+
+                    // Thanh tiến trình
+                    LinearProgressIndicator(
+                        progress = { score.toFloat() / questions.size },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
+                            .padding(bottom = 32.dp),
+                        color = when {
+                            percentage >= 90 -> Color(0xFF10B981)
+                            percentage >= 70 -> Color(0xFF6366F1)
+                            percentage >= 50 -> Color(0xFFF59E0B)
+                            else -> Color(0xFFEF4444)
+                        },
+                        trackColor = Color(0xFFE2E8F0),
+                    )
+
+                    // Buttons
+                    Button(
+                        onClick = { onBackClick() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(bottom = 12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF6366F1)
+                        ),
+                        shape = RoundedCornerShape(14.dp)
+                    ) {
+                        Text(
+                            text = "Hoàn thành",
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White
+                        )
+                    }
+
+                    Button(
+                        onClick = {
+                            // Reset quiz
+                            currentQuestionIndex = 0
+                            selectedAnswer = null
+                            showResult = false
+                            score = 0
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent
+                        ),
+                        shape = RoundedCornerShape(14.dp)
+                    ) {
+                        Text(
+                            text = "Làm lại",
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF6366F1)
+                        )
+                    }
+                }
+            }
+        }
     }
 
 }
