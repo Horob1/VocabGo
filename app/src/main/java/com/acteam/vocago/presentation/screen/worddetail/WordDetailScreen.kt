@@ -1,6 +1,7 @@
 package com.acteam.vocago.presentation.screen.worddetail
 
 import android.speech.tts.TextToSpeech
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,7 +48,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -134,15 +134,15 @@ fun WordDetailScreen(
                         onClick = { rootNavController.popBackStack() },
                         modifier = Modifier
                             .padding(4.dp)
-                            .shadow(2.dp, RoundedCornerShape(12.dp))
                             .background(
-                                MaterialTheme.colorScheme.surface,
+                                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
                                 RoundedCornerShape(12.dp)
                             )
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 },
@@ -176,7 +176,13 @@ fun WordDetailScreen(
                             .fillMaxWidth()
                             .padding(16.dp),
                         shape = RoundedCornerShape(20.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        border = BorderStroke(
+                            1.dp,
+                            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                        )
                     ) {
                         Box(
                             modifier = Modifier
@@ -222,8 +228,8 @@ fun WordDetailScreen(
                                     }?.type?.joinToString(", ")?.let {
                                         Card(
                                             colors = CardDefaults.cardColors(
-                                                containerColor = MaterialTheme.colorScheme.secondary.copy(
-                                                    alpha = 0.2f
+                                                containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(
+                                                    alpha = 0.8f
                                                 )
                                             ),
                                             shape = RoundedCornerShape(12.dp)
@@ -233,9 +239,7 @@ fun WordDetailScreen(
                                                 style = MaterialTheme.typography.bodyMedium.copy(
                                                     fontWeight = FontWeight.Medium
                                                 ),
-                                                color = MaterialTheme.colorScheme.onSurface.copy(
-                                                    0.8f
-                                                ),
+                                                color = MaterialTheme.colorScheme.onSecondaryContainer,
                                                 modifier = Modifier.padding(
                                                     horizontal = 12.dp,
                                                     vertical = 4.dp
@@ -250,7 +254,7 @@ fun WordDetailScreen(
                                         Card(
                                             colors = CardDefaults.cardColors(
                                                 containerColor = MaterialTheme.colorScheme.primaryContainer.copy(
-                                                    alpha = 0.3f
+                                                    alpha = 0.8f
                                                 )
                                             ),
                                             shape = RoundedCornerShape(12.dp)
@@ -260,7 +264,7 @@ fun WordDetailScreen(
                                                 style = MaterialTheme.typography.bodyLarge.copy(
                                                     fontWeight = FontWeight.SemiBold
                                                 ),
-                                                color = MaterialTheme.colorScheme.primary,
+                                                color = MaterialTheme.colorScheme.onPrimaryContainer,
                                                 modifier = Modifier.padding(
                                                     horizontal = 16.dp,
                                                     vertical = 8.dp
@@ -276,7 +280,7 @@ fun WordDetailScreen(
                                 Card(
                                     colors = CardDefaults.cardColors(
                                         containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(
-                                            alpha = 0.3f
+                                            alpha = 0.8f
                                         )
                                     ),
                                     shape = RoundedCornerShape(12.dp)
@@ -286,6 +290,7 @@ fun WordDetailScreen(
                                         style = MaterialTheme.typography.bodyLarge.copy(
                                             fontWeight = FontWeight.Medium
                                         ),
+                                        color = MaterialTheme.colorScheme.onTertiaryContainer,
                                         modifier = Modifier.padding(
                                             horizontal = 16.dp,
                                             vertical = 8.dp
@@ -312,17 +317,16 @@ fun WordDetailScreen(
                                                 )
                                             },
                                         colors = CardDefaults.cardColors(
-                                            containerColor = MaterialTheme.colorScheme.primary.copy(
-                                                alpha = 0.1f
+                                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(
+                                                alpha = 0.8f
                                             )
                                         ),
-                                        shape = RoundedCornerShape(16.dp),
-                                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                                        shape = RoundedCornerShape(16.dp)
                                     ) {
                                         Icon(
                                             imageVector = Icons.AutoMirrored.Outlined.VolumeUp,
                                             contentDescription = "speak",
-                                            tint = MaterialTheme.colorScheme.primary,
+                                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
                                             modifier = Modifier.padding(12.dp)
                                         )
                                     }
@@ -347,17 +351,16 @@ fun WordDetailScreen(
                                                 )
                                             },
                                         colors = CardDefaults.cardColors(
-                                            containerColor = MaterialTheme.colorScheme.secondary.copy(
-                                                alpha = 0.1f
+                                            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(
+                                                alpha = 0.8f
                                             )
                                         ),
-                                        shape = RoundedCornerShape(16.dp),
-                                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                                        shape = RoundedCornerShape(16.dp)
                                     ) {
                                         Icon(
                                             imageVector = Icons.Filled.AddCircle,
                                             contentDescription = "add",
-                                            tint = MaterialTheme.colorScheme.secondary,
+                                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
                                             modifier = Modifier.padding(12.dp)
                                         )
                                     }
@@ -369,17 +372,16 @@ fun WordDetailScreen(
                                                 clipboardManager.setText(AnnotatedString(word))
                                             },
                                         colors = CardDefaults.cardColors(
-                                            containerColor = MaterialTheme.colorScheme.tertiary.copy(
-                                                alpha = 0.1f
+                                            containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(
+                                                alpha = 0.8f
                                             )
                                         ),
-                                        shape = RoundedCornerShape(16.dp),
-                                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                                        shape = RoundedCornerShape(16.dp)
                                     ) {
                                         Icon(
                                             imageVector = Icons.Filled.ContentCopy,
                                             contentDescription = "copy",
-                                            tint = MaterialTheme.colorScheme.tertiary,
+                                            tint = MaterialTheme.colorScheme.onTertiaryContainer,
                                             modifier = Modifier.padding(12.dp)
                                         )
                                     }
@@ -396,10 +398,11 @@ fun WordDetailScreen(
                                         )
                                     },
                                 colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.onSurface.copy(0.1f)
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(
+                                        alpha = 0.8f
+                                    )
                                 ),
-                                shape = RoundedCornerShape(12.dp),
-                                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                                shape = RoundedCornerShape(12.dp)
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -414,7 +417,7 @@ fun WordDetailScreen(
                                         style = MaterialTheme.typography.bodySmall.copy(
                                             fontWeight = FontWeight.Medium
                                         ),
-                                        color = MaterialTheme.colorScheme.onSurface
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Image(
@@ -437,7 +440,13 @@ fun WordDetailScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        border = BorderStroke(
+                            1.dp,
+                            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                        )
                     ) {
                         ScrollableTabRow(
                             selectedTabIndex = selectedTabIndex,
@@ -456,7 +465,7 @@ fun WordDetailScreen(
                                         Card(
                                             colors = CardDefaults.cardColors(
                                                 containerColor = if (selected)
-                                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                                                    MaterialTheme.colorScheme.primaryContainer
                                                 else
                                                     MaterialTheme.colorScheme.surface
                                             ),
@@ -468,7 +477,7 @@ fun WordDetailScreen(
                                                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium
                                                 ),
                                                 color = if (selected)
-                                                    MaterialTheme.colorScheme.primary
+                                                    MaterialTheme.colorScheme.onPrimaryContainer
                                                 else
                                                     MaterialTheme.colorScheme.onSurface.copy(0.7f),
                                                 maxLines = 1,
@@ -491,7 +500,13 @@ fun WordDetailScreen(
                             .padding(horizontal = 16.dp)
                             .padding(bottom = 16.dp),
                         shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        border = BorderStroke(
+                            1.dp,
+                            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                        )
                     ) {
                         Column(
                             modifier = Modifier
@@ -507,7 +522,7 @@ fun WordDetailScreen(
                                         Card(
                                             colors = CardDefaults.cardColors(
                                                 containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(
-                                                    alpha = 0.3f
+                                                    alpha = 0.5f
                                                 )
                                             ),
                                             shape = RoundedCornerShape(12.dp)
@@ -528,17 +543,15 @@ fun WordDetailScreen(
                                                         Text(
                                                             text = "• $it",
                                                             style = MaterialTheme.typography.bodyMedium,
-                                                            color = MaterialTheme.colorScheme.onSurface.copy(
-                                                                0.8f
-                                                            )
+                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
                                                         )
                                                     }
 
                                                 example.examples.map {
                                                     Card(
                                                         colors = CardDefaults.cardColors(
-                                                            containerColor = MaterialTheme.colorScheme.secondary.copy(
-                                                                alpha = 0.1f
+                                                            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(
+                                                                alpha = 0.5f
                                                             )
                                                         ),
                                                         shape = RoundedCornerShape(8.dp)
@@ -550,13 +563,14 @@ fun WordDetailScreen(
                                                                 text = "💬 ${it.original}",
                                                                 style = MaterialTheme.typography.bodyMedium.copy(
                                                                     fontWeight = FontWeight.Medium
-                                                                )
+                                                                ),
+                                                                color = MaterialTheme.colorScheme.onSecondaryContainer
                                                             )
                                                             if (tgLang != "English") {
                                                                 Text(
                                                                     text = "→ ${it.translations.translation}",
                                                                     style = MaterialTheme.typography.bodySmall,
-                                                                    color = MaterialTheme.colorScheme.onSurface.copy(
+                                                                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(
                                                                         0.7f
                                                                     )
                                                                 )
@@ -575,7 +589,7 @@ fun WordDetailScreen(
                                         Card(
                                             colors = CardDefaults.cardColors(
                                                 containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(
-                                                    alpha = 0.3f
+                                                    alpha = 0.5f
                                                 )
                                             ),
                                             shape = RoundedCornerShape(12.dp)
@@ -589,14 +603,14 @@ fun WordDetailScreen(
                                                     style = MaterialTheme.typography.bodyLarge.copy(
                                                         fontWeight = FontWeight.Bold
                                                     ),
-                                                    color = MaterialTheme.colorScheme.tertiary
+                                                    color = MaterialTheme.colorScheme.onTertiaryContainer
                                                 )
                                                 idiom.translations.filter { it.targetLanguage == tgLang }
                                                     .map { it.translation }.forEach {
                                                         Text(
                                                             text = "• $it",
                                                             style = MaterialTheme.typography.bodyMedium,
-                                                            color = MaterialTheme.colorScheme.onSurface.copy(
+                                                            color = MaterialTheme.colorScheme.onTertiaryContainer.copy(
                                                                 0.8f
                                                             )
                                                         )
@@ -612,7 +626,7 @@ fun WordDetailScreen(
                                         Card(
                                             colors = CardDefaults.cardColors(
                                                 containerColor = MaterialTheme.colorScheme.primaryContainer.copy(
-                                                    alpha = 0.3f
+                                                    alpha = 0.5f
                                                 )
                                             ),
                                             shape = RoundedCornerShape(12.dp)
@@ -627,7 +641,7 @@ fun WordDetailScreen(
                                                     style = MaterialTheme.typography.bodyLarge.copy(
                                                         fontWeight = FontWeight.Bold
                                                     ),
-                                                    color = MaterialTheme.colorScheme.primary,
+                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                                                     modifier = Modifier.weight(1f)
                                                 )
 
@@ -643,8 +657,8 @@ fun WordDetailScreen(
                                                             )
                                                         },
                                                     colors = CardDefaults.cardColors(
-                                                        containerColor = MaterialTheme.colorScheme.secondary.copy(
-                                                            alpha = 0.2f
+                                                        containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(
+                                                            alpha = 0.8f
                                                         )
                                                     ),
                                                     shape = RoundedCornerShape(8.dp)
@@ -655,7 +669,7 @@ fun WordDetailScreen(
                                                         modifier = Modifier
                                                             .padding(8.dp)
                                                             .size(20.dp),
-                                                        tint = MaterialTheme.colorScheme.secondary
+                                                        tint = MaterialTheme.colorScheme.onSecondaryContainer
                                                     )
                                                 }
 
@@ -670,8 +684,8 @@ fun WordDetailScreen(
                                                             )
                                                         },
                                                     colors = CardDefaults.cardColors(
-                                                        containerColor = MaterialTheme.colorScheme.tertiary.copy(
-                                                            alpha = 0.2f
+                                                        containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(
+                                                            alpha = 0.8f
                                                         )
                                                     ),
                                                     shape = RoundedCornerShape(8.dp)
@@ -682,7 +696,7 @@ fun WordDetailScreen(
                                                         modifier = Modifier
                                                             .padding(8.dp)
                                                             .size(20.dp),
-                                                        tint = MaterialTheme.colorScheme.tertiary
+                                                        tint = MaterialTheme.colorScheme.onTertiaryContainer
                                                     )
                                                 }
                                             }
@@ -696,7 +710,7 @@ fun WordDetailScreen(
                                         Card(
                                             colors = CardDefaults.cardColors(
                                                 containerColor = MaterialTheme.colorScheme.errorContainer.copy(
-                                                    alpha = 0.3f
+                                                    alpha = 0.5f
                                                 )
                                             ),
                                             shape = RoundedCornerShape(12.dp)
@@ -711,7 +725,7 @@ fun WordDetailScreen(
                                                     style = MaterialTheme.typography.bodyLarge.copy(
                                                         fontWeight = FontWeight.Bold
                                                     ),
-                                                    color = MaterialTheme.colorScheme.error,
+                                                    color = MaterialTheme.colorScheme.onErrorContainer,
                                                     modifier = Modifier.weight(1f)
                                                 )
 
@@ -727,8 +741,8 @@ fun WordDetailScreen(
                                                             )
                                                         },
                                                     colors = CardDefaults.cardColors(
-                                                        containerColor = MaterialTheme.colorScheme.secondary.copy(
-                                                            alpha = 0.2f
+                                                        containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(
+                                                            alpha = 0.8f
                                                         )
                                                     ),
                                                     shape = RoundedCornerShape(8.dp)
@@ -739,7 +753,7 @@ fun WordDetailScreen(
                                                         modifier = Modifier
                                                             .padding(8.dp)
                                                             .size(20.dp),
-                                                        tint = MaterialTheme.colorScheme.secondary
+                                                        tint = MaterialTheme.colorScheme.onSecondaryContainer
                                                     )
                                                 }
 
@@ -754,8 +768,8 @@ fun WordDetailScreen(
                                                             )
                                                         },
                                                     colors = CardDefaults.cardColors(
-                                                        containerColor = MaterialTheme.colorScheme.tertiary.copy(
-                                                            alpha = 0.2f
+                                                        containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(
+                                                            alpha = 0.8f
                                                         )
                                                     ),
                                                     shape = RoundedCornerShape(8.dp)
@@ -766,7 +780,7 @@ fun WordDetailScreen(
                                                         modifier = Modifier
                                                             .padding(8.dp)
                                                             .size(20.dp),
-                                                        tint = MaterialTheme.colorScheme.tertiary
+                                                        tint = MaterialTheme.colorScheme.onTertiaryContainer
                                                     )
                                                 }
                                             }

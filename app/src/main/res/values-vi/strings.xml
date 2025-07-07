@@ -386,5 +386,10 @@
     <string name="difficulty_hard">Khó</string>
     <string name="text_full_test">Bài thi đầy đủ</string>
     <string name="text_duration">Thời lượng</string>
+    <string name="text_last_login">Đăng nhập lần cuối</string>
+    <string name="text_device_management">Quản lý thiết bị</string>
+    <string name="text_delete_device">Xóa thiết bị</string>
+    <string name="text_delete">Xóa</string>
+    <string name="text_delete_device_confirm">Bạn có muốn xóa thiết bị này không?</string>
 
 </resources>

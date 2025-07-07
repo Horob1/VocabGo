@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Videocam
@@ -67,7 +68,7 @@ fun UserProfileCard(
     val buttonSize = if (isCompact) 44.dp else 52.dp
     val buttonHeight = if (isCompact) 44.dp else 52.dp
     val contentPadding = if (isCompact) 16.dp else 24.dp
-    val sectionSpacing = if (isCompact) 8.dp else 12.dp
+    val sectionSpacing = if (isCompact) 4.dp else 12.dp
 
     val imageHeight = when (deviceType) {
         DeviceType.TabletPortrait -> 480.dp
@@ -123,7 +124,7 @@ fun UserProfileCard(
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Spacer(modifier = Modifier.height(sectionSpacing + 16.dp))
+                    Spacer(modifier = Modifier.height(sectionSpacing + 4.dp))
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -194,7 +195,7 @@ fun UserProfileCard(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(sectionSpacing + 8.dp))
+                    Spacer(modifier = Modifier.height(sectionSpacing + 4.dp))
 
                     if (isTabletLandscape) {
                         Row(
@@ -215,6 +216,7 @@ fun UserProfileCard(
                                     modifier = Modifier.size(iconSize)
                                 )
                             }
+                            Spacer(modifier = Modifier.weight(1f))
 
                             IconButton(
                                 onClick = onVideoCallClick,
@@ -229,6 +231,7 @@ fun UserProfileCard(
                                     modifier = Modifier.size(iconSize)
                                 )
                             }
+                            Spacer(modifier = Modifier.weight(1f))
 
                             Button(
                                 onClick = onclick,
@@ -250,8 +253,10 @@ fun UserProfileCard(
                         }
                     } else {
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             // Location button
@@ -271,6 +276,8 @@ fun UserProfileCard(
                                     modifier = Modifier.size(iconSize)
                                 )
                             }
+                            Spacer(modifier = Modifier.weight(1f))
+
 
                             IconButton(
                                 onClick = onVideoCallClick,
@@ -288,22 +295,22 @@ fun UserProfileCard(
                                     modifier = Modifier.size(iconSize)
                                 )
                             }
+                            Spacer(modifier = Modifier.weight(1f))
 
-                            Button(
+                            IconButton(
                                 onClick = onclick,
-                                shape = RoundedCornerShape(28.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF000000)
-                                ),
                                 modifier = Modifier
-                                    .height(buttonHeight)
-                                    .weight(1f)
+                                    .size(buttonSize)
+                                    .background(
+                                        MaterialTheme.colorScheme.background,
+                                        CircleShape
+                                    )
                             ) {
-                                Text(
-                                    stringResource(R.string.text_chat),
-                                    color = Color.White,
-                                    fontSize = if (deviceType == DeviceType.Mobile) 14.sp else 18.sp,
-                                    fontWeight = FontWeight.SemiBold
+                                Icon(
+                                    Icons.AutoMirrored.Filled.Chat,
+                                    contentDescription = "Call",
+                                    tint = MaterialTheme.colorScheme.onBackground,
+                                    modifier = Modifier.size(iconSize)
                                 )
                             }
                         }

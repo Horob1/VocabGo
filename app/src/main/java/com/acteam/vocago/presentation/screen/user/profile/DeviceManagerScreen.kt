@@ -3,6 +3,7 @@ package com.acteam.vocago.presentation.screen.user.profile
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,12 +37,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.acteam.vocago.R
 import com.acteam.vocago.data.model.DeviceDTO
 import com.acteam.vocago.presentation.screen.common.data.UIState
+import com.acteam.vocago.presentation.screen.main.toeictest.component.ErrorDisplay
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -83,12 +87,7 @@ fun DeviceManagementScreen(
         }
 
         is UIState.UIError -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Không thể tải danh sách thiết bị.")
-            }
+            ErrorDisplay()
         }
     }
 }
@@ -119,13 +118,16 @@ fun DeviceListContent(
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Quản lý thiết bị",
+                text = stringResource(R.string.text_device_management),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+        ) {
             items(devices) { device ->
                 DeviceItem(
                     device = device,
@@ -140,19 +142,19 @@ fun DeviceListContent(
         if (showDeleteDialog && deviceToDelete != null) {
             AlertDialog(
                 onDismissRequest = { showDeleteDialog = false },
-                title = { Text("Xóa thiết bị") },
-                text = { Text("Bạn có chắc muốn xóa thiết bị này không?") },
+                title = { Text(stringResource(R.string.text_delete_device)) },
+                text = { Text(stringResource(R.string.text_delete_device_confirm)) },
                 confirmButton = {
                     TextButton(onClick = {
                         onDeleteDevice(deviceToDelete!!)
                         showDeleteDialog = false
                     }) {
-                        Text("Xóa", color = Color.Red)
+                        Text(stringResource(R.string.text_delete), color = Color.Red)
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showDeleteDialog = false }) {
-                        Text("Hủy")
+                        Text(stringResource(R.string.btn_cancel))
                     }
                 }
             )
@@ -188,7 +190,7 @@ fun DeviceItem(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Đăng nhập gần nhất: ${formatDate(device.updatedAt)}",
+                    text = "${stringResource(R.string.text_last_login)}: ${formatDate(device.updatedAt)}",
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
