@@ -22,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.AllInclusive
@@ -365,12 +364,6 @@ fun VocaListDetailScreen(
                                                 modifier = Modifier.weight(1f),
                                                 shape = RoundedCornerShape(12.dp)
                                             ) {
-                                                Icon(
-                                                    Icons.Default.Delete,
-                                                    contentDescription = null,
-                                                    modifier = Modifier.size(18.dp)
-                                                )
-                                                Spacer(modifier = Modifier.width(8.dp))
                                                 Text(
                                                     text = stringResource(R.string.btn_delete),
                                                     style = MaterialTheme.typography.labelLarge

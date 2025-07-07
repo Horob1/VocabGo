@@ -20,7 +20,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.KeyboardDoubleArrowDown
 import androidx.compose.material.icons.filled.KeyboardDoubleArrowUp
@@ -56,6 +55,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
+import com.acteam.vocago.presentation.screen.common.EmptySurface
 import com.acteam.vocago.presentation.screen.common.LoginRequiredDialog
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
@@ -91,14 +91,14 @@ fun VocaScreen(
             modifier = Modifier
                 .padding(
                     horizontal = responsiveDP(
-                        mobile = 20,
-                        tabletPortrait = 28,
-                        tabletLandscape = 36
+                        mobile = 16,
+                        tabletPortrait = 24,
+                        tabletLandscape = 32
                     ),
                     vertical = responsiveDP(
-                        mobile = 16,
-                        tabletPortrait = 20,
-                        tabletLandscape = 24
+                        mobile = 8,
+                        tabletPortrait = 12,
+                        tabletLandscape = 16
                     )
                 )
                 .fillMaxWidth(),
@@ -113,9 +113,9 @@ fun VocaScreen(
                     stringResource(R.string.title_voca_center),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontSize = responsiveSP(
-                            mobile = 24,
-                            tabletPortrait = 26,
-                            tabletLandscape = 28
+                            mobile = 20,
+                            tabletPortrait = 22,
+                            tabletLandscape = 24
                         ),
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -182,201 +182,204 @@ fun VocaScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Vocabulary List Section
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(
-                horizontal = responsiveDP(
-                    mobile = 20,
-                    tabletPortrait = 28,
-                    tabletLandscape = 36
-                ),
-                vertical = responsiveDP(
-                    mobile = 8,
-                    tabletPortrait = 12,
-                    tabletLandscape = 16
-                )
-            ),
-            verticalArrangement = Arrangement.spacedBy(
-                responsiveDP(
-                    mobile = 12,
-                    tabletPortrait = 16,
-                    tabletLandscape = 20
-                )
-            )
-        ) {
-            items(
-                vocaLists.size,
-                key = { vocaLists[it].id }
-            ) { index ->
-                var showConfirmDeleteVoca by remember { mutableStateOf(false) }
-                SwipeToDismissBox(
-                    state = rememberSwipeToDismissBoxState(
-                        confirmValueChange = {
-                            if (it == SwipeToDismissBoxValue.EndToStart) {
-                                // Xóa từ vựng
-                                showConfirmDeleteVoca = true
-                                true
-                            }
-                            false
-                        }
+        if (vocaLists.isEmpty())
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                EmptySurface()
+            }
+        else
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    horizontal = responsiveDP(
+                        mobile = 20,
+                        tabletPortrait = 28,
+                        tabletLandscape = 36
                     ),
-                    backgroundContent = {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(
-                                    Color.Red.copy(0.7f),
-                                    shape = MaterialTheme.shapes.large
-                                ),
-                            contentAlignment = Alignment.CenterEnd
-                        ) {
-                            Row {
-                                Icon(
-                                    Icons.Filled.DeleteSweep,
-                                    contentDescription = "Delete",
-                                    tint = Color.White
-                                )
-                                Spacer(
-                                    modifier = Modifier
-                                        .width(16.dp)
-                                        .height(16.dp)
-                                )
+                    vertical = responsiveDP(
+                        mobile = 8,
+                        tabletPortrait = 12,
+                        tabletLandscape = 16
+                    )
+                ),
+                verticalArrangement = Arrangement.spacedBy(
+                    responsiveDP(
+                        mobile = 12,
+                        tabletPortrait = 16,
+                        tabletLandscape = 20
+                    )
+                )
+            ) {
+                items(
+                    vocaLists.size,
+                    key = { vocaLists[it].id }
+                ) { index ->
+                    var showConfirmDeleteVoca by remember { mutableStateOf(false) }
+                    SwipeToDismissBox(
+                        state = rememberSwipeToDismissBoxState(
+                            confirmValueChange = {
+                                if (it == SwipeToDismissBoxValue.EndToStart) {
+                                    // Xóa từ vựng
+                                    showConfirmDeleteVoca = true
+                                    true
+                                }
+                                false
                             }
-                        }
-                    }
-                ) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .safeClickable(
-                                "voca_list_detail"
-                            ) {
-                                rootNavController.navigate(
-                                    NavScreen.VocaListDetailNavScreen(
-                                        vocaLists[index].id
-                                    )
-                                )
-                            }
-                            .shadow(
-                                elevation = 2.dp,
-                                shape = RoundedCornerShape(16.dp)
-                            ),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
                         ),
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = 4.dp,
-                            pressedElevation = 2.dp
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(20.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            // Accent color strip
+                        backgroundContent = {
                             Box(
                                 modifier = Modifier
-                                    .size(
-                                        width = 4.dp,
-                                        height = 40.dp
-                                    )
+                                    .fillMaxSize()
                                     .background(
-                                        MaterialTheme.colorScheme.primary,
-                                        shape = RoundedCornerShape(2.dp)
-                                    )
-                            )
-
-                            Spacer(modifier = Modifier.size(16.dp))
-
-                            Column(
-                                modifier = Modifier.weight(1f)
+                                        Color.Red.copy(0.7f),
+                                        shape = MaterialTheme.shapes.large
+                                    ),
+                                contentAlignment = Alignment.CenterEnd
                             ) {
-                                Text(
-                                    text = vocaLists[index].title,
-                                    style = MaterialTheme.typography.titleMedium.copy(
-                                        fontWeight = FontWeight.Medium,
-                                        color = MaterialTheme.colorScheme.onSurface
+                                Row {
+                                    Icon(
+                                        Icons.Filled.DeleteSweep,
+                                        contentDescription = "Delete",
+                                        tint = Color.White
                                     )
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = stringResource(R.string.tap_to_view_detail),
-                                    style = MaterialTheme.typography.bodySmall.copy(
-                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                    Spacer(
+                                        modifier = Modifier
+                                            .width(16.dp)
+                                            .height(16.dp)
                                     )
-                                )
+                                }
                             }
                         }
-                    }
-                }
-
-                if (showConfirmDeleteVoca) {
-                    // Hiển thị dialog xác nhận xóa
-                    Dialog(
-                        onDismissRequest = { showConfirmDeleteVoca = false }
                     ) {
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp),
-                            shape = RoundedCornerShape(20.dp),
+                                .safeClickable(
+                                    "voca_list_detail"
+                                ) {
+                                    rootNavController.navigate(
+                                        NavScreen.VocaListDetailNavScreen(
+                                            vocaLists[index].id
+                                        )
+                                    )
+                                }
+                                .shadow(
+                                    elevation = 2.dp,
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.surface
                             ),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                            elevation = CardDefaults.cardElevation(
+                                defaultElevation = 4.dp,
+                                pressedElevation = 2.dp
+                            )
                         ) {
-                            Column(
+                            Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(24.dp)
+                                    .padding(20.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = "${stringResource(R.string.title_sure_to_delete)} ${vocaLists[index].title}",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight.Bold
+                                // Accent color strip
+                                Box(
+                                    modifier = Modifier
+                                        .size(
+                                            width = 4.dp,
+                                            height = 40.dp
+                                        )
+                                        .background(
+                                            MaterialTheme.colorScheme.primary,
+                                            shape = RoundedCornerShape(2.dp)
+                                        )
                                 )
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                                ) {
-                                    Button(
-                                        onClick = { showConfirmDeleteVoca = false },
-                                        modifier = Modifier.weight(1f),
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                                        ),
-                                        shape = RoundedCornerShape(12.dp)
-                                    ) {
-                                        Text(
-                                            text = stringResource(R.string.btn_cancel),
-                                            style = MaterialTheme.typography.labelLarge
-                                        )
-                                    }
 
-                                    Button(
-                                        onClick = {
-                                            viewModel.deleteVocaList(vocaLists[index])
-                                            showConfirmDeleteVoca = false
-                                        },
-                                        modifier = Modifier.weight(1f),
-                                        shape = RoundedCornerShape(12.dp)
+                                Spacer(modifier = Modifier.size(16.dp))
+
+                                Column(
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(
+                                        text = vocaLists[index].title,
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontWeight = FontWeight.Medium,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = stringResource(R.string.tap_to_view_detail),
+                                        style = MaterialTheme.typography.bodySmall.copy(
+                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    if (showConfirmDeleteVoca) {
+                        // Hiển thị dialog xác nhận xóa
+                        Dialog(
+                            onDismissRequest = { showConfirmDeleteVoca = false }
+                        ) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                shape = RoundedCornerShape(20.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surface
+                                ),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(24.dp)
+                                ) {
+                                    Text(
+                                        text = "${stringResource(R.string.title_sure_to_delete)} ${vocaLists[index].title}",
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                                     ) {
-                                        Icon(
-                                            Icons.Default.Delete,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(18.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text(
-                                            text = stringResource(R.string.btn_delete),
-                                            style = MaterialTheme.typography.labelLarge
-                                        )
+                                        Button(
+                                            onClick = { showConfirmDeleteVoca = false },
+                                            modifier = Modifier.weight(1f),
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                            ),
+                                            shape = RoundedCornerShape(12.dp)
+                                        ) {
+                                            Text(
+                                                text = stringResource(R.string.btn_cancel),
+                                                style = MaterialTheme.typography.labelLarge
+                                            )
+                                        }
+
+                                        Button(
+                                            onClick = {
+                                                viewModel.deleteVocaList(vocaLists[index])
+                                                showConfirmDeleteVoca = false
+                                            },
+                                            modifier = Modifier.weight(1f),
+                                            shape = RoundedCornerShape(12.dp)
+                                        ) {
+                                            Text(
+                                                text = stringResource(R.string.btn_delete),
+                                                style = MaterialTheme.typography.labelLarge
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -384,7 +387,6 @@ fun VocaScreen(
                     }
                 }
             }
-        }
     }
 
     // Add Dialog with improved design
@@ -538,7 +540,7 @@ fun VocaScreen(
                                     showSyncDialog = false
                                 },
                             colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                                containerColor = MaterialTheme.colorScheme.primary
                             ),
                             shape = RoundedCornerShape(16.dp),
                         ) {
@@ -574,7 +576,7 @@ fun VocaScreen(
                                     showSyncDialog = false
                                 },
                             colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                                containerColor = MaterialTheme.colorScheme.primary
                             ),
                             shape = RoundedCornerShape(16.dp)
                         ) {
@@ -587,14 +589,14 @@ fun VocaScreen(
                                 Icon(
                                     imageVector = Icons.Default.KeyboardDoubleArrowUp,
                                     contentDescription = "Sync voca list to server",
-                                    tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                    tint = MaterialTheme.colorScheme.surface,
                                     modifier = Modifier.size(32.dp)
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
                                     stringResource(R.string.desc_sync_voca_list_to_server),
                                     style = MaterialTheme.typography.bodySmall.copy(
-                                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                                        color = MaterialTheme.colorScheme.surface
                                     ),
                                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                                 )
