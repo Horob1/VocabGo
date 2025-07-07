@@ -24,7 +24,6 @@ class SyncVocaFromServeUseCase(
             }
         } catch (e: Exception) {
             e.printStackTrace()
-
         }
 
     }

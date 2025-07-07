@@ -77,9 +77,10 @@ fun SearchNovelScreen(
                 leadingIcon = {
                     IconButton(
                         onClick = {
-                            navController.navigate(
-                                NavScreen.SearchNovelNavScreen(navigateKeySearch.value)
-                            )
+                            if (navigateKeySearch.value.isNotEmpty() && navigateKeySearch.value != currentKeySearch)
+                                navController.navigate(
+                                    NavScreen.SearchNovelNavScreen(navigateKeySearch.value)
+                                )
                         }
                     ) {
                         Icon(
@@ -91,9 +92,10 @@ fun SearchNovelScreen(
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(
                     onSearch = {
-                        navController.navigate(
-                            NavScreen.SearchNovelNavScreen(navigateKeySearch.value)
-                        )
+                        if (navigateKeySearch.value.isNotEmpty() && navigateKeySearch.value != currentKeySearch)
+                            navController.navigate(
+                                NavScreen.SearchNovelNavScreen(navigateKeySearch.value)
+                            )
                     }
                 ),
                 singleLine = true,

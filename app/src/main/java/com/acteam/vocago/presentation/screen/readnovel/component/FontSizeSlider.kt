@@ -179,7 +179,7 @@ fun FontSizeAdjuster(
                 Icon(
                     imageVector = Icons.Default.Remove,
                     contentDescription = "Giảm cỡ chữ",
-                    tint = if (value > minValue) MaterialTheme.colorScheme.primary
+                    tint = if (value > minValue) MaterialTheme.colorScheme.onSurface
                     else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 )
             }
@@ -209,7 +209,7 @@ fun FontSizeAdjuster(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Tăng cỡ chữ",
-                    tint = if (value < maxValue) MaterialTheme.colorScheme.primary
+                    tint = if (value < maxValue) MaterialTheme.colorScheme.onSurface
                     else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 )
             }

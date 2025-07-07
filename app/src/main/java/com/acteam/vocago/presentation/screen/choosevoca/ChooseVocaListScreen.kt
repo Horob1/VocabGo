@@ -2,6 +2,7 @@ package com.acteam.vocago.presentation.screen.choosevoca
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.acteam.vocago.R
 import com.acteam.vocago.data.local.entity.VocaEntity
+import com.acteam.vocago.presentation.screen.common.EmptySurface
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,78 +43,92 @@ fun ChooseVocaListScreen(
 ) {
     val vocaLists by viewModel.vocaLists.collectAsStateWithLifecycle()
     Scaffold {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-                .padding(16.dp)
-        ) {
-            items(
-                vocaLists.size,
-                key = { vocaLists[it].id }
-            ) { index ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            viewModel.saveWordToVocaList(word, vocaLists[index].id)
-                            rootNavController.popBackStack()
-                        }
-                        .shadow(
-                            elevation = 2.dp,
-                            shape = RoundedCornerShape(16.dp)
-                        ),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 4.dp,
-                        pressedElevation = 2.dp
-                    )
-                ) {
-                    Row(
+        if (vocaLists.isEmpty())
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it),
+                contentAlignment = Alignment.Center
+
+            ) {
+                EmptySurface(
+
+                )
+            }
+        else
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(
+                    vocaLists.size,
+                    key = { vocaLists[it].id }
+                ) { index ->
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(20.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Accent color strip
-                        Box(
-                            modifier = Modifier
-                                .size(
-                                    width = 4.dp,
-                                    height = 40.dp
-                                )
-                                .background(
-                                    MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(2.dp)
-                                )
+                            .clickable {
+                                viewModel.saveWordToVocaList(word, vocaLists[index].id)
+                                rootNavController.popBackStack()
+                            }
+                            .shadow(
+                                elevation = 2.dp,
+                                shape = RoundedCornerShape(16.dp)
+                            ),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = 4.dp,
+                            pressedElevation = 2.dp
                         )
-
-                        Spacer(modifier = Modifier.size(16.dp))
-
-                        Column(
-                            modifier = Modifier.weight(1f)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = vocaLists[index].title,
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    fontWeight = FontWeight.Medium,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
+                            // Accent color strip
+                            Box(
+                                modifier = Modifier
+                                    .size(
+                                        width = 4.dp,
+                                        height = 40.dp
+                                    )
+                                    .background(
+                                        MaterialTheme.colorScheme.primary,
+                                        shape = RoundedCornerShape(2.dp)
+                                    )
                             )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = stringResource(R.string.tap_to_choose),
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+
+                            Spacer(modifier = Modifier.size(16.dp))
+
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = vocaLists[index].title,
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
                                 )
-                            )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = stringResource(R.string.tap_to_choose),
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                    )
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
     }
 }
