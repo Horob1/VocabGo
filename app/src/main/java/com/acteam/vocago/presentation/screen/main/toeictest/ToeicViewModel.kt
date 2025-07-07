@@ -8,6 +8,7 @@ import com.acteam.vocago.data.model.TestResultListDto
 import com.acteam.vocago.data.model.ToeicDetailDto
 import com.acteam.vocago.data.model.ToeicDto
 import com.acteam.vocago.domain.usecase.GetLocalUserProfileUseCase
+import com.acteam.vocago.domain.usecase.GetLoginStateUseCase
 import com.acteam.vocago.domain.usecase.GetTestResultDetailUseCase
 import com.acteam.vocago.domain.usecase.GetToeicDetailUseCase
 import com.acteam.vocago.domain.usecase.GetToeicListUseCase
@@ -26,8 +27,10 @@ class ToeicViewModel(
     private val submitToeicUseCase: SubmitToeicUseCase,
     private val getLocalUserProfileUseCase: GetLocalUserProfileUseCase,
     private val getToeicResultUseCase: GetToeicResultUseCase,
-    private val getTestResultDetailUseCase: GetTestResultDetailUseCase
+    private val getTestResultDetailUseCase: GetTestResultDetailUseCase,
+    private val getLoginStateUseCase: GetLoginStateUseCase
 ) : ViewModel() {
+    val loginState = getLoginStateUseCase()
 
     private val _toeicListState = MutableStateFlow<UIState<ToeicDto>>(UIState.UILoading)
     val toeicListState: StateFlow<UIState<ToeicDto>> = _toeicListState.asStateFlow()

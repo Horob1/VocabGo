@@ -9,21 +9,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
+import com.acteam.vocago.presentation.screen.common.EmptySurface
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
+import com.acteam.vocago.presentation.screen.common.LoginRequiredDialog
 import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.presentation.screen.main.toeictest.component.ToeicHeader
 import com.acteam.vocago.utils.responsiveValue
@@ -34,11 +34,16 @@ fun ToeicScreen(
     rootNavController: NavController,
 ) {
     val uiState by viewModel.toeicListState.collectAsState()
-
+    val isAuth by viewModel.loginState.collectAsState()
+    var isShowLoginDialog by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         viewModel.getToeicList()
     }
-
+    LaunchedEffect(isAuth) {
+        if (!isAuth) {
+            isShowLoginDialog = true
+        }
+    }
     Column(modifier = Modifier.fillMaxSize()) {
         ToeicHeader()
         Spacer(modifier = Modifier.height(12.dp))
@@ -84,15 +89,18 @@ fun ToeicScreen(
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = stringResource(R.string.login_require),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold
-                        ),
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    EmptySurface()
                 }
             }
         }
+    }
+    if (isShowLoginDialog) {
+        LoginRequiredDialog(
+            onDismiss = { isShowLoginDialog = false },
+            onConfirm = {
+                isShowLoginDialog = false
+                rootNavController.navigate(NavScreen.AuthNavScreen)
+            }
+        )
     }
 }

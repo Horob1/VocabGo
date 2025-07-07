@@ -191,6 +191,7 @@ fun UserNavigatorScreen(
                 Text(stringResource(R.string.title_logout))
             }
         }
+        Spacer(modifier = Modifier.height(4.dp))
 
     }
 

@@ -9,10 +9,12 @@ data class WordOfTheDaySimpleResponse(
     val message: String
 )
 
+
 @Serializable
 data class WordOfTheDaySimpleDto(
     val word: String,
     val types: List<WordTypeSimpleDto>,
+    val phonetics: List<WordPhoneticSimpleDto>,
     val translations: List<WordTranslationSimpleDto>
 )
 
@@ -20,6 +22,12 @@ data class WordOfTheDaySimpleDto(
 data class WordTypeSimpleDto(
     val targetLanguage: String,
     val type: List<String>
+)
+
+@Serializable
+data class WordPhoneticSimpleDto(
+    val countryCode: String,
+    val pronunciation: String
 )
 
 @Serializable

@@ -12,11 +12,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
+import org.json.JSONArray
+import java.net.URLEncoder
 
 class CameraViewModel : ViewModel() {
     private val _detectedText = mutableStateOf("")
@@ -27,6 +26,9 @@ class CameraViewModel : ViewModel() {
     var ocrBitmap by mutableStateOf<Bitmap?>(null)
     var ocrLines by mutableStateOf<List<OcrModel>>(emptyList())
     var isTranslated by mutableStateOf(false)
+
+    var isTranslating by mutableStateOf(false)
+        private set
 
     fun onTextDetected(text: String) {
         _detectedText.value = text
@@ -45,53 +47,54 @@ class CameraViewModel : ViewModel() {
         ocrLines = emptyList()
         _detectedText.value = ""
         isTranslated = false
-        cameraHandler?.release() // Giải phóng tài nguyên trước
-        cameraHandler?.restartPreview() // Khởi động lại preview
+        isTranslating = false
+        cameraHandler?.release()
+        cameraHandler?.restartPreview()
     }
 
     suspend fun translateOverlayText(targetLang: String = "vi") {
-        if (isTranslated) return
+        // ✅ Tránh lặp và tránh khi đang dịch
+        if (isTranslated || isTranslating) return
 
-        val translated = ocrLines.map { line ->
-            val response = withContext(Dispatchers.IO) {
-                try {
-                    val body = JSONObject().apply {
-                        put("q", line.text)
-                        put("source", "auto")
-                        put("target", targetLang)
-                        put("format", "text")
-                    }
+        isTranslating = true
 
-                    val requestBody =
-                        body.toString().toRequestBody("application/json".toMediaType())
-                    val request = Request.Builder()
-                        .url("https://translate.argosopentech.com/translate")
-                        .post(requestBody)
-                        .build()
+        try {
+            val client = OkHttpClient()
 
-                    val client = OkHttpClient()
-                    val result = client.newCall(request).execute()
-                    val responseBody = result.body?.string() ?: ""
+            val translated = ocrLines.map { line ->
+                val response = withContext(Dispatchers.IO) {
+                    try {
+                        val encodedText = URLEncoder.encode(line.text, "UTF-8")
+                        val url =
+                            "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=$targetLang&dt=t&q=$encodedText"
 
-                    val json = JSONObject(responseBody)
-                    if (json.has("translatedText")) {
-                        json.getString("translatedText")
-                    } else {
+                        val request = Request.Builder()
+                            .url(url)
+                            .get()
+                            .build()
+
+                        val result = client.newCall(request).execute()
+                        val responseBody = result.body?.string() ?: ""
+                        val json = JSONArray(responseBody)
+                        val translatedText =
+                            json.getJSONArray(0).getJSONArray(0).getString(0)
+
+                        translatedText
+                    } catch (e: Exception) {
+                        Log.e("TranslateAPI", "Lỗi dịch: ${e.message}", e)
                         "[Dịch lỗi]"
                     }
-                } catch (e: Exception) {
-                    Log.e("TranslateAPI", "Lỗi dịch: ${e.message}")
-                    "[Dịch lỗi]"
                 }
+
+                line.copy(text = response)
             }
 
-            line.copy(text = response)
+            ocrLines = translated
+            isTranslated = true
+        } finally {
+            isTranslating = false
         }
-
-        ocrLines = translated
-        isTranslated = true
     }
-
 
     override fun onCleared() {
         cameraHandler?.release()

@@ -357,9 +357,11 @@ fun LoginScreen(
                     )
                     clearErrorSignal = false
                 }
-            } else if (errorType == UIErrorType.PreconditionFailedError) {
-                show2FADialog = true
-            } else {
+            }
+//            } else if (errorType == UIErrorType.PreconditionFailedError) {
+//                show2FADialog = true
+//            }
+            else {
                 val messageResId = when (errorType) {
                     UIErrorType.NotFoundError,
                     UIErrorType.UnauthorizedError,

@@ -72,6 +72,10 @@ fun FeatureBar(
                 rootNavController.navigate(NavScreen.NewsHistoryNavScreen(isBookmark = false))
             }),
             FeatureBarItem.Dictionary(onClick = {
+                if (!isAuth) {
+                    runOnUnAuth()
+                    return@Dictionary
+                }
                 rootNavController.navigate(NavScreen.DictionaryNavScreen)
             }),
             FeatureBarItem.Setting(onClick = {

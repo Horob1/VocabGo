@@ -28,6 +28,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -68,7 +69,7 @@ fun SubmitResultOverlay(
                 .fillMaxWidth()
                 .animateContentSize(),
             shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 16.dp)
         ) {
             Column(
@@ -80,7 +81,7 @@ fun SubmitResultOverlay(
                     modifier = Modifier
                         .size(80.dp)
                         .background(
-                            TOEICColors.Success.copy(alpha = 0.1f),
+                            MaterialTheme.colorScheme.primaryContainer,
                             CircleShape
                         ),
                     contentAlignment = Alignment.Center
@@ -99,7 +100,7 @@ fun SubmitResultOverlay(
                     text = stringResource(R.string.text_congratulation),
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp,
-                    color = TOEICColors.Primary
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -107,7 +108,7 @@ fun SubmitResultOverlay(
                 Text(
                     text = stringResource(R.string.text_your_success_exam),
                     fontSize = 16.sp,
-                    color = TOEICColors.OnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
 
@@ -118,7 +119,7 @@ fun SubmitResultOverlay(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = TOEICColors.Primary.copy(alpha = 0.05f)
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 ) {
                     Column(
@@ -128,14 +129,14 @@ fun SubmitResultOverlay(
                         Text(
                             text = stringResource(R.string.text_total_score),
                             fontSize = 14.sp,
-                            color = TOEICColors.OnSurfaceVariant,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
                             text = "${result.totalScore}",
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
-                            color = TOEICColors.Primary
+                            color = MaterialTheme.colorScheme.primary
                         )
 
                         Spacer(Modifier.height(16.dp))
@@ -154,7 +155,7 @@ fun SubmitResultOverlay(
                                 modifier = Modifier
                                     .height(40.dp)
                                     .width(1.dp),
-                                color = TOEICColors.OnSurfaceVariant.copy(alpha = 0.3f)
+                                color = MaterialTheme.colorScheme.outline
                             )
 
                             ScoreItem(
@@ -193,19 +194,19 @@ fun SubmitResultOverlay(
                         .fillMaxWidth()
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = TOEICColors.Success
+                        containerColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = RoundedCornerShape(25.dp)
                 ) {
                     Icon(
                         Icons.Default.Check,
                         contentDescription = null,
-                        tint = Color.White
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = stringResource(R.string.text_complete),
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -226,14 +227,14 @@ private fun ScoreItem(
         Text(
             text = title,
             fontSize = 12.sp,
-            color = TOEICColors.OnSurfaceVariant,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
             fontWeight = FontWeight.Medium
         )
         Text(
             text = score.toString(),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = TOEICColors.Primary
+            color = MaterialTheme.colorScheme.primary
         )
     }
 }
@@ -250,20 +251,20 @@ private fun InfoItem(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = TOEICColors.OnSurfaceVariant,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(18.dp)
         )
         Spacer(Modifier.height(4.dp))
         Text(
             text = label,
             fontSize = 12.sp,
-            color = TOEICColors.OnSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
             text = value,
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
-            color = TOEICColors.OnSurface
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }

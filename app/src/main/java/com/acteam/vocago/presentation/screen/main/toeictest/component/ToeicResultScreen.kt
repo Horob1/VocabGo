@@ -34,6 +34,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -116,8 +117,8 @@ fun ToeicResultsScreen(
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        TOEICColors.Primary.copy(alpha = 0.05f),
-                        Color.White
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.05f),
+                        MaterialTheme.colorScheme.surface
                     )
                 )
             )
@@ -204,7 +205,7 @@ private fun StatisticsSummary(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = TOEICColors.Primary.copy(alpha = 0.1f)
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         )
     ) {
         Column(
@@ -214,7 +215,7 @@ private fun StatisticsSummary(
                 text = stringResource(R.string.text_general_static),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = TOEICColors.Primary
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
 
             Spacer(Modifier.height(16.dp))
@@ -227,28 +228,28 @@ private fun StatisticsSummary(
                     icon = Icons.Default.Quiz,
                     label = stringResource(R.string.text_total_score),
                     value = totalTests.toString(),
-                    color = TOEICColors.Primary
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 StatItem(
                     icon = Icons.AutoMirrored.Filled.TrendingUp,
                     label = stringResource(R.string.text_avg_score),
                     value = avgScore.toString(),
-                    color = TOEICColors.Success
+                    color = MaterialTheme.colorScheme.tertiary
                 )
 
                 StatItem(
                     icon = Icons.Default.Star,
                     label = stringResource(R.string.text_max_score),
                     value = bestScore.toString(),
-                    color = TOEICColors.Warning
+                    color = MaterialTheme.colorScheme.secondary
                 )
 
                 StatItem(
                     icon = Icons.Default.AccessTime,
                     label = stringResource(R.string.text_time),
                     value = "${totalStudyTime / 60} ${stringResource(R.string.text_minute)}",
-                    color = TOEICColors.Accent
+                    color = MaterialTheme.colorScheme.outline
                 )
             }
         }
@@ -276,7 +277,7 @@ fun TestResultCard(
                     onItemClick()
                 }),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
@@ -289,12 +290,21 @@ fun TestResultCard(
                     Text(
                         stringResource(R.string.text_test),
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
                 Column(horizontalAlignment = Alignment.End) {
-                    Text(date.format(formatter), fontSize = 12.sp)
-                    Text(date.format(timeFormatter), fontSize = 12.sp)
+                    Text(
+                        date.format(formatter),
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        date.format(timeFormatter),
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
 
@@ -308,20 +318,20 @@ fun TestResultCard(
                     stringResource(R.string.text_total_score),
                     testDto.totalScore,
                     990,
-                    TOEICColors.Primary,
+                    MaterialTheme.colorScheme.primary,
                     true
                 )
                 ScoreDisplay(
                     stringResource(R.string.listenning),
                     testDto.listeningScore,
                     495,
-                    TOEICColors.Success
+                    MaterialTheme.colorScheme.tertiary
                 )
                 ScoreDisplay(
                     stringResource(R.string.reading),
                     testDto.readingScore,
                     495,
-                    TOEICColors.Accent
+                    MaterialTheme.colorScheme.secondary
                 )
             }
 
@@ -335,26 +345,28 @@ fun TestResultCard(
                     Icon(
                         Icons.Default.AccessTime,
                         contentDescription = null,
-                        tint = TOEICColors.OnSurfaceVariant,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
                         "${testDto.completionTime / 60}p ${testDto.completionTime % 60}s",
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         Icons.Default.CheckCircle,
                         contentDescription = null,
-                        tint = TOEICColors.OnSurfaceVariant,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
                         "$correctAnswers/$totalQuestions ${stringResource(R.string.text_correct)}",
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -391,7 +403,7 @@ private fun StatItem(
         Text(
             text = label,
             fontSize = 12.sp,
-            color = TOEICColors.OnSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -407,7 +419,7 @@ private fun FilterSortBar(
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Row(
             modifier = Modifier
@@ -475,7 +487,7 @@ private fun ScoreDisplay(
         Text(
             text = label,
             fontSize = if (isMain) 14.sp else 12.sp,
-            color = TOEICColors.OnSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = if (isMain) FontWeight.Medium else FontWeight.Normal
         )
 
@@ -490,12 +502,11 @@ private fun ScoreDisplay(
             Text(
                 text = "/$maxScore",
                 fontSize = 10.sp,
-                color = TOEICColors.OnSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
 }
-
 
 @Composable
 private fun EmptyResultsState(
@@ -517,7 +528,7 @@ private fun EmptyResultsState(
             text = stringResource(R.string.text_no_result_yet),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            color = TOEICColors.OnSurface
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Spacer(Modifier.height(8.dp))
@@ -525,7 +536,7 @@ private fun EmptyResultsState(
         Text(
             text = stringResource(R.string.text_no_practice),
             fontSize = 14.sp,
-            color = TOEICColors.OnSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
     }

@@ -159,9 +159,19 @@ fun DictionaryScreen(
                             onViewAllClick = {
                                 rootNavController.navigate(NavScreen.WordDetailNavScreen(wordData.word))
                             },
-                            onNavigateToChooseVocaList = { word ->
-                                //rootNavController.navigate(NavScreen.ChooseVocaListNavScreen(word))
-                            },
+                            onNavigateToChooseVocaList = { _ ->
+                                rootNavController.navigate(
+                                    NavScreen.ChooseVocaListNavScreen(
+                                        word = wordData.word,
+                                        meaning = wordData.translations.firstOrNull()?.translation
+                                            ?: "",
+                                        pronunciation = wordData.phonetics.firstOrNull()?.pronunciation
+                                            ?: "",
+                                        type = wordData.types.firstOrNull()?.type?.firstOrNull()
+                                            ?: ""
+                                    )
+                                )
+                            }
                         )
                     }
 

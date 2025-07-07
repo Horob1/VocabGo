@@ -24,6 +24,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Translate
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -202,13 +203,16 @@ fun CameraScreen(
                 )
             }
 
-            IconButton(onClick = {
-                if (!viewModel.isTranslated) {
-                    coroutineScope.launch {
-                        viewModel.translateOverlayText()
+            IconButton(
+                onClick = {
+                    if (!viewModel.isTranslated) {
+                        coroutineScope.launch {
+                            viewModel.translateOverlayText()
+                        }
                     }
-                }
-            }) {
+                },
+                enabled = !viewModel.isTranslating
+            ) {
                 Icon(Icons.Default.Translate, contentDescription = "Dịch ảnh", tint = Color.White)
             }
         }
@@ -252,4 +256,15 @@ fun CameraScreen(
             }
         }
     }
+    if (viewModel.isTranslating) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f)),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+
 }

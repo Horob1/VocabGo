@@ -26,6 +26,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -55,7 +55,7 @@ fun ToeicItem(
             .padding(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Box {
             Box(
@@ -65,8 +65,8 @@ fun ToeicItem(
                     .background(
                         Brush.horizontalGradient(
                             colors = listOf(
-                                Color(0xFF667eea),
-                                Color(0xFF764ba2)
+                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.colorScheme.secondary
                             )
                         )
                     )
@@ -83,7 +83,7 @@ fun ToeicItem(
                         text = title,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
 
                     Spacer(modifier = Modifier.height(4.dp))
@@ -97,14 +97,14 @@ fun ToeicItem(
                         Icon(
                             imageVector = Icons.Default.School,
                             contentDescription = null,
-                            tint = Color.White.copy(alpha = 0.8f),
+                            tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "TOEIC Test",
+                            text = "${stringResource(R.string.text_test)} Toeic",
                             fontSize = 11.sp,
-                            color = Color.White.copy(alpha = 0.8f),
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                             fontWeight = FontWeight.Medium
                         )
                     }
@@ -122,23 +122,22 @@ fun ToeicItem(
                     StatItem(
                         icon = Icons.Default.Quiz,
                         label = "200 ${stringResource(R.string.text_question)}",
-                        value = "Full Test"
+                        value = stringResource(R.string.text_full_test)
                     )
 
                     StatItem(
                         icon = Icons.Default.Schedule,
                         label = "120 ${stringResource(R.string.text_minute)}",
-                        value = "Duration"
+                        value = stringResource(R.string.text_duration)
                     )
 
                     StatItem(
                         icon = Icons.AutoMirrored.Filled.TrendingUp,
                         label = stringResource(R.string.text_advanced),
-                        value = "Level"
+                        value = stringResource(R.string.text_level)
                     )
                 }
 
-                // Action Buttons - More compact
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -150,7 +149,7 @@ fun ToeicItem(
                             .height(44.dp),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF667eea)
+                            containerColor = MaterialTheme.colorScheme.primary
                         )
                     ) {
                         Icon(
@@ -168,7 +167,6 @@ fun ToeicItem(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Secondary Buttons Row
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -187,13 +185,13 @@ fun ToeicItem(
                                 imageVector = Icons.Default.Psychology,
                                 contentDescription = null,
                                 modifier = Modifier.size(16.dp),
-                                tint = Color(0xFF667eea)
+                                tint = MaterialTheme.colorScheme.primary
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = stringResource(R.string.text_practice),
                                 fontSize = 12.sp,
-                                color = Color(0xFF667eea)
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
 
@@ -211,13 +209,13 @@ fun ToeicItem(
                                 imageVector = Icons.Default.Assessment,
                                 contentDescription = null,
                                 modifier = Modifier.size(16.dp),
-                                tint = Color(0xFF667eea)
+                                tint = MaterialTheme.colorScheme.primary
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = stringResource(R.string.text_result),
                                 fontSize = 12.sp,
-                                color = Color(0xFF667eea)
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
@@ -240,13 +238,13 @@ fun StatItem(
             modifier = Modifier
                 .size(36.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color(0xFF667eea).copy(alpha = 0.1f)),
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Color(0xFF667eea),
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(18.dp)
             )
         }
@@ -257,14 +255,14 @@ fun StatItem(
             text = value,
             fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )
 
         Text(
             text = label,
             fontSize = 12.sp,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )
     }

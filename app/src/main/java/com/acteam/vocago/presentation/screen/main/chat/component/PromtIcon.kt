@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Campaign
+import androidx.compose.material.icons.filled.ChildCare
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.DataObject
 import androidx.compose.material.icons.filled.EmojiObjects
@@ -109,7 +110,7 @@ val personaIcons: Map<Int, List<ImageVector>> = mapOf(
         Icons.Default.SentimentVerySatisfied, // Playful
         Icons.Default.Mic,                 // Performer
         Icons.Default.Style,               // Poetic
-        Icons.Default.Groups               // Down to Earth
+        Icons.Default.ChildCare               // Down to Earth
     ),
 
     // Faker (Gamer)
