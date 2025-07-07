@@ -83,6 +83,7 @@
     <string name="enum_news_level_medium">Trung bình</string>
     <string name="enum_news_level_hard">Khó</string>
     <string name="enum_news_level_all">Tất cả</string>
+    <string name="text_level">Mức độ</string>
 
     <string name="enum_news_category_news">Tin tức</string>
     <string name="enum_news_category_travel">Du lịch</string>
@@ -208,7 +209,7 @@
     <string name="prompt_playful_jack">Vui nhộn</string>
     <string name="prompt_performer">Biểu diễn</string>
     <string name="prompt_poetic">Thơ mộng</string>
-    <string name="prompt_down_to_earth">Gần gũi</string>
+    <string name="prompt_down_to_earth">Bị bỏ rơi</string>
     <string name="prompt_analytical">Chiến lược</string>
     <string name="prompt_coach">Huấn luyện game</string>
     <string name="prompt_casual_faker">Thư giãn</string>
@@ -332,6 +333,58 @@
     <string name="text_learn_out">Bạn có chắc muốn thoát khỏi bài kiểm tra không?</string>
     <string name="text_excellent">Xuất sắc!</string>
     <string name="text_keep_trying">Cố gắng thêm!</string>
-    <string name="text_replay">Làm laại</string>
+    <string name="text_replay">Làm lại</string>
+
+    <string name="part1_title">Hình ảnh</string>
+    <string name="part2_title">Hỏi - Đáp</string>
+    <string name="part3_title">Hội thoại</string>
+    <string name="part4_title">Bài nói</string>
+    <string name="part5_title">Câu chưa hoàn chỉnh</string>
+    <string name="part6_title">Hoàn chỉnh đoạn văn</string>
+    <string name="part7_title">Đọc hiểu</string>
+
+    <string name="part1_subtitle">Miêu tả hình ảnh</string>
+    <string name="part2_subtitle">Hỏi &amp; Đáp</string>
+    <string name="part3_subtitle">Đối thoại</string>
+    <string name="part4_subtitle">Thuyết trình</string>
+    <string name="part5_subtitle">Hoàn thành câu</string>
+    <string name="part6_subtitle">Hoàn thành đoạn</string>
+    <string name="part7_subtitle">Đọc hiểu</string>
+
+    <string name="part1_description">Bạn sẽ nghe bốn câu mô tả một bức tranh. Chọn câu mô tả chính xác nhất. Câu hỏi và đáp án không được in và chỉ phát một lần.</string>
+    <string name="part2_description">Bạn sẽ nghe một câu hỏi kèm theo ba câu trả lời. Chọn câu trả lời phù hợp nhất. Âm thanh chỉ phát một lần và không có bản in.</string>
+    <string name="part3_description">Bạn sẽ nghe nhiều cuộc hội thoại giữa hai hoặc ba người. Sau đó, trả lời câu hỏi dựa trên những gì bạn nghe. Có in câu hỏi và đáp án.</string>
+    <string name="part4_description">Bạn sẽ nghe các bài nói ngắn từ một người. Sau đó, trả lời câu hỏi dựa trên bài nói. Có in câu hỏi và đáp án.</string>
+    <string name="part5_description">Bạn sẽ thấy một câu có chỗ trống. Dưới đó là bốn lựa chọn A, B, C, D. Chọn phương án hoàn chỉnh câu tốt nhất.</string>
+    <string name="part6_description">Bạn sẽ thấy bốn đoạn văn ngắn có một số chỗ trống. Mỗi chỗ trống có bốn lựa chọn. Chọn từ hoặc câu thích hợp để hoàn chỉnh đoạn văn.</string>
+    <string name="part7_description">Bạn sẽ đọc nhiều loại văn bản như email, thư từ, thông báo, bài báo và quảng cáo. Sau đó trả lời câu hỏi dựa trên nội dung đã đọc.</string>
+
+    <string name="part1_format">6 câu hỏi, mỗi câu có 4 phương án A, B, C, D. Bạn sẽ thấy hình và nghe 4 câu mô tả, chọn câu chính xác nhất.</string>
+    <string name="part2_format">25 câu hỏi với 3 lựa chọn A, B, C. Nghe câu hỏi, sau đó là các câu trả lời, và chọn câu phù hợp nhất.</string>
+    <string name="part3_format">13 cuộc hội thoại, mỗi cái gồm 3 câu hỏi (tổng cộng 39). Mỗi câu hỏi có 4 đáp án A, B, C, D. Có thể kèm hình ảnh hoặc bảng.</string>
+    <string name="part4_format">10 bài nói, mỗi bài có 3 câu hỏi (tổng cộng 30). Nội dung có thể là thông báo, quảng cáo, tin tức, hướng dẫn hoặc bài thuyết trình.</string>
+    <string name="part5_format">40 câu hỏi độc lập. Mỗi câu có một chỗ trống và 4 lựa chọn. Kiểm tra ngữ pháp, từ vựng và cách sử dụng trong ngữ cảnh.</string>
+    <string name="part6_format">4 đoạn văn, mỗi đoạn có 4 chỗ trống (tổng 16 câu). Bạn có thể điền từ, cụm từ hoặc câu hoàn chỉnh.</string>
+    <string name="part7_format">Đoạn đơn (29 câu hỏi): 10 văn bản, mỗi cái có 2–4 câu hỏi. Đoạn đôi (25 câu hỏi): 5 cặp đoạn với 5 câu hỏi mỗi cặp.</string>
+
+    <string name="part1_tips">Tập trung vào chi tiết trong ảnh như người, vật, hành động và vị trí. Loại bỏ những câu có từ phát âm giống nhưng ý nghĩa khác.</string>
+    <string name="part2_tips">Chú ý từ để hỏi (What, Where, When, Why, How). Tránh những câu trả lời có âm gần giống nhưng ý nghĩa không liên quan.</string>
+    <string name="part3_tips">Đọc trước câu hỏi để biết cần nghe gì. Chú ý đến bối cảnh, người nói, thời gian, địa điểm và mục đích.</string>
+    <string name="part4_tips">Đọc trước các câu hỏi. Tập trung vào mục đích, đối tượng nghe, thời gian, địa điểm và chi tiết được đề cập.</string>
+    <string name="part5_tips">Đọc toàn bộ câu trước khi chọn. Chú ý đến ngữ pháp, loại từ, thì và nghĩa.</string>
+    <string name="part6_tips">Đọc toàn bộ đoạn để hiểu ngữ cảnh. Chú ý đến sự liên kết và mạch logic giữa các câu.</string>
+    <string name="part7_tips">Đọc câu hỏi trước khi đọc văn bản. Tìm từ khóa trong câu hỏi và xác định vị trí chúng trong văn bản. Tập trung vào chi tiết và suy luận hợp lý.</string>
+
+    <string name="time_30_seconds">~30 giây</string>
+    <string name="time_25_seconds">~25 giây</string>
+    <string name="time_1_minute">~1 phút</string>
+    <string name="time_45_seconds">~45 giây</string>
+    <string name="time_1_5_minutes">~1.5 phút</string>
+
+    <string name="difficulty_easy">Dễ</string>
+    <string name="difficulty_medium">Trung bình</string>
+    <string name="difficulty_hard">Khó</string>
+    <string name="text_full_test">Bài thi đầy đủ</string>
+    <string name="text_duration">Thời lượng</string>
 
 </resources>

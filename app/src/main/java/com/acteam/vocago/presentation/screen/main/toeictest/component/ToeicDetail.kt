@@ -2,6 +2,7 @@ package com.acteam.vocago.presentation.screen.main.toeictest.component
 
 import android.annotation.SuppressLint
 import android.os.Build
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -29,6 +30,7 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -36,6 +38,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -87,7 +90,12 @@ fun ToeicDetailScreen(
 ) {
     val uiState by viewModel.toeicDetailState.collectAsState()
     val submitState by viewModel.submitState.collectAsState()
-
+    var showConfirmDialog by remember { mutableStateOf(false) }
+    BackHandler(enabled = true) {
+        if (!showConfirmDialog) {
+            showConfirmDialog = true
+        }
+    }
     LaunchedEffect(Unit) {
         viewModel.getToeicDetail(id)
         viewModel.loadCurrentUserId()
@@ -98,7 +106,7 @@ fun ToeicDetailScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
-                color = TOEICColors.Surface
+                color = MaterialTheme.colorScheme.background
             ) {
                 when (val state = uiState) {
                     is UIState.UILoading -> {
@@ -115,9 +123,9 @@ fun ToeicDetailScreen(
                                     .fillMaxWidth()
                                     .padding(16.dp),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = TOEICColors.Error.copy(alpha = 0.1f)
+                                    containerColor = MaterialTheme.colorScheme.errorContainer
                                 ),
-                                border = BorderStroke(1.dp, TOEICColors.Error.copy(alpha = 0.3f))
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.error)
                             ) {
                                 Column(
                                     modifier = Modifier.padding(24.dp),
@@ -126,7 +134,7 @@ fun ToeicDetailScreen(
                                     Icon(
                                         imageVector = Icons.Default.ErrorOutline,
                                         contentDescription = null,
-                                        tint = TOEICColors.Error,
+                                        tint = MaterialTheme.colorScheme.error,
                                         modifier = Modifier.size(48.dp)
                                     )
                                     Spacer(modifier = Modifier.height(16.dp))
@@ -134,7 +142,7 @@ fun ToeicDetailScreen(
                                         text = "Đã xảy ra lỗi",
                                         fontSize = 18.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = TOEICColors.Error
+                                        color = MaterialTheme.colorScheme.onErrorContainer
                                     )
                                 }
                             }
@@ -170,6 +178,26 @@ fun ToeicDetailScreen(
                 )
             }
         }
+    }
+    if (showConfirmDialog) {
+        AlertDialog(
+            onDismissRequest = { showConfirmDialog = false },
+            confirmButton = {
+                Button(onClick = {
+                    showConfirmDialog = false
+                    rootNavController.popBackStack()
+                }) {
+                    Text(stringResource(R.string.text_exit))
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showConfirmDialog = false }) {
+                    Text(stringResource(R.string.btn_cancel))
+                }
+            },
+            title = { Text(stringResource(R.string.text_confirm)) },
+            text = { Text(stringResource(R.string.text_learn_out)) }
+        )
     }
 }
 
@@ -207,7 +235,7 @@ fun ToeicDetailContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TOEICColors.Surface)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         ToeicDetailHeader(
             testTitle = testData.title,
@@ -335,7 +363,7 @@ fun ToeicDetailContent(
         }
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             Row(
@@ -349,8 +377,8 @@ fun ToeicDetailContent(
                     onClick = { if (currentQuestionIndex > 0) currentQuestionIndex-- },
                     enabled = currentQuestionIndex > 0,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = TOEICColors.SurfaceVariant,
-                        contentColor = TOEICColors.OnSurface
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurface
                     ),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -360,7 +388,7 @@ fun ToeicDetailContent(
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    stringResource(R.string.text_previous)
+                    Text(stringResource(R.string.text_previous))
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -369,7 +397,7 @@ fun ToeicDetailContent(
                     text = "${currentQuestionIndex + 1} / $totalQuestions",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TOEICColors.OnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -387,7 +415,9 @@ fun ToeicDetailContent(
                             )
                             viewModel.submitToeicTest(submitData)
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = TOEICColors.Success),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(stringResource(R.string.submit))
@@ -402,10 +432,12 @@ fun ToeicDetailContent(
                 } else {
                     Button(
                         onClick = { currentQuestionIndex++ },
-                        colors = ButtonDefaults.buttonColors(containerColor = TOEICColors.Primary),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
                         modifier = Modifier.weight(1f)
                     ) {
-                        stringResource(R.string.text_next)
+                        Text(stringResource(R.string.text_next))
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowForward,
@@ -431,7 +463,7 @@ fun ToeicDetailHeader(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
     ) {
         Column(
@@ -445,7 +477,7 @@ fun ToeicDetailHeader(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = testTitle,
-                        color = TOEICColors.OnSurface,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -454,13 +486,13 @@ fun ToeicDetailHeader(
                     ) {
                         Card(
                             colors = CardDefaults.cardColors(
-                                containerColor = TOEICColors.Primary.copy(alpha = 0.1f)
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
                             ),
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Text(
                                 text = "Part $currentPart",
-                                color = TOEICColors.Primary,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -469,7 +501,7 @@ fun ToeicDetailHeader(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "${stringResource(R.string.text_question)} $currentQuestion/$totalQuestions",
-                            color = TOEICColors.OnSurfaceVariant,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 14.sp
                         )
                     }
@@ -478,13 +510,17 @@ fun ToeicDetailHeader(
                 // Timer Card
                 Card(
                     colors = CardDefaults.cardColors(
-                        containerColor = if (timeRemaining < 600) TOEICColors.Warning.copy(alpha = 0.1f)
-                        else TOEICColors.Success.copy(alpha = 0.1f)
+                        containerColor = if (timeRemaining < 600)
+                            MaterialTheme.colorScheme.errorContainer
+                        else
+                            MaterialTheme.colorScheme.secondaryContainer
                     ),
                     border = BorderStroke(
                         1.dp,
-                        if (timeRemaining < 600) TOEICColors.Warning.copy(alpha = 0.3f)
-                        else TOEICColors.Success.copy(alpha = 0.3f)
+                        if (timeRemaining < 600)
+                            MaterialTheme.colorScheme.error
+                        else
+                            MaterialTheme.colorScheme.secondary
                     )
                 ) {
                     Row(
@@ -494,7 +530,10 @@ fun ToeicDetailHeader(
                         Icon(
                             imageVector = Icons.Default.AccessTime,
                             contentDescription = "Time",
-                            tint = if (timeRemaining < 600) TOEICColors.Warning else TOEICColors.Success,
+                            tint = if (timeRemaining < 600)
+                                MaterialTheme.colorScheme.error
+                            else
+                                MaterialTheme.colorScheme.secondary,
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -502,7 +541,10 @@ fun ToeicDetailHeader(
                             text = "${timeRemaining / 60}:${
                                 (timeRemaining % 60).toString().padStart(2, '0')
                             }",
-                            color = if (timeRemaining < 600) TOEICColors.Warning else TOEICColors.Success,
+                            color = if (timeRemaining < 600)
+                                MaterialTheme.colorScheme.onErrorContainer
+                            else
+                                MaterialTheme.colorScheme.onSecondaryContainer,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -520,14 +562,14 @@ fun ToeicDetailHeader(
                         .fillMaxWidth()
                         .height(6.dp)
                         .clip(RoundedCornerShape(3.dp)),
-                    color = TOEICColors.Primary,
-                    trackColor = TOEICColors.SurfaceVariant
+                    color = MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "${(progress * 100).toInt()}% ${stringResource(R.string.text_complete)}",
                     fontSize = 12.sp,
-                    color = TOEICColors.OnSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -582,7 +624,7 @@ fun AudioControls(audioUrl: String) {
             Icon(
                 imageVector = Icons.Default.Pause,
                 contentDescription = null,
-                tint = TOEICColors.Primary,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -592,8 +634,8 @@ fun AudioControls(audioUrl: String) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(4.dp),
-            color = TOEICColors.Primary,
-            trackColor = Color(0xFFE0E0E0),
+            color = MaterialTheme.colorScheme.primary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
         )
     }
 }
@@ -625,11 +667,14 @@ fun AnswerOption(
             .alpha(animatedAlpha)
             .clickable { onSelected() },
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         border = BorderStroke(
             width = 2.dp,
-            color = if (isSelected) TOEICColors.Success else TOEICColors.SurfaceVariant
+            color = if (isSelected)
+                MaterialTheme.colorScheme.primary
+            else
+                MaterialTheme.colorScheme.outline
         ),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
@@ -643,14 +688,20 @@ fun AnswerOption(
                 modifier = Modifier
                     .size(32.dp)
                     .background(
-                        if (isSelected) TOEICColors.Success else TOEICColors.SurfaceVariant,
+                        if (isSelected)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.surfaceVariant,
                         CircleShape
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = optionLetter,
-                    color = if (isSelected) Color.White else TOEICColors.OnSurfaceVariant,
+                    color = if (isSelected)
+                        MaterialTheme.colorScheme.onPrimary
+                    else
+                        MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -661,27 +712,12 @@ fun AnswerOption(
             Text(
                 text = answerText,
                 fontSize = 15.sp,
-                color = TOEICColors.OnSurface,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f),
                 lineHeight = 20.sp
             )
         }
     }
-}
-
-object TOEICColors {
-    val Primary = Color(0xFF2563EB)
-    val PrimaryVariant = Color(0xFF1E40AF)
-    val Secondary = Color(0xFF06B6D4)
-    val SecondaryVariant = Color(0xFF0891B2)
-    val Surface = Color(0xFFF8FAFC)
-    val SurfaceVariant = Color(0xFFE2E8F0)
-    val OnSurface = Color(0xFF1E293B)
-    val OnSurfaceVariant = Color(0xFF64748B)
-    val Success = Color(0xFF10B981)
-    val Warning = Color(0xFFF59E0B)
-    val Error = Color(0xFFEF4444)
-    val Accent = Color(0xFF8B5CF6)
 }
 
 fun buildSubmitUserAnswers(

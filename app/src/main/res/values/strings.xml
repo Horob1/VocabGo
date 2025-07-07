@@ -214,7 +214,7 @@
     <string name="prompt_playful_jack">Playful</string>
     <string name="prompt_performer">Performer</string>
     <string name="prompt_poetic">Poetic</string>
-    <string name="prompt_down_to_earth">Down to Earth</string>
+    <string name="prompt_down_to_earth">Abandoned</string>
     <string name="prompt_analytical">Analytical</string>
     <string name="prompt_coach">Coach</string>
     <string name="prompt_casual_faker">Casual</string>
@@ -341,5 +341,63 @@
     <string name="text_excellent">Excellent!</string>
     <string name="text_keep_trying">Keep trying!</string>
     <string name="text_replay">Replay</string>
+
+    <!-- TOEIC Part Titles -->
+    <string name="part1_title">Photographs</string>
+    <string name="part2_title">Question-Response</string>
+    <string name="part3_title">Conversations</string>
+    <string name="part4_title">Talks</string>
+    <string name="part5_title">Incomplete Sentences</string>
+    <string name="part6_title">Text Completion</string>
+    <string name="part7_title">Reading Comprehension</string>
+
+    <!-- TOEIC Part Subtitles -->
+    <string name="part1_subtitle">Image Description</string>
+    <string name="part2_subtitle">Q&amp;A</string>
+    <string name="part3_subtitle">Dialogue</string>
+    <string name="part4_subtitle">Presentations</string>
+    <string name="part5_subtitle">Sentence Completion</string>
+    <string name="part6_subtitle">Paragraph Completion</string>
+    <string name="part7_subtitle">Reading</string>
+
+    <!-- TOEIC Part Descriptions -->
+    <string name="part1_description">You will hear four descriptions of a picture. Choose the sentence that best describes what you see. The question and choices are not printed and are read only once.</string>
+    <string name="part2_description">You will hear a question followed by three responses. Choose the most appropriate response. The audio is played only once and is not printed.</string>
+    <string name="part3_description">You will hear several conversations between two or three people. Then answer the questions based on what you hear. Questions and answer choices are printed.</string>
+    <string name="part4_description">You will hear short talks given by a speaker. Then answer the questions based on the talk. Questions and answer choices are printed.</string>
+    <string name="part5_description">You will see a sentence with a blank. Below are four words or phrases labeled A, B, C, D. Choose the one that best completes the sentence.</string>
+    <string name="part6_description">You will see four short texts with some blanks. Each blank has four answer choices. Choose the best word or sentence to complete the text.</string>
+    <string name="part7_description">You will read various texts such as emails, letters, announcements, articles, and ads. Then answer questions based on what you read.</string>
+
+    <!-- TOEIC Part Formats -->
+    <string name="part1_format">6 questions, each with 4 options A, B, C, D. You will see a photo and hear 4 sentences, choose the most accurate description.</string>
+    <string name="part2_format">25 questions with 3 options A, B, C. Listen to the question, then the responses, and choose the best one.</string>
+    <string name="part3_format">13 conversations, each with 3 questions (39 total). Each question has 4 options A, B, C, D. Some may include visuals or tables.</string>
+    <string name="part4_format">10 talks, each with 3 questions (30 total). Talks may include announcements, ads, news, instructions, or presentations.</string>
+    <string name="part5_format">40 independent questions. Each sentence has a blank and 4 options. Tests grammar, vocabulary, and usage in context.</string>
+    <string name="part6_format">4 texts, each with 4 blanks (16 total). You may fill in words, phrases, or complete sentences.</string>
+    <string name="part7_format">Single passages (29 questions): 10 texts with 2–4 questions each. Double passages (25 questions): 5 sets with 5 questions each.</string>
+
+    <!-- TOEIC Part Tips -->
+    <string name="part1_tips">Focus on the details in the image such as people, objects, actions, and positions. Eliminate answers with similar-sounding words but different meanings.</string>
+    <string name="part2_tips">Pay attention to the question word (What, Where, When, Why, How). Avoid answers with similar sounds but unrelated meaning.</string>
+    <string name="part3_tips">Read the questions first to know what to listen for. Pay attention to context, speakers, time, place, and purpose.</string>
+    <string name="part4_tips">Read the questions beforehand. Focus on purpose, audience, time, location, and specific details mentioned.</string>
+    <string name="part5_tips">Read the entire sentence before choosing. Pay attention to grammar, word type, verb tense, and meaning.</string>
+    <string name="part6_tips">Read the whole passage to understand the context. Pay attention to sentence connections and logical flow.</string>
+    <string name="part7_tips">Read the questions before reading the text. Find keywords in the question and locate them in the text. Focus on details and logical inference.</string>
+
+    <!-- Time and Difficulty -->
+    <string name="time_30_seconds">~30 seconds</string>
+    <string name="time_25_seconds">~25 seconds</string>
+    <string name="time_1_minute">~1 minute</string>
+    <string name="time_45_seconds">~45 seconds</string>
+    <string name="time_1_5_minutes">~1.5 minutes</string>
+
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="text_full_test">Full test</string>
+    <string name="text_duration">Duration</string>
 
 </resources>

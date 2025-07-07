@@ -44,7 +44,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -131,7 +130,7 @@ fun RenderSingleQuestionScreen(
         // Câu hỏi
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
         ) {
             Column(
@@ -145,7 +144,7 @@ fun RenderSingleQuestionScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Card(
                             colors = CardDefaults.cardColors(
-                                containerColor = TOEICColors.Accent.copy(alpha = 0.1f)
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
                             ),
                             shape = RoundedCornerShape(8.dp)
                         ) {
@@ -153,7 +152,7 @@ fun RenderSingleQuestionScreen(
                                 text = "${stringResource(R.string.text_question)} $index",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp,
-                                color = TOEICColors.Accent,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
                         }
@@ -163,7 +162,7 @@ fun RenderSingleQuestionScreen(
                         if (userAnswer.containsKey(index)) {
                             Card(
                                 colors = CardDefaults.cardColors(
-                                    containerColor = TOEICColors.Success.copy(alpha = 0.1f)
+                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
                                 ),
                                 shape = RoundedCornerShape(8.dp)
                             ) {
@@ -174,14 +173,14 @@ fun RenderSingleQuestionScreen(
                                     Icon(
                                         imageVector = Icons.Default.Check,
                                         contentDescription = null,
-                                        tint = TOEICColors.Success,
+                                        tint = MaterialTheme.colorScheme.onTertiaryContainer,
                                         modifier = Modifier.size(12.dp)
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
                                         text = stringResource(R.string.text_answer),
                                         fontSize = 12.sp,
-                                        color = TOEICColors.Success,
+                                        color = MaterialTheme.colorScheme.onTertiaryContainer,
                                         fontWeight = FontWeight.Medium
                                     )
                                 }
@@ -193,7 +192,7 @@ fun RenderSingleQuestionScreen(
                         Icon(
                             imageVector = Icons.Default.GridView,
                             contentDescription = "next question",
-                            tint = TOEICColors.Primary
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -203,7 +202,7 @@ fun RenderSingleQuestionScreen(
                     Text(
                         text = it,
                         fontSize = 16.sp,
-                        color = TOEICColors.OnSurface,
+                        color = MaterialTheme.colorScheme.onSurface,
                         lineHeight = 22.sp
                     )
                 }
@@ -289,7 +288,7 @@ fun RenderSingleQuestionScreen(
                                     },
                                 colors = CardDefaults.cardColors(
                                     containerColor = if (userAnswer.containsKey(questionIndex + 1))
-                                        TOEICColors.Success
+                                        MaterialTheme.colorScheme.tertiary
                                     else
                                         MaterialTheme.colorScheme.surfaceVariant
                                 ),
@@ -305,7 +304,7 @@ fun RenderSingleQuestionScreen(
                                         style = MaterialTheme.typography.bodySmall,
                                         fontWeight = FontWeight.Medium,
                                         color = if (userAnswer.containsKey(questionIndex + 1))
-                                            Color.White
+                                            MaterialTheme.colorScheme.onTertiary
                                         else
                                             MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -400,7 +399,7 @@ fun RenderPracticeQuestionScreen(
         // Câu hỏi
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
         ) {
             Column(
@@ -414,7 +413,7 @@ fun RenderPracticeQuestionScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Card(
                             colors = CardDefaults.cardColors(
-                                containerColor = TOEICColors.Accent.copy(alpha = 0.1f)
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
                             ),
                             shape = RoundedCornerShape(8.dp)
                         ) {
@@ -422,7 +421,7 @@ fun RenderPracticeQuestionScreen(
                                 text = "${stringResource(R.string.text_question)} $index",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp,
-                                color = TOEICColors.Accent,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
                         }
@@ -432,7 +431,7 @@ fun RenderPracticeQuestionScreen(
                         if (userAnswer.containsKey(index)) {
                             Card(
                                 colors = CardDefaults.cardColors(
-                                    containerColor = TOEICColors.Success.copy(alpha = 0.1f)
+                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
                                 ),
                                 shape = RoundedCornerShape(8.dp)
                             ) {
@@ -443,14 +442,14 @@ fun RenderPracticeQuestionScreen(
                                     Icon(
                                         imageVector = Icons.Default.Check,
                                         contentDescription = null,
-                                        tint = TOEICColors.Success,
+                                        tint = MaterialTheme.colorScheme.onTertiaryContainer,
                                         modifier = Modifier.size(12.dp)
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
                                         text = stringResource(R.string.text_answer),
                                         fontSize = 12.sp,
-                                        color = TOEICColors.Success,
+                                        color = MaterialTheme.colorScheme.onTertiaryContainer,
                                         fontWeight = FontWeight.Medium
                                     )
                                 }
@@ -462,7 +461,7 @@ fun RenderPracticeQuestionScreen(
                         Icon(
                             imageVector = Icons.Default.GridView,
                             contentDescription = "next question",
-                            tint = TOEICColors.Primary
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -472,7 +471,7 @@ fun RenderPracticeQuestionScreen(
                     Text(
                         text = it,
                         fontSize = 16.sp,
-                        color = TOEICColors.OnSurface,
+                        color = MaterialTheme.colorScheme.onSurface,
                         lineHeight = 22.sp
                     )
                 }
@@ -557,7 +556,7 @@ fun RenderPracticeQuestionScreen(
                                     },
                                 colors = CardDefaults.cardColors(
                                     containerColor = if (userAnswer.containsKey(actualIndex))
-                                        TOEICColors.Success
+                                        MaterialTheme.colorScheme.tertiary
                                     else
                                         MaterialTheme.colorScheme.surfaceVariant
                                 ),
@@ -573,7 +572,7 @@ fun RenderPracticeQuestionScreen(
                                         style = MaterialTheme.typography.bodySmall,
                                         fontWeight = FontWeight.Medium,
                                         color = if (userAnswer.containsKey(actualIndex))
-                                            Color.White
+                                            MaterialTheme.colorScheme.onTertiary
                                         else
                                             MaterialTheme.colorScheme.onSurfaceVariant
                                     )

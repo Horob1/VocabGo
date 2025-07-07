@@ -109,6 +109,7 @@ fun WordOfTheDayCard(
         } else {
             val word = wordData.word
             val wordType = wordData.types.firstOrNull()?.type?.firstOrNull() ?: ""
+            val pronunciation = wordData.phonetics.firstOrNull()?.pronunciation ?: ""
             val translation = wordData.translations.firstOrNull()?.translation ?: ""
 
             Column(
@@ -141,6 +142,14 @@ fun WordOfTheDayCard(
                 Text(
                     text = word,
                     style = MaterialTheme.typography.displaySmall.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                Text(
+                    text = pronunciation,
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     ),

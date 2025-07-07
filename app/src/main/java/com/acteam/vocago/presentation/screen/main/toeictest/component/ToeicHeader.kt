@@ -52,7 +52,7 @@ fun ToeicHeader(
     ) {
         Column {
             Text(
-                text = "TOEIC TEST",
+                text = "${stringResource(R.string.text_test)} Toeic",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = responsiveSP(
                         mobile = 20,

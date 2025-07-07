@@ -119,7 +119,7 @@ val viewModelModule = module {
     }
     viewModel {
         ToeicViewModel(
-            get(), get(), get(), get(), get(), get()
+            get(), get(), get(), get(), get(), get(), get()
         )
     }
 

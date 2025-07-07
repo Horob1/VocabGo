@@ -29,11 +29,13 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Quiz
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -65,14 +67,17 @@ fun TOEICPartSelectionScreen(
     var selectedParts by remember { mutableStateOf(setOf<Int>()) }
     var expandedParts by remember { mutableStateOf(setOf<Int>()) }
 
+    val listeningParts = getListeningParts()
+    val readingParts = getReadingParts()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        TOEICColors.Primary.copy(alpha = 0.05f),
-                        Color.White
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.05f),
+                        MaterialTheme.colorScheme.surface
                     )
                 )
             )
@@ -82,17 +87,24 @@ fun TOEICPartSelectionScreen(
                 Text(
                     stringResource(R.string.text_selection_part),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             },
             navigationIcon = {
                 IconButton(onClick = {
                     rootNavController.popBackStack()
                 }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Quay lại")
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Quay lại",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent
+            )
         )
 
         LazyColumn(
@@ -104,7 +116,7 @@ fun TOEICPartSelectionScreen(
         ) {
             item {
                 SectionHeader(
-                    title = "LISTENING",
+                    title = stringResource(R.string.listenning),
                     subtitle = "${stringResource(R.string.listenning)} (100 ${stringResource(R.string.text_question)} - 45 ${
                         stringResource(
                             R.string.text_minute
@@ -142,7 +154,7 @@ fun TOEICPartSelectionScreen(
 
             item {
                 SectionHeader(
-                    title = "READING",
+                    title = stringResource(R.string.reading),
                     subtitle = "${stringResource(R.string.reading)} (100 ${stringResource(R.string.text_question)} - 75 ${
                         stringResource(
                             R.string.text_minute
@@ -150,7 +162,11 @@ fun TOEICPartSelectionScreen(
                     })",
                     icon = "📖",
                     totalQuestions = 100,
-                    timeLimit = "75 phút"
+                    timeLimit = "75 ${
+                        stringResource(
+                            R.string.text_minute
+                        )
+                    }"
                 )
             }
 
@@ -189,14 +205,18 @@ fun TOEICPartSelectionScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 16.dp)
-                            .height(48.dp)
+                            .height(48.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        )
                     ) {
                         Text(
                             "${stringResource(R.string.text_start_practice)} (${selectedParts.size} ${
                                 stringResource(
                                     R.string.text_part
                                 )
-                            })"
+                            })",
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
@@ -218,27 +238,44 @@ fun SectionHeader(
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = TOEICColors.Primary.copy(alpha = 0.1f))
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
     ) {
-        Row(modifier = Modifier.padding(24.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(icon, fontSize = 32.sp, modifier = Modifier.padding(end = 20.dp))
+        Row(
+            modifier = Modifier.padding(24.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                icon,
+                fontSize = 32.sp,
+                modifier = Modifier.padding(end = 20.dp)
+            )
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     title,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TOEICColors.Primary
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
-                Text(subtitle, fontSize = 14.sp, color = TOEICColors.OnSurfaceVariant)
+                Text(
+                    subtitle,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     "$totalQuestions ${stringResource(R.string.text_question)}",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TOEICColors.Primary
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
-                Text(timeLimit, fontSize = 12.sp, color = TOEICColors.OnSurfaceVariant)
+                Text(
+                    timeLimit,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             }
         }
     }
@@ -257,11 +294,13 @@ fun CompactPartCard(
             .fillMaxWidth()
             .border(
                 width = if (isSelected) 2.dp else 0.dp,
-                color = if (isSelected) TOEICColors.Primary else Color.Transparent,
+                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
                 shape = RoundedCornerShape(16.dp)
             ),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -269,18 +308,17 @@ fun CompactPartCard(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
+                // Selection checkbox
                 Box(
                     modifier = Modifier
                         .size(32.dp)
                         .background(
-                            color = if (isSelected) TOEICColors.Primary else Color.Transparent,
+                            color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
                             shape = RoundedCornerShape(6.dp)
                         )
                         .border(
                             width = 2.dp,
-                            color = if (isSelected) TOEICColors.Primary else TOEICColors.OnSurfaceVariant.copy(
-                                alpha = 0.5f
-                            ),
+                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
                             shape = RoundedCornerShape(6.dp)
                         )
                         .clickable { onToggleSelect() },
@@ -290,7 +328,7 @@ fun CompactPartCard(
                         Icon(
                             Icons.Default.Check,
                             contentDescription = "Selected",
-                            tint = Color.White,
+                            tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -302,14 +340,17 @@ fun CompactPartCard(
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .background(TOEICColors.Primary.copy(alpha = 0.1f), CircleShape),
+                        .background(
+                            MaterialTheme.colorScheme.secondaryContainer,
+                            CircleShape
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         "P${part.partNumber}",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TOEICColors.Primary
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
 
@@ -321,12 +362,12 @@ fun CompactPartCard(
                         part.title,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TOEICColors.OnSurface
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         "${part.questionCount} ${stringResource(R.string.text_question)} • ${part.timePerQuestion} • ${part.difficulty}",
                         fontSize = 12.sp,
-                        color = TOEICColors.OnSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
@@ -340,7 +381,7 @@ fun CompactPartCard(
                     Icon(
                         if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                         contentDescription = if (isExpanded) "Thu gọn" else "Mở rộng",
-                        tint = TOEICColors.OnSurfaceVariant
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -379,13 +420,13 @@ fun CompactPartCard(
                     stringResource(R.string.text_decribe),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TOEICColors.OnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
                     part.description,
                     fontSize = 14.sp,
-                    color = TOEICColors.OnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 20.sp
                 )
 
@@ -394,27 +435,34 @@ fun CompactPartCard(
                     stringResource(R.string.text_format),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TOEICColors.OnSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
                     part.format,
                     fontSize = 14.sp,
-                    color = TOEICColors.OnSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 20.sp
                 )
 
                 Spacer(Modifier.height(16.dp))
+
+                // Tips card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = TOEICColors.Success.copy(alpha = 0.1f))
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                    )
                 ) {
-                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.Top) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
                         Icon(
                             Icons.Default.Lightbulb,
                             contentDescription = null,
-                            tint = TOEICColors.Success,
+                            tint = MaterialTheme.colorScheme.onTertiaryContainer,
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(Modifier.width(12.dp))
@@ -423,13 +471,13 @@ fun CompactPartCard(
                                 stringResource(R.string.text_tip_and_trick),
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = TOEICColors.Success
+                                color = MaterialTheme.colorScheme.onTertiaryContainer
                             )
                             Spacer(Modifier.height(4.dp))
                             Text(
                                 part.tips,
                                 fontSize = 12.sp,
-                                color = TOEICColors.OnSurfaceVariant,
+                                color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f),
                                 lineHeight = 16.sp
                             )
                         }
@@ -446,12 +494,21 @@ fun QuickInfoItem(icon: ImageVector, label: String, value: String) {
         Icon(
             icon,
             contentDescription = null,
-            tint = TOEICColors.Primary,
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(20.dp)
         )
         Spacer(Modifier.height(4.dp))
-        Text(label, fontSize = 11.sp, color = TOEICColors.OnSurfaceVariant)
-        Text(value, fontSize = 12.sp, fontWeight = FontWeight.Medium, color = TOEICColors.OnSurface)
+        Text(
+            label,
+            fontSize = 11.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            value,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
 
@@ -468,94 +525,101 @@ data class TOEICPart(
     val type: String
 )
 
-private val listeningParts = listOf(
-    TOEICPart(
-        partNumber = 1,
-        title = "Photographs",
-        subtitle = "Image Description",
-        description = "You will hear four descriptions of a picture. Choose the sentence that best describes what you see. The question and choices are not printed and are read only once.",
-        format = "6 questions, each with 4 options A, B, C, D. You will see a photo and hear 4 sentences, choose the most accurate description.",
-        tips = "Focus on the details in the image such as people, objects, actions, and positions. Eliminate answers with similar-sounding words but different meanings.",
-        questionCount = 6,
-        timePerQuestion = "~30 seconds",
-        difficulty = "Easy",
-        type = "listening"
-    ),
-    TOEICPart(
-        partNumber = 2,
-        title = "Question-Response",
-        subtitle = "Q&A",
-        description = "You will hear a question followed by three responses. Choose the most appropriate response. The audio is played only once and is not printed.",
-        format = "25 questions with 3 options A, B, C. Listen to the question, then the responses, and choose the best one.",
-        tips = "Pay attention to the question word (What, Where, When, Why, How). Avoid answers with similar sounds but unrelated meaning.",
-        questionCount = 25,
-        timePerQuestion = "~25 seconds",
-        difficulty = "Medium",
-        type = "listening"
-    ),
-    TOEICPart(
-        partNumber = 3,
-        title = "Conversations",
-        subtitle = "Dialogue",
-        description = "You will hear several conversations between two or three people. Then answer the questions based on what you hear. Questions and answer choices are printed.",
-        format = "13 conversations, each with 3 questions (39 total). Each question has 4 options A, B, C, D. Some may include visuals or tables.",
-        tips = "Read the questions first to know what to listen for. Pay attention to context, speakers, time, place, and purpose.",
-        questionCount = 39,
-        timePerQuestion = "~1 minute",
-        difficulty = "Medium",
-        type = "listening"
-    ),
-    TOEICPart(
-        partNumber = 4,
-        title = "Talks",
-        subtitle = "Presentations",
-        description = "You will hear short talks given by a speaker. Then answer the questions based on the talk. Questions and answer choices are printed.",
-        format = "10 talks, each with 3 questions (30 total). Talks may include announcements, ads, news, instructions, or presentations.",
-        tips = "Read the questions beforehand. Focus on purpose, audience, time, location, and specific details mentioned.",
-        questionCount = 30,
-        timePerQuestion = "~1 minute",
-        difficulty = "Hard",
-        type = "listening"
+@Composable
+fun getListeningParts(): List<TOEICPart> {
+    return listOf(
+        TOEICPart(
+            partNumber = 1,
+            title = stringResource(R.string.part1_title),
+            subtitle = stringResource(R.string.part1_subtitle),
+            description = stringResource(R.string.part1_description),
+            format = stringResource(R.string.part1_format),
+            tips = stringResource(R.string.part1_tips),
+            questionCount = 6,
+            timePerQuestion = stringResource(R.string.time_30_seconds),
+            difficulty = stringResource(R.string.difficulty_easy),
+            type = "listening"
+        ),
+        TOEICPart(
+            partNumber = 2,
+            title = stringResource(R.string.part2_title),
+            subtitle = stringResource(R.string.part2_subtitle),
+            description = stringResource(R.string.part2_description),
+            format = stringResource(R.string.part2_format),
+            tips = stringResource(R.string.part2_tips),
+            questionCount = 25,
+            timePerQuestion = stringResource(R.string.time_25_seconds),
+            difficulty = stringResource(R.string.difficulty_medium),
+            type = "listening"
+        ),
+        TOEICPart(
+            partNumber = 3,
+            title = stringResource(R.string.part3_title),
+            subtitle = stringResource(R.string.part3_subtitle),
+            description = stringResource(R.string.part3_description),
+            format = stringResource(R.string.part3_format),
+            tips = stringResource(R.string.part3_tips),
+            questionCount = 39,
+            timePerQuestion = stringResource(R.string.time_1_minute),
+            difficulty = stringResource(R.string.difficulty_medium),
+            type = "listening"
+        ),
+        TOEICPart(
+            partNumber = 4,
+            title = stringResource(R.string.part4_title),
+            subtitle = stringResource(R.string.part4_subtitle),
+            description = stringResource(R.string.part4_description),
+            format = stringResource(R.string.part4_format),
+            tips = stringResource(R.string.part4_tips),
+            questionCount = 30,
+            timePerQuestion = stringResource(R.string.time_1_minute),
+            difficulty = stringResource(R.string.difficulty_hard),
+            type = "listening"
+        )
     )
-)
-private val readingParts = listOf(
-    TOEICPart(
-        partNumber = 5,
-        title = "Incomplete Sentences",
-        subtitle = "Sentence Completion",
-        description = "You will see a sentence with a blank. Below are four words or phrases labeled A, B, C, D. Choose the one that best completes the sentence.",
-        format = "40 independent questions. Each sentence has a blank and 4 options. Tests grammar, vocabulary, and usage in context.",
-        tips = "Read the entire sentence before choosing. Pay attention to grammar, word type, verb tense, and meaning.",
-        questionCount = 30,
-        timePerQuestion = "~45 seconds",
-        difficulty = "Medium",
-        type = "reading"
-    ),
-    TOEICPart(
-        partNumber = 6,
-        title = "Text Completion",
-        subtitle = "Paragraph Completion",
-        description = "You will see four short texts with some blanks. Each blank has four answer choices. Choose the best word or sentence to complete the text.",
-        format = "4 texts, each with 4 blanks (16 total). You may fill in words, phrases, or complete sentences.",
-        tips = "Read the whole passage to understand the context. Pay attention to sentence connections and logical flow.",
-        questionCount = 16,
-        timePerQuestion = "~1.5 minutes",
-        difficulty = "Hard",
-        type = "reading"
-    ),
-    TOEICPart(
-        partNumber = 7,
-        title = "Reading Comprehension",
-        subtitle = "Reading",
-        description = "You will read various texts such as emails, letters, announcements, articles, and ads. Then answer questions based on what you read.",
-        format = "Single passages (29 questions): 10 texts with 2–4 questions each. Double passages (25 questions): 5 sets with 5 questions each.",
-        tips = "Read the questions before reading the text. Find keywords in the question and locate them in the text. Focus on details and logical inference.",
-        questionCount = 54,
-        timePerQuestion = "~1.5 minutes",
-        difficulty = "Hard",
-        type = "reading"
+}
+
+@Composable
+fun getReadingParts(): List<TOEICPart> {
+    return listOf(
+        TOEICPart(
+            partNumber = 5,
+            title = stringResource(R.string.part5_title),
+            subtitle = stringResource(R.string.part5_subtitle),
+            description = stringResource(R.string.part5_description),
+            format = stringResource(R.string.part5_format),
+            tips = stringResource(R.string.part5_tips),
+            questionCount = 30,
+            timePerQuestion = stringResource(R.string.time_45_seconds),
+            difficulty = stringResource(R.string.difficulty_medium),
+            type = "reading"
+        ),
+        TOEICPart(
+            partNumber = 6,
+            title = stringResource(R.string.part6_title),
+            subtitle = stringResource(R.string.part6_subtitle),
+            description = stringResource(R.string.part6_description),
+            format = stringResource(R.string.part6_format),
+            tips = stringResource(R.string.part6_tips),
+            questionCount = 16,
+            timePerQuestion = stringResource(R.string.time_1_5_minutes),
+            difficulty = stringResource(R.string.difficulty_hard),
+            type = "reading"
+        ),
+        TOEICPart(
+            partNumber = 7,
+            title = stringResource(R.string.part7_title),
+            subtitle = stringResource(R.string.part7_subtitle),
+            description = stringResource(R.string.part7_description),
+            format = stringResource(R.string.part7_format),
+            tips = stringResource(R.string.part7_tips),
+            questionCount = 54,
+            timePerQuestion = stringResource(R.string.time_1_5_minutes),
+            difficulty = stringResource(R.string.difficulty_hard),
+            type = "reading"
+        )
     )
-)
+}
 
 fun filterToeicDetailBySelectedParts(
     dto: ToeicDetailDto,

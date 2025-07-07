@@ -50,7 +50,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -116,7 +115,10 @@ fun ResultDetailScreen(
                         .padding(paddingValues),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("Lỗi khi tải dữ liệu", color = Color.Red)
+                    Text(
+                        text = "Lỗi khi tải dữ liệu",
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             }
 
@@ -131,7 +133,10 @@ fun ResultDetailScreen(
                             .padding(paddingValues),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Không tìm thấy kết quả phù hợp", color = Color.Gray)
+                        Text(
+                            text = "Không tìm thấy kết quả phù hợp",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                     return@Scaffold
                 }
@@ -139,14 +144,7 @@ fun ResultDetailScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    Color(0xFFE3F2FD),
-                                    Color(0xFFEDE7F6)
-                                )
-                            )
-                        )
+                        .background(MaterialTheme.colorScheme.background)
                         .padding(16.dp)
                         .padding(paddingValues),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -164,6 +162,7 @@ fun ResultDetailScreen(
                             text = stringResource(R.string.text_part_detail),
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
                     }
@@ -199,11 +198,12 @@ fun TestResultHeader(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
-
-            // Dòng chứa nút Back
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -211,14 +211,15 @@ fun TestResultHeader(
                 Text(
                     text = stringResource(R.string.text_result_exam),
                     style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
             Text(
                 text = "${stringResource(R.string.text_complete)}: ${formatDate(testResult.submittedAt)}",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
@@ -230,6 +231,9 @@ fun ScoreOverviewCard(testResult: TestResultListDto) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Column(
@@ -239,6 +243,7 @@ fun ScoreOverviewCard(testResult: TestResultListDto) {
                 text = stringResource(R.string.text_overall_score),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
@@ -249,36 +254,28 @@ fun ScoreOverviewCard(testResult: TestResultListDto) {
                 ScoreItem(
                     title = stringResource(R.string.text_total_score),
                     score = testResult.totalScore.toString(),
-                    color = Brush.linearGradient(
-                        colors = listOf(Color(0xFF9C27B0), Color(0xFFE91E63))
-                    ),
+                    color = MaterialTheme.colorScheme.primary,
                     icon = Icons.Default.Star
                 )
 
                 ScoreItem(
                     title = stringResource(R.string.listenning),
                     score = testResult.listeningScore.toString(),
-                    color = Brush.linearGradient(
-                        colors = listOf(Color(0xFF2196F3), Color(0xFF00BCD4))
-                    ),
+                    color = MaterialTheme.colorScheme.secondary,
                     icon = Icons.Default.Headset
                 )
 
                 ScoreItem(
                     title = stringResource(R.string.reading),
                     score = testResult.readingScore.toString(),
-                    color = Brush.linearGradient(
-                        colors = listOf(Color(0xFF4CAF50), Color(0xFF009688))
-                    ),
+                    color = MaterialTheme.colorScheme.tertiary,
                     icon = Icons.AutoMirrored.Filled.MenuBook
                 )
 
                 ScoreItem(
                     title = stringResource(R.string.text_time),
                     score = formatTime(testResult.completionTime),
-                    color = Brush.linearGradient(
-                        colors = listOf(Color(0xFFFF9800), Color(0xFFF44336))
-                    ),
+                    color = MaterialTheme.colorScheme.primaryContainer,
                     icon = Icons.Default.AccessTime
                 )
             }
@@ -290,7 +287,7 @@ fun ScoreOverviewCard(testResult: TestResultListDto) {
 fun ScoreItem(
     title: String,
     score: String,
-    color: Brush,
+    color: Color,
     icon: ImageVector,
 ) {
     Card(
@@ -298,12 +295,13 @@ fun ScoreItem(
             .width(80.dp)
             .height(100.dp),
         shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = color
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Column(
@@ -312,19 +310,19 @@ fun ScoreItem(
                 Icon(
                     imageVector = icon,
                     contentDescription = title,
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = score,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
                 Text(
                     text = title,
-                    color = Color.White.copy(alpha = 0.9f),
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f),
                     fontSize = 10.sp,
                     textAlign = TextAlign.Center
                 )
@@ -344,6 +342,9 @@ fun PartResultCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -365,9 +366,7 @@ fun PartResultCard(
                         modifier = Modifier
                             .size(40.dp)
                             .background(
-                                color = if (part.partNumber <= 4) Color(0xFF2196F3) else Color(
-                                    0xFF4CAF50
-                                ),
+                                color = if (part.partNumber <= 4) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.tertiary,
                                 shape = CircleShape
                             ),
                         contentAlignment = Alignment.Center
@@ -375,7 +374,7 @@ fun PartResultCard(
                         Icon(
                             imageVector = if (part.partNumber <= 4) Icons.Default.Headset else Icons.AutoMirrored.Filled.MenuBook,
                             contentDescription = "${stringResource(R.string.text_part)} ${part.partNumber}",
-                            tint = Color.White,
+                            tint = MaterialTheme.colorScheme.onSecondary,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -386,12 +385,13 @@ fun PartResultCard(
                         Text(
                             text = "Part ${part.partNumber}",
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = "${part.correctAnswers}/${part.totalQuestions} ${stringResource(R.string.text_correct)}",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -410,7 +410,8 @@ fun PartResultCard(
 
                     Icon(
                         imageVector = if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                        contentDescription = if (isExpanded) "Thu gọn" else "Mở rộng"
+                        contentDescription = if (isExpanded) "Thu gọn" else "Mở rộng",
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -423,7 +424,7 @@ fun PartResultCard(
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
                 color = getAccuracyColor(part.correctAnswers, part.totalQuestions),
-                trackColor = Color.Gray.copy(alpha = 0.3f),
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
 
             // Chi tiết câu hỏi
@@ -453,7 +454,10 @@ fun QuestionResultItem(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (question.isCorrect) Color(0xFFE8F5E8) else Color(0xFFFFF0F0)
+            containerColor = if (question.isCorrect)
+                MaterialTheme.colorScheme.tertiaryContainer
+            else
+                MaterialTheme.colorScheme.errorContainer
         )
     ) {
         Column(
@@ -470,7 +474,10 @@ fun QuestionResultItem(
                     Icon(
                         imageVector = if (question.isCorrect) Icons.Default.CheckCircle else Icons.Default.Cancel,
                         contentDescription = if (question.isCorrect) "Đúng" else "Sai",
-                        tint = if (question.isCorrect) Color(0xFF4CAF50) else Color(0xFFF44336),
+                        tint = if (question.isCorrect)
+                            MaterialTheme.colorScheme.tertiary
+                        else
+                            MaterialTheme.colorScheme.error,
                         modifier = Modifier.size(20.dp)
                     )
 
@@ -479,7 +486,8 @@ fun QuestionResultItem(
                     Text(
                         text = "Câu ${question.questionIndex}",
                         style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -490,19 +498,19 @@ fun QuestionResultItem(
                         Text(
                             text = question.userAnswer,
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color(0xFFF44336)
+                            color = MaterialTheme.colorScheme.error
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "${stringResource(R.string.text_answer)}: ${question.correctAnswer}",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color(0xFF4CAF50)
+                            color = MaterialTheme.colorScheme.tertiary
                         )
                     } else {
                         Text(
                             text = "${stringResource(R.string.text_answer)}: ${question.correctAnswer}",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color(0xFF4CAF50)
+                            color = MaterialTheme.colorScheme.tertiary
                         )
                     }
 
@@ -515,6 +523,7 @@ fun QuestionResultItem(
                         Icon(
                             imageVector = if (isExplanationExpanded) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                             contentDescription = if (isExplanationExpanded) "Ẩn giải thích" else "Xem giải thích",
+                            tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(16.dp)
                         )
                     }
@@ -527,14 +536,14 @@ fun QuestionResultItem(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color.White.copy(alpha = 0.7f)
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
                     )
                 ) {
                     Text(
                         text = question.explanation,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(12.dp),
-                        color = Color.Gray.copy(alpha = 0.8f)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -542,7 +551,6 @@ fun QuestionResultItem(
     }
 }
 
-// Helper functions
 fun formatDate(dateString: String): String {
     return try {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
@@ -560,12 +568,13 @@ fun formatTime(seconds: Int): String {
     return "${hours}h ${minutes}m"
 }
 
+@Composable
 fun getAccuracyColor(correct: Int, total: Int): Color {
     val percentage = (correct * 100) / total
     return when {
-        percentage >= 80 -> Color(0xFF4CAF50)
-        percentage >= 60 -> Color(0xFF2196F3)
-        percentage >= 40 -> Color(0xFFFF9800)
-        else -> Color(0xFFF44336)
+        percentage >= 80 -> MaterialTheme.colorScheme.tertiary
+        percentage >= 60 -> MaterialTheme.colorScheme.secondary
+        percentage >= 40 -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.error
     }
 }

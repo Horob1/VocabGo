@@ -54,29 +54,20 @@ class LoginViewModel(
             val username = _loginFormState.value.username
             val password = _loginFormState.value.password
 
-            Log.d("login", "🚀 Sending login request for user: $username")
-
             try {
                 loginUseCase(username = username, password = password)
-
-                Log.d("login", "✅ Login successful for user: $username")
-
                 afterLoginSuccess()
                 _loginUIState.value = UIState.UISuccess(Unit)
 
             } catch (e: Exception) {
-                Log.e("login", "❌ Login failed: ${e.message}", e)
-
                 if (e is ApiException) {
-                    Log.w("login", "📡 Server returned error code: ${e.code}")
-
                     _loginUIState.value = when (e.code) {
                         422 -> UIState.UIError(UIErrorType.UnexpectedEntityError)
                         400 -> UIState.UIError(UIErrorType.BadRequestError)
                         401 -> UIState.UIError(UIErrorType.UnauthorizedError)
                         404 -> UIState.UIError(UIErrorType.NotFoundError)
                         403 -> UIState.UIError(UIErrorType.ForbiddenError)
-                        428 -> UIState.UIError(UIErrorType.PreconditionFailedError)
+//                        428 -> UIState.UIError(UIErrorType.PreconditionFailedError)
                         else -> UIState.UIError(UIErrorType.UnknownError)
                     }
                 } else {
@@ -114,8 +105,8 @@ class LoginViewModel(
                         // User bị ban rồi
                         403 -> _loginUIState.value = UIState.UIError(UIErrorType.ForbiddenError)
                         // Xac thuc 2 buoc
-                        428 -> _loginUIState.value =
-                            UIState.UIError(UIErrorType.PreconditionFailedError)
+//                        428 -> _loginUIState.value =
+//                            UIState.UIError(UIErrorType.PreconditionFailedError)
 
                         else -> _loginUIState.value = UIState.UIError(UIErrorType.UnknownError)
                     }
