@@ -102,17 +102,27 @@ fun VideoCallScreen(
     DisposableEffect(Unit) {
         onDispose {
             ringtonePlayer?.let {
-                if (it.isPlaying) it.stop()
-                it.release()
-                ringtonePlayer = null
+                try {
+                    if (it.isPlaying) it.stop()
+                } catch (e: IllegalStateException) {
+                } finally {
+                    it.release()
+                    ringtonePlayer = null
+                }
             }
+
             mediaPlayer?.let {
-                if (it.isPlaying) it.stop()
-                it.release()
-                mediaPlayer = null
+                try {
+                    if (it.isPlaying) it.stop()
+                } catch (e: IllegalStateException) {
+                } finally {
+                    it.release()
+                    mediaPlayer = null
+                }
             }
         }
     }
+
     Box(modifier = Modifier.fillMaxSize()) {
         when (callState) {
             CallState.PREVIEW -> {
