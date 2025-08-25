@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -157,11 +158,13 @@ fun ProfileScreen(
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
+            Log.d("ProfileScreen", "Camera result: success=$success, uri=$capturedImageUri")
             if (success) {
                 capturedImageUri?.let { uri ->
+                    Log.d("ProfileScreen", "Launching updateAvatar with $uri")
                     viewModel.updateAvatar(uri, context)
                     isShowModelChooseAvatar = false
-                }
+                } ?: Log.e("ProfileScreen", "capturedImageUri is null after camera success")
             }
         }
     )
@@ -179,10 +182,13 @@ fun ProfileScreen(
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
+        Log.d("ProfileScreen", "Gallery result: uri=$uri")
         uri?.let {
+            Log.d("ProfileScreen", "Launching updateAvatar with $uri")
             viewModel.updateAvatar(it, context)
-        }
+        } ?: Log.e("ProfileScreen", "No image selected from gallery")
     }
+
 
     val firstNameFocusRequester = remember { FocusRequester() }
     val lastNameFocusRequester = remember { FocusRequester() }
@@ -206,14 +212,19 @@ fun ProfileScreen(
     val requestCameraPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
+        Log.d("ProfileScreen", "Camera permission granted=$isGranted")
         try {
             if (isGranted) {
                 val photoFile = File(context.externalCacheDir, "temp_image.jpg")
+                Log.d("ProfileScreen", "Creating photoFile: ${photoFile.absolutePath}")
+
                 capturedImageUri = FileProvider.getUriForFile(
                     context,
                     "${context.packageName}.fileprovider",
                     photoFile
                 )
+                Log.d("ProfileScreen", "capturedImageUri = $capturedImageUri")
+
                 capturedImageUri?.let { uri ->
                     cameraLauncher.launch(uri)
                 }
@@ -225,9 +236,10 @@ fun ProfileScreen(
                 ).show()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("ProfileScreen", "Error launching camera", e)
         }
     }
+
     if (user == null || uiState is UIState.UILoading) Box(
         Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

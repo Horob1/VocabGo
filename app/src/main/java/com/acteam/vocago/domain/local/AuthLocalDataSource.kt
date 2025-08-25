@@ -11,6 +11,4 @@ interface AuthLocalDataSource {
     val isAuth: StateFlow<Boolean>
     fun refreshTokens(accessToken: String, refreshToken: String)
     fun saveCredential(credentialId: String, accessToken: String, refreshToken: String)
-
-
 }

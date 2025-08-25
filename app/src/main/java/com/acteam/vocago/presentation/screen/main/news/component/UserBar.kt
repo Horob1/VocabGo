@@ -113,7 +113,7 @@ fun UserBar(
         }
 
         UserAvatar(
-            imageUrl = userProfile?.avatar,
+            imageUrl = if (isAuth) userProfile?.avatar else null,
             onClick = {
                 if (isAuth) navigateToProfile()
                 else navigateToLogin()

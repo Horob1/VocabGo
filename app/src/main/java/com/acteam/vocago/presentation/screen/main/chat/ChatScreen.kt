@@ -329,12 +329,18 @@ fun ChatScreen(
                     with(LocalDensity.current) { (cardHeight * 0.25f).toPx().toInt() }
                 }
                 var offsetXExtra = 0
-                offsetXExtra = if (deviceType == DeviceType.Mobile) {
-                    with(LocalDensity.current) { 48.dp.toPx().toInt() }
-                } else if (deviceType == DeviceType.TabletPortrait) {
-                    with(LocalDensity.current) { 120.dp.toPx().toInt() }
-                } else {
-                    with(LocalDensity.current) { 320.dp.toPx().toInt() }
+                offsetXExtra = when (deviceType) {
+                    DeviceType.Mobile -> {
+                        with(LocalDensity.current) { 48.dp.toPx().toInt() }
+                    }
+
+                    DeviceType.TabletPortrait -> {
+                        with(LocalDensity.current) { 120.dp.toPx().toInt() }
+                    }
+
+                    else -> {
+                        with(LocalDensity.current) { 320.dp.toPx().toInt() }
+                    }
                 }
                 LocationCard(
                     location = userProfileList[page].location,

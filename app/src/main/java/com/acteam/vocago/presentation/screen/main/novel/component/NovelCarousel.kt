@@ -49,6 +49,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.acteam.vocago.R
 import com.acteam.vocago.domain.model.Novel
+import com.acteam.vocago.presentation.screen.common.EmptySurface
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 import kotlinx.coroutines.delay
@@ -60,6 +61,15 @@ fun NovelCarousel(
     novel: List<Novel>,
     onItemClick: (String) -> Unit,
 ) {
+    if (novel.isEmpty()) {
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            EmptySurface()
+        }
+        return
+    }
     val realSize = novel.size
     val startIndex = Int.MAX_VALUE / 2 // Start from middle to allow left/right scroll
 
