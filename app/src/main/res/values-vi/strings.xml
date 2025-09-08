@@ -83,7 +83,6 @@
     <string name="enum_news_level_medium">Trung bình</string>
     <string name="enum_news_level_hard">Khó</string>
     <string name="enum_news_level_all">Tất cả</string>
-    <string name="text_level">Mức độ</string>
 
     <string name="enum_news_category_news">Tin tức</string>
     <string name="enum_news_category_travel">Du lịch</string>

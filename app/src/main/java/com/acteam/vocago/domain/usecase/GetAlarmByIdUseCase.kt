@@ -6,5 +6,5 @@ import com.acteam.vocago.domain.repository.AlarmRepository
 class GetAlarmByIdUseCase(
     private val alarmRepository: AlarmRepository,
 ) {
-    suspend operator fun invoke(id: String): Alarm? = alarmRepository.getAlarmById(id)
+    suspend operator fun invoke(id: Int): Alarm? = alarmRepository.getAlarmById(id)
 }

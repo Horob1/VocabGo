@@ -38,7 +38,7 @@ class AlarmViewModel(
         }
     }
 
-    fun findAlarm(id: String) {
+    fun findAlarm(id: Int) {
         viewModelScope.launch {
             _alarmUiState.value = UIState.UILoading
             val alarm = getAlarmByIdUseCase(id)
@@ -53,7 +53,7 @@ class AlarmViewModel(
     fun setDefaultAlarm() {
         _alarmUiState.value = UIState.UISuccess(
             Alarm(
-                id = "",
+                id = 0,
                 hour = 0,
                 minute = 0,
                 enabled = false,

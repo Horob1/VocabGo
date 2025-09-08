@@ -1,19 +1,15 @@
 package com.acteam.vocago.presentation
 
 import android.app.Application
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
-import coil.request.CachePolicy
-import coil.util.DebugLogger
 import com.acteam.vocago.di.appModules
 import com.acteam.vocago.utils.NotificationChannelHelper
+import com.acteam.vocago.utils.StaticProvider
+import com.meticha.triggerx.dsl.TriggerX
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 
-class VocabGoApp : Application(), ImageLoaderFactory {
+class VocabGoApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -24,25 +20,18 @@ class VocabGoApp : Application(), ImageLoaderFactory {
             androidContext(this@VocabGoApp)
             modules(appModules)
         }
-    }
+        // Khởi tạo TriggerX
+        TriggerX.init(this) {
 
-    override fun newImageLoader(): ImageLoader {
-        return ImageLoader(this).newBuilder()
-            .memoryCachePolicy(CachePolicy.ENABLED)
-            .memoryCache {
-                MemoryCache.Builder(this)
-                    .maxSizePercent(0.1)
-                    .strongReferencesEnabled(true)
-                    .build()
-            }
-            .diskCachePolicy(CachePolicy.ENABLED)
-            .diskCache {
-                DiskCache.Builder()
-                    .maxSizePercent(0.03)
-                    .directory(cacheDir)
-                    .build()
-            }
-            .logger(DebugLogger())
-            .build()
+            /* UI that opens when the alarm fires */
+            activityClass = AppAlarmActivity::class.java
+            alarmDataProvider = StaticProvider()
+            /* Foreground-service notification */
+            useDefaultNotification(
+                title = "Alarm running",
+                message = "Tap to open",
+                channelName = "Alarm Notifications"
+            )
+        }
     }
 }

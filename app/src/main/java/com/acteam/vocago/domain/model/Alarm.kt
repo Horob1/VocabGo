@@ -3,7 +3,7 @@ package com.acteam.vocago.domain.model
 import com.acteam.vocago.data.local.entity.AlarmEntity
 
 data class Alarm(
-    val id: String,
+    val id: Int,
     val hour: Int,
     val minute: Int,
     val enabled: Boolean,

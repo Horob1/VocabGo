@@ -26,7 +26,7 @@ import com.acteam.vocago.utils.RoomConverters
         AlarmEntity::class,
         LocalNovelHistoryEntity::class,
         VocaListEntity::class,
-        VocaEntity::class
+        VocaEntity::class,
     ],
     version = 1
 )
@@ -38,4 +38,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun newsHistoryDao(): NewsHistoryDao
     abstract fun localNovelHistoryDao(): LocalNovelHistoryDao
     abstract fun vocaDao(): VocaDao
+
 }
