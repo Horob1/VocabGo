@@ -37,4 +37,13 @@ val daoModule = module {
         get<AppDatabase>().vocaDao()
     }
 
+    single {
+        get<AppDatabase>().novelDao()
+    }
+
+    single {
+        get<AppDatabase>().chapterDao()
+    }
+
+
 }

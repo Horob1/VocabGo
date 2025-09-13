@@ -21,6 +21,6 @@ val localDataModule = module {
         NewsLocalDataSourceImpl(get())
     }
     single<NovelLocalDataSource> {
-        NovelLocalDataSourceImpl(get())
+        NovelLocalDataSourceImpl(get(), get(), get())
     }
 }

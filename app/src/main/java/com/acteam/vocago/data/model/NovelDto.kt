@@ -1,5 +1,6 @@
 package com.acteam.vocago.data.model
 
+import com.acteam.vocago.data.local.entity.NovelEntity
 import com.acteam.vocago.domain.model.Novel
 import kotlinx.serialization.Serializable
 
@@ -17,6 +18,18 @@ data class NovelDto(
     val updatedAt: String,
 ) {
     fun toNovel(): Novel = Novel(
+        _id = _id,
+        fictionNumber = fictionNumber,
+        fictionTitle = fictionTitle,
+        totalChapters = totalChapters,
+        image = image,
+        author = author,
+        isPublish = isPublish,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
+
+    fun toEntity(): NovelEntity = NovelEntity(
         _id = _id,
         fictionNumber = fictionNumber,
         fictionTitle = fictionTitle,

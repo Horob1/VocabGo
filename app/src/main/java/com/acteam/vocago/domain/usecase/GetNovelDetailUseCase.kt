@@ -1,13 +1,13 @@
 package com.acteam.vocago.domain.usecase
 
-import com.acteam.vocago.data.model.NovelDetailDto
-import com.acteam.vocago.domain.remote.NovelRemoteDataSource
+import com.acteam.vocago.domain.model.NovelDetail
+import com.acteam.vocago.domain.repository.NovelRepository
 
 class GetNovelDetailUseCase(
-    private val novelRemoteDataSource: NovelRemoteDataSource,
+    private val novelRepository: NovelRepository,
 ) {
-    suspend operator fun invoke(id: String): NovelDetailDto? {
-        return novelRemoteDataSource.getNovelDetail(id).getOrNull()
+    suspend operator fun invoke(id: String): NovelDetail? {
+        return novelRepository.getNovelDetail(id).getOrNull()
     }
 
 }

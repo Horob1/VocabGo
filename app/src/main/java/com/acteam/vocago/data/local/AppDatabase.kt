@@ -4,16 +4,20 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.acteam.vocago.data.local.dao.AlarmDao
+import com.acteam.vocago.data.local.dao.ChapterDao
 import com.acteam.vocago.data.local.dao.LocalNovelHistoryDao
 import com.acteam.vocago.data.local.dao.LoggedInUserDao
 import com.acteam.vocago.data.local.dao.NewsDao
 import com.acteam.vocago.data.local.dao.NewsHistoryDao
+import com.acteam.vocago.data.local.dao.NovelDao
 import com.acteam.vocago.data.local.dao.VocaDao
 import com.acteam.vocago.data.local.entity.AlarmEntity
+import com.acteam.vocago.data.local.entity.ChapterEntity
 import com.acteam.vocago.data.local.entity.LocalNovelHistoryEntity
 import com.acteam.vocago.data.local.entity.LoggedInUser
 import com.acteam.vocago.data.local.entity.NewsEntity
 import com.acteam.vocago.data.local.entity.NewsHistoryEntity
+import com.acteam.vocago.data.local.entity.NovelEntity
 import com.acteam.vocago.data.local.entity.VocaEntity
 import com.acteam.vocago.data.local.entity.VocaListEntity
 import com.acteam.vocago.utils.RoomConverters
@@ -27,6 +31,8 @@ import com.acteam.vocago.utils.RoomConverters
         LocalNovelHistoryEntity::class,
         VocaListEntity::class,
         VocaEntity::class,
+        NovelEntity::class,
+        ChapterEntity::class
     ],
     version = 1
 )
@@ -38,5 +44,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun newsHistoryDao(): NewsHistoryDao
     abstract fun localNovelHistoryDao(): LocalNovelHistoryDao
     abstract fun vocaDao(): VocaDao
-
+    abstract fun novelDao(): NovelDao
+    abstract fun chapterDao(): ChapterDao
 }

@@ -20,6 +20,7 @@ import com.acteam.vocago.domain.usecase.GetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.GetFontFamilyUseCase
 import com.acteam.vocago.domain.usecase.GetLanguageUseCase
 import com.acteam.vocago.domain.usecase.GetLastReadChapterUseCase
+import com.acteam.vocago.domain.usecase.GetLocalChapterFlowUseCase
 import com.acteam.vocago.domain.usecase.GetLocalUserProfileUseCase
 import com.acteam.vocago.domain.usecase.GetLoginStateUseCase
 import com.acteam.vocago.domain.usecase.GetNewsDetailUseCase
@@ -28,12 +29,13 @@ import com.acteam.vocago.domain.usecase.GetNewsPagingUseCase
 import com.acteam.vocago.domain.usecase.GetNovelDetailUseCase
 import com.acteam.vocago.domain.usecase.GetNovelFirstPageUseCase
 import com.acteam.vocago.domain.usecase.GetReadNovelFirstPageUseCase
+import com.acteam.vocago.domain.usecase.GetReadNovelFlowUseCase
 import com.acteam.vocago.domain.usecase.GetReadNovelFontSizeUseCase
-import com.acteam.vocago.domain.usecase.GetReadNovelPagingFlowUseCase
 import com.acteam.vocago.domain.usecase.GetReadNovelThemeUseCase
 import com.acteam.vocago.domain.usecase.GetSearchNovelPagingFlowUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetSuggestWordUseCase
+import com.acteam.vocago.domain.usecase.GetTTSConfigUseCase
 import com.acteam.vocago.domain.usecase.GetTestResultDetailUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
 import com.acteam.vocago.domain.usecase.GetToeicDetailUseCase
@@ -50,7 +52,9 @@ import com.acteam.vocago.domain.usecase.LogoutUseCase
 import com.acteam.vocago.domain.usecase.RegisterUseCase
 import com.acteam.vocago.domain.usecase.ResendVerifyEmailUseCase
 import com.acteam.vocago.domain.usecase.ResetPasswordUseCase
+import com.acteam.vocago.domain.usecase.SaveChapterUseCase
 import com.acteam.vocago.domain.usecase.SaveOnBoardingStateUseCase
+import com.acteam.vocago.domain.usecase.SaveTTSConfigUseCase
 import com.acteam.vocago.domain.usecase.SaveWordToVocaListUseCase
 import com.acteam.vocago.domain.usecase.SetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.SetFontFamilyUseCase
@@ -303,7 +307,7 @@ val useCaseModule = module {
     }
 
     single {
-        GetReadNovelPagingFlowUseCase(get())
+        GetReadNovelFlowUseCase(get())
     }
 
     factory {
@@ -346,4 +350,17 @@ val useCaseModule = module {
         SyncVocaFromServeUseCase(get(), get())
     }
 
+    single { GetLocalChapterFlowUseCase(get()) }
+
+    single {
+        SaveChapterUseCase(get())
+    }
+
+    single {
+        GetTTSConfigUseCase(get())
+    }
+
+    single {
+        SaveTTSConfigUseCase(get())
+    }
 }

@@ -14,11 +14,6 @@ class NovelViewModel(
     private val getNovelFirstPageUseCase: GetNovelFirstPageUseCase,
     private val getReadNovelFirstPageUseCase: GetReadNovelFirstPageUseCase,
 ) : ViewModel() {
-    private val _connectMode = MutableStateFlow<Boolean>(true)
-    val connectMode = _connectMode
-    fun setConnectMode(mode: Boolean) {
-        _connectMode.value = mode
-    }
 
     private val _novelFirstPage = MutableStateFlow<UIState<List<Novel>>>(UIState.UILoading)
     val novelFirstPage = _novelFirstPage
@@ -44,13 +39,8 @@ class NovelViewModel(
         _readNovelFirstPage.value = UIState.UILoading
         viewModelScope.launch {
             val result = getReadNovelFirstPageUseCase()
-            if (result.isSuccess) {
-                _readNovelFirstPage.value = UIState.UISuccess(result.getOrDefault(emptyList()))
-            } else {
-                _readNovelFirstPage.value = UIState.UIError(
-                    UIErrorType.UnknownError
-                )
-            }
+
+            _readNovelFirstPage.value = UIState.UISuccess(result)
         }
     }
 

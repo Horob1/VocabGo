@@ -1,5 +1,12 @@
 package com.acteam.vocago.presentation.screen.noveldetail
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.FormatAlignLeft
 import androidx.compose.material.icons.automirrored.filled.FormatAlignRight
+import androidx.compose.material.icons.filled.DownloadForOffline
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -40,16 +48,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.common.data.UIState
+import com.acteam.vocago.presentation.screen.main.novel.component.DownloadDialog
 import com.acteam.vocago.presentation.screen.noveldetail.component.StoryCard
 import com.acteam.vocago.utils.DateDisplayHelper
 import java.util.Locale
@@ -60,14 +71,66 @@ fun NovelDetailScreen(
     viewModel: NovelDetailViewModel,
     navController: NavController,
 ) {
+    val context = LocalContext.current
     val novelDetail by viewModel.novelDetail.collectAsState()
     val readChapter by viewModel.readChapter.collectAsState()
+    val localNovel by viewModel.getLocalChapterFlowUseCase(novelId)
+        .collectAsState(initial = emptyList())
+    val isBind by viewModel.isBind.collectAsState()
+    val downloadState by viewModel.downloadState.collectAsState()
+    LaunchedEffect(isBind) {
+        if (!isBind) {
+            viewModel.bindService(context)
+        }
+    }
     LaunchedEffect(Unit) {
         if (novelDetail !is UIState.UISuccess) {
             viewModel.loadNovel(novelId)
         }
     }
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val showDownloadDialog = remember { mutableStateOf(false) }
+    var hasPermission by remember {
+        mutableStateOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            } else {
+                true
+            }
+        )
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { granted ->
+            hasPermission = granted
+            if (granted) {
+                if (isBind) {
+                    if (downloadState is DownloadServiceState.Downloading) {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.already_downloading),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        showDownloadDialog.value = true
+                    }
+                } else {
+                    viewModel.bindService(context)
+                }
+            } else {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.notification_permission_denied),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    )
+
 
     val tabs = listOf(R.string.chapters)
 
@@ -104,6 +167,25 @@ fun NovelDetailScreen(
                                         chapterId = readChapter
                                     )
                                 )
+                            }
+                        },
+                        onDownloadClick = {
+                            if (!hasPermission) {
+                                launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                return@StoryCard
+                            }
+                            if (isBind) {
+                                if (downloadState is DownloadServiceState.Downloading) {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.already_downloading),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    return@StoryCard
+                                }
+                                showDownloadDialog.value = true
+                            } else {
+                                viewModel.bindService(context)
                             }
                         }
                     )
@@ -282,6 +364,12 @@ fun NovelDetailScreen(
                                                     )
                                                 )
                                             }
+                                            Spacer(modifier = Modifier.weight(1f))
+                                            if (localNovel.firstOrNull { it == novel.chapters[index]._id } != null) Icon(
+                                                imageVector = Icons.Default.DownloadForOffline,
+                                                contentDescription = "Download",
+                                                tint = MaterialTheme.colorScheme.primary
+                                            )
                                         }
                                     }
                                 }
@@ -289,11 +377,42 @@ fun NovelDetailScreen(
                         }
                     }
                 }
+                if (showDownloadDialog.value) {
+                    DownloadDialog(
+                        onDismiss = {
+                            showDownloadDialog.value = false
+                        },
+                        onDownload = {
+                            val intent =
+                                Intent(context, DownloadNovelService::class.java).apply {
+                                    action = DownloadNovelService.ACTION_DOWNLOAD
+                                    putExtra(
+                                        "novelInfo", NovelInfo(
+                                            name = novel.fictionTitle,
+                                            url = novel.image,
+                                            chapterList = it.map { chapter ->
+                                                ChapterInfo(
+                                                    number = chapter.chapterNumber,
+                                                    _id = chapter._id
+                                                )
+                                            },
+                                            _id = novel._id
+                                        )
+                                    )
+                                }
+                            context.startService(intent)
+                            showDownloadDialog.value = false
+                        },
+                        chapterList = novel.chapters
+                    )
+
+                }
             }
 
             is UIState.UIError -> {
                 // Xử lý lỗi
             }
         }
+
     }
 }

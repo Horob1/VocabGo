@@ -3,8 +3,8 @@ package com.acteam.vocago.presentation.screen.readnovel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.acteam.vocago.data.model.ChapterDto
-import com.acteam.vocago.data.model.NovelDetailDto
 import com.acteam.vocago.data.model.WordDto
+import com.acteam.vocago.domain.model.NovelDetail
 import com.acteam.vocago.domain.model.NovelFont
 import com.acteam.vocago.domain.model.NovelTheme
 import com.acteam.vocago.domain.usecase.GetChapterUseCase
@@ -47,8 +47,8 @@ class ReadNovelViewModel(
     private val _wordUiState = MutableStateFlow<UIState<WordDto>>(UIState.UILoading)
     val wordUiState = _wordUiState
 
-    private val _novelDetail = MutableStateFlow<UIState<NovelDetailDto>>(UIState.UILoading)
-    val novelDetail: StateFlow<UIState<NovelDetailDto>> = _novelDetail
+    private val _novelDetail = MutableStateFlow<UIState<NovelDetail>>(UIState.UILoading)
+    val novelDetail: StateFlow<UIState<NovelDetail>> = _novelDetail
 
     val theme = getReadNovelThemeUseCase().stateIn(
         scope = viewModelScope,
@@ -91,9 +91,6 @@ class ReadNovelViewModel(
                         ?: getChapterUseCase(result.previousChapter._id)
                 if (previousResult != null) {
                     temp.add(previousResult)
-                } else {
-                    onError()
-                    return@launch
                 }
             }
 
@@ -102,9 +99,6 @@ class ReadNovelViewModel(
                     ?: getChapterUseCase(result.nextChapter._id)
                 if (nextResult != null) {
                     temp.add(nextResult)
-                } else {
-                    onError()
-                    return@launch
                 }
             }
             _chapters.value = temp

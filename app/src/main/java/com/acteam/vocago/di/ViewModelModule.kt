@@ -9,6 +9,7 @@ import com.acteam.vocago.presentation.screen.auth.verifyemail.VerifyEmailViewMod
 import com.acteam.vocago.presentation.screen.choosevoca.ChooseVocaViewModel
 import com.acteam.vocago.presentation.screen.flashcard.FlashCardViewModel
 import com.acteam.vocago.presentation.screen.learn.LearnViewModel
+import com.acteam.vocago.presentation.screen.listennovel.ListenNovelViewModel
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.main.novel.NovelViewModel
@@ -195,6 +196,10 @@ val viewModelModule = module {
     }
     viewModel {
         LearnViewModel(get())
+    }
+
+    viewModel {
+        ListenNovelViewModel(get(), get(), get())
     }
 
 }

@@ -391,4 +391,27 @@
     <string name="text_delete">Xóa</string>
     <string name="text_delete_device_confirm">Bạn có muốn xóa thiết bị này không?</string>
 
+    <string name="text_list">DS.Chương</string>
+    <string name="text_setting">Cài đặt</string>
+    <string name="text_help">Trợ giúp</string>
+    <string name="txt_auto_off">Tự động tắt</string>
+    <string name="text_cancel_alarm">Huỷ hẹn giờ tắt</string>
+    <string name="text_download_chapter">Tải xuống các chương truyện</string>
+    <string name="text_download_done">đã tải xong!</string>
+    <string name="already_downloading">Một truyện đang tải xuống! Hãy chờ đợi!</string>
+    <string name="download_all">Tải xuống tất cả</string>
+    <string name="notification_permission_denied">Quyền thông báo bị từ chối!</string>
+    <string name="chapterList">Danh sách chương</string>
+    <string name="alert_permission_diened">Đồng ý quyền để sử dụng tính năng này!</string>
+    <string name="btn_confirm">Đồng ý</string>
+    <string name="text_speed">Tốc độ</string>
+    <string name="text_slow">Chậm</string>
+    <string name="text_fast">Nhanh</string>
+    <string name="text_pitch">Độ cao</string>
+    <string name="text_low">Thấp</string>
+    <string name="text_high">Cao</string>
+    <string name="text_voice">Gọng nói</string>
+    <string name="text_select_voice">Chọn giọng nói</string>
+    <string name="desc_setting_voice">Tuỳ chỉnh giọng nói theo ý bạn</string>
+    <string name="title_setting_voice">Tuỳ chỉnh giọng nói</string>
 </resources>

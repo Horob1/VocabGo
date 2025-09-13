@@ -3,7 +3,6 @@ package com.acteam.vocago.presentation.screen.main.novel.component
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.acteam.vocago.domain.model.Novel
-import com.acteam.vocago.presentation.screen.common.EmptySurface
 import com.acteam.vocago.utils.responsiveDP
 import com.acteam.vocago.utils.responsiveSP
 
@@ -32,7 +30,9 @@ fun NovelList(
     bgColorAlpha: Float = 0f,
     onNovelClick: (String) -> Unit = {},
     onGoToFullNovelList: () -> Unit = {},
+    showDate: Boolean = true,
 ) {
+    if (novelList.isEmpty()) return
     Column(
         modifier = modifier
             .background(
@@ -85,27 +85,11 @@ fun NovelList(
             }
         }
 
-        if (novelList.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = responsiveDP(
-                            mobile = 16,
-                            tabletPortrait = 24,
-                            tabletLandscape = 32
-                        )
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                EmptySurface()
-            }
-        }
-
         novelList.forEach { novel ->
             NovelCard(
                 novel = novel,
-                onClick = onNovelClick
+                onClick = onNovelClick,
+                showDate = showDate
             )
         }
     }

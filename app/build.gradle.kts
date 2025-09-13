@@ -61,6 +61,10 @@ android {
 }
 
 dependencies {
+    // Socket
+    implementation(libs.socket.io.client)
+    // Media
+    implementation(libs.androidx.media)
     // TriggerX
     implementation(libs.triggerx)
     //audio

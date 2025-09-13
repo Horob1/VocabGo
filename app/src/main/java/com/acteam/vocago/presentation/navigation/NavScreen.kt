@@ -103,6 +103,9 @@ sealed class NavScreen {
     @Serializable
     data object NovelHistoryNavScreen : NavScreen()
 
+    @Serializable
+    data class ListenNovelNavScreen(val novelId: String, val chapterId: String) : NavScreen()
+
     // Mâm 2
 
     // Mân 2 của Auth

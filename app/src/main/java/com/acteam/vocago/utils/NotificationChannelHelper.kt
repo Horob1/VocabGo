@@ -3,31 +3,30 @@ package com.acteam.vocago.utils
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 
 object NotificationChannelHelper {
-    const val ALARM_CHANNEL_ID = "alarm_channel"
-    private const val ALARM_CHANNEL_NAME = "Báo thức"
-    private const val ALARM_CHANNEL_DESCRIPTION = "Kênh dành cho báo thức phát nhạc"
+    const val DOWNLOAD_CHANNEL_ID = "download_channel"
+    const val NOVEL_SPEAKING_CHANNEL_ID = "novel_speaking_channel"
 
-    private fun createAlarmChannel(manager: NotificationManager) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                ALARM_CHANNEL_ID,
-                ALARM_CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = ALARM_CHANNEL_DESCRIPTION
-                enableVibration(true)
-            }
-
-            manager.createNotificationChannel(channel)
-        }
-    }
 
     fun createAllChannels(context: Context) {
         val manager = context.getSystemService(NotificationManager::class.java)
-        createAlarmChannel(manager)
-    }
+        val downloadChannel = NotificationChannel(
+            DOWNLOAD_CHANNEL_ID,
+            "Download",
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            setSound(null, null)
+        }
 
+        val novelSpeakingChannel = NotificationChannel(
+            NOVEL_SPEAKING_CHANNEL_ID,
+            "Novel Speaking",
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            setSound(null, null)
+        }
+        manager.createNotificationChannel(downloadChannel)
+        manager.createNotificationChannel(novelSpeakingChannel)
+    }
 }

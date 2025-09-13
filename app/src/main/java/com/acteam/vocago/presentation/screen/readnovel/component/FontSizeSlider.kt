@@ -1,3 +1,5 @@
+package com.acteam.vocago.presentation.screen.readnovel.component
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
