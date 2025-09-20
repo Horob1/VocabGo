@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -77,6 +78,15 @@ fun UserNavigatorScreen(
                 },
                 R.string.title_alarm,
                 Icons.Filled.Alarm
+            ),
+            Triple(
+                {
+                    userNavController.navigate(
+                        NavScreen.RankingNavScreen
+                    )
+                },
+                R.string.title_ranking,
+                Icons.Default.Leaderboard
             ),
             Triple(
                 {

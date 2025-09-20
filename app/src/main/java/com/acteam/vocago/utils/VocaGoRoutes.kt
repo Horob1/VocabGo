@@ -9,6 +9,9 @@ sealed class VocaGoRoutes(val path: String) {
     data object VerifyEmail : VocaGoRoutes("api/v1/user/verify-email")
     data object ResendVerifyEmail : VocaGoRoutes("api/v1/user/resend-verification-email")
     data object VerifyTwoFA : VocaGoRoutes("api/v1/user/verify-2fa")
+    data object GetTwoFAQrCode : VocaGoRoutes("api/v1/user/get-2fa-qr-code")
+    data object SetUpTwoFA : VocaGoRoutes("api/v1/user/setup-2fa")
+    data object DisableTwoFA : VocaGoRoutes("api/v1/user/turn-off-2fa")
     data object LoginGoogle : VocaGoRoutes("api/v1/user/login-google")
     data object Logout : VocaGoRoutes("api/v1/user/logout")
 
@@ -45,5 +48,10 @@ sealed class VocaGoRoutes(val path: String) {
     //voca
     data object GetVoca : VocaGoRoutes("/api/v1/voca/me")
     data object VocaSync : VocaGoRoutes("/api/v1/voca/sync")
+
+    //checkin
+    data object SelectCheckIn : VocaGoRoutes("/api/v1/user/select-check-in")
+    data object CheckIn : VocaGoRoutes("/api/v1/user/check-in")
+    data object GetRanking : VocaGoRoutes("/api/v1/user/ranking-table")
 
 }

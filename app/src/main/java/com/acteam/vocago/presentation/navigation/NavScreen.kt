@@ -156,4 +156,7 @@ sealed class NavScreen {
     @Serializable
     data object AnalyzeUserNavScreen : NavScreen()
 
+    @Serializable
+    data object RankingNavScreen : NavScreen()
+
 }

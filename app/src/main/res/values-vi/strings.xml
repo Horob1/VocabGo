@@ -391,5 +391,25 @@
     <string name="text_delete_device">Xóa thiết bị</string>
     <string name="text_delete">Xóa</string>
     <string name="text_delete_device_confirm">Bạn có muốn xóa thiết bị này không?</string>
-
+    <string name="title_ranking">Bảng xếp hạng</string>
+    <string name="your_achievements">Thành tích của bạn</string>
+    <string name="text_keep_trying_continue">Tiếp tục cố gắng nhé!</string>
+    <string name="text_current_streak">Chuỗi hiện tại</string>
+    <string name="text_max_streak">Chuỗi tốt nhất</string>
+    <string name="ranking_top">Top cao thủ</string>
+    <string name="setup_2fa_failed">OTP không hợp lệ, vui lòng thử lại</string>
+    <string name="disable_2fa_failed">Tắt xác thực 2 bước thất bại, vui lòng thử lại</string>
+    <string name="two_factor_authentication">Xác thực 2 bước</string>
+    <string name="btn_enable">Bật</string>
+    <string name="btn_disable">Tắt</string>
+    <string name="desc_two_factor_setup">Quét mã QR này bằng ứng dụng xác thực của bạn</string>
+    <string name="desc_two_factor_setup_2">Nhập mã 6 chữ số từ ứng dụng của bạn</string>
+    <string name="daily_check_in_title">🎉 Daily Check-in 🎉</string>
+    <string name="check_in_title">🎉 Check-in 🎉</string>
+    <string name="daily_check_in_message">
+        Hôm nay sẽ là một ngày tuyệt vời!\nBấm vào biểu tượng để check-in nhé! 💪
+    </string>
+    <string name="check_in_success_message">
+        Tuyệt vời! Bạn đã check-in thành công!\nHãy bắt đầu ngày mới đầy năng lượng! ✨
+    </string>
 </resources>

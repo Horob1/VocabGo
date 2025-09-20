@@ -20,6 +20,8 @@ import com.acteam.vocago.presentation.screen.user.profile.ChangePasswordScreen
 import com.acteam.vocago.presentation.screen.user.profile.DeviceManagementScreen
 import com.acteam.vocago.presentation.screen.user.profile.ProfileScreen
 import com.acteam.vocago.presentation.screen.user.profile.ProfileViewModel
+import com.acteam.vocago.presentation.screen.user.ranking.RankingScreen
+import com.acteam.vocago.presentation.screen.user.ranking.RankingViewModel
 import com.acteam.vocago.presentation.screen.user.usernavigator.UserNavigatorScreen
 import com.acteam.vocago.presentation.screen.user.usernavigator.UserNavigatorViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -63,6 +65,14 @@ fun SetupUserNavGraph(
                         navController = userNavController
                     )
                 }
+            }
+
+            composable<NavScreen.RankingNavScreen> {
+                val rankingViewModel = koinViewModel<RankingViewModel>()
+                RankingScreen(
+                    viewModel = rankingViewModel,
+                    navController = userNavController
+                )
             }
 
             composable<NavScreen.ChangePasswordNavScreen> {

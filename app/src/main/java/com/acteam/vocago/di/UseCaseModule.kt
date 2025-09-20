@@ -2,6 +2,7 @@ package com.acteam.vocago.di
 
 import com.acteam.vocago.domain.usecase.AnswerNewsUseCase
 import com.acteam.vocago.domain.usecase.ChangePasswordUseCase
+import com.acteam.vocago.domain.usecase.CheckInUseCase
 import com.acteam.vocago.domain.usecase.ChooseLanguageUserCase
 import com.acteam.vocago.domain.usecase.CreateVocaListUseCase
 import com.acteam.vocago.domain.usecase.DeleteAlarmByIdUseCase
@@ -27,6 +28,7 @@ import com.acteam.vocago.domain.usecase.GetNewsHistoryPagingUseCase
 import com.acteam.vocago.domain.usecase.GetNewsPagingUseCase
 import com.acteam.vocago.domain.usecase.GetNovelDetailUseCase
 import com.acteam.vocago.domain.usecase.GetNovelFirstPageUseCase
+import com.acteam.vocago.domain.usecase.GetRankingUseCase
 import com.acteam.vocago.domain.usecase.GetReadNovelFirstPageUseCase
 import com.acteam.vocago.domain.usecase.GetReadNovelFontSizeUseCase
 import com.acteam.vocago.domain.usecase.GetReadNovelPagingFlowUseCase
@@ -39,6 +41,8 @@ import com.acteam.vocago.domain.usecase.GetThemeUseCase
 import com.acteam.vocago.domain.usecase.GetToeicDetailUseCase
 import com.acteam.vocago.domain.usecase.GetToeicListUseCase
 import com.acteam.vocago.domain.usecase.GetToeicResultUseCase
+import com.acteam.vocago.domain.usecase.GetTwoFAQrCodeUseCase
+import com.acteam.vocago.domain.usecase.GetUserRankingUseCase
 import com.acteam.vocago.domain.usecase.GetVocaListDetailUseCase
 import com.acteam.vocago.domain.usecase.GetWordOfTheDayUseCase
 import com.acteam.vocago.domain.usecase.InsertAlarmUseCase
@@ -57,11 +61,13 @@ import com.acteam.vocago.domain.usecase.SetFontFamilyUseCase
 import com.acteam.vocago.domain.usecase.SetNovelThemeUseCase
 import com.acteam.vocago.domain.usecase.SetReadNovelFontSizeUseCase
 import com.acteam.vocago.domain.usecase.SetThemeUseCase
+import com.acteam.vocago.domain.usecase.SetUp2FAUseCase
 import com.acteam.vocago.domain.usecase.SubmitToeicUseCase
 import com.acteam.vocago.domain.usecase.SyncProfileUseCase
 import com.acteam.vocago.domain.usecase.SyncVocaFromServeUseCase
 import com.acteam.vocago.domain.usecase.SyncVocaToServerUseCase
 import com.acteam.vocago.domain.usecase.ToggleBookmarkNewsUseCase
+import com.acteam.vocago.domain.usecase.TurnOff2FAUseCase
 import com.acteam.vocago.domain.usecase.UpdateAlarmUseCase
 import com.acteam.vocago.domain.usecase.UpdateAvatarUseCase
 import com.acteam.vocago.domain.usecase.UpdateChosenCategoriesUseCase
@@ -345,5 +351,22 @@ val useCaseModule = module {
     single {
         SyncVocaFromServeUseCase(get(), get())
     }
-
+    single {
+        GetTwoFAQrCodeUseCase(get())
+    }
+    single {
+        SetUp2FAUseCase(get())
+    }
+    single {
+        TurnOff2FAUseCase(get())
+    }
+    single {
+        GetUserRankingUseCase(get())
+    }
+    single {
+        CheckInUseCase(get())
+    }
+    single {
+        GetRankingUseCase(get())
+    }
 }

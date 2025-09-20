@@ -25,6 +25,7 @@ class UserLocalDataSourceImpl(
                 avatar = user.avatar,
                 roles = user.roles.joinToString(","),
                 status = user.status,
+                require2FA = user.require2FA,
                 createdAt = user.createdAt,
                 updatedAt = user.updatedAt,
             )
@@ -50,6 +51,7 @@ class UserLocalDataSourceImpl(
                     avatar = it.avatar,
                     roles = it.roles.split(",").map { role -> RoleDto(role) },
                     status = it.status,
+                    require2FA = it.require2FA,
                     createdAt = it.createdAt,
                     updatedAt = it.updatedAt,
                 )

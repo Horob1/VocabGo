@@ -2,20 +2,27 @@ package com.acteam.vocago.presentation.screen.user.profile
 
 import android.content.ContentResolver
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.acteam.vocago.data.model.ApiException
 import com.acteam.vocago.data.model.DeviceDTO
+import com.acteam.vocago.data.model.GetTwoFAQrCodeResponse
 import com.acteam.vocago.data.model.UpdateUserDto
 import com.acteam.vocago.domain.usecase.ChangePasswordUseCase
 import com.acteam.vocago.domain.usecase.GetDevicesListUseCase
 import com.acteam.vocago.domain.usecase.GetLocalUserProfileUseCase
+import com.acteam.vocago.domain.usecase.GetTwoFAQrCodeUseCase
 import com.acteam.vocago.domain.usecase.LogoutDeviceUseCase
+import com.acteam.vocago.domain.usecase.SetUp2FAUseCase
 import com.acteam.vocago.domain.usecase.SyncProfileUseCase
+import com.acteam.vocago.domain.usecase.TurnOff2FAUseCase
 import com.acteam.vocago.domain.usecase.UpdateAvatarUseCase
 import com.acteam.vocago.domain.usecase.UpdateProfileUseCase
+import com.acteam.vocago.presentation.screen.auth.common.data.OtpState
 import com.acteam.vocago.presentation.screen.common.data.UIErrorType
 import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.presentation.screen.user.data.ChangePasswordState
@@ -38,6 +45,9 @@ class ProfileViewModel(
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val getDevicesListUseCase: GetDevicesListUseCase,
     private val logoutUserDeviceUseCase: LogoutDeviceUseCase,
+    private val getTwoFAQrCodeUseCase: GetTwoFAQrCodeUseCase,
+    private val setUp2FAUseCase: SetUp2FAUseCase,
+    private val turnOff2FAUseCase: TurnOff2FAUseCase
 ) : ViewModel() {
     private val _userProfile = getLocalUserProfileUseCase().stateIn(
         viewModelScope,
@@ -50,7 +60,8 @@ class ProfileViewModel(
             firstName = "",
             lastName = "",
             dob = "",
-            address = ""
+            address = "",
+            require2FA = false
         )
     )
 
@@ -84,7 +95,8 @@ class ProfileViewModel(
                 firstName = userProfile.value?.firstName ?: "",
                 lastName = userProfile.value?.lastName ?: "",
                 dob = userProfile.value?.dob ?: "",
-                address = userProfile.value?.address ?: ""
+                address = userProfile.value?.address ?: "",
+                require2FA = userProfile.value?.require2FA ?: false
             )
     }
 
@@ -254,4 +266,106 @@ class ProfileViewModel(
             }
         }
     }
+
+    private val _qrCodeState = MutableStateFlow<UIState<Unit>>(UIState.UILoading)
+    val qrCodeState: StateFlow<UIState<Unit>> = _qrCodeState
+
+    private val _qrCodeData = MutableStateFlow<GetTwoFAQrCodeResponse?>(null)
+    val qrCodeData: StateFlow<GetTwoFAQrCodeResponse?> = _qrCodeData
+
+    private val _qrCodeBitmap = MutableStateFlow<Bitmap?>(null)
+    val qrCodeBitmap: StateFlow<Bitmap?> = _qrCodeBitmap
+
+    private val _otpState = MutableStateFlow(OtpState())
+    val otpState: StateFlow<OtpState> = _otpState
+
+    fun getTwoFAQrCode() {
+        viewModelScope.launch {
+            _qrCodeState.value = UIState.UILoading
+            try {
+                val result = getTwoFAQrCodeUseCase()
+                _qrCodeData.value = result
+                _qrCodeState.value = UIState.UISuccess(Unit)
+            } catch (e: Exception) {
+                _qrCodeState.value = UIState.UIError(UIErrorType.ServerError)
+            }
+
+        }
+    }
+
+    fun decodeBase64ToBitmap(base64Image: String) {
+        try {
+            val pureBase64 = base64Image.substringAfter(",")
+            val decodedBytes = android.util.Base64.decode(pureBase64, android.util.Base64.DEFAULT)
+            val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+            _qrCodeBitmap.value = bitmap
+        } catch (e: Exception) {
+            e.printStackTrace()
+            _qrCodeBitmap.value = null
+        }
+    }
+
+    fun setOtpValue(otp: String) {
+        _otpState.value = _otpState.value.copy(otp = otp)
+    }
+
+    fun clearQRCodeData() {
+        _qrCodeData.value = null
+        _qrCodeBitmap.value = null
+        _qrCodeState.value = UIState.UISuccess(Unit)
+    }
+
+    private val _setup2FAState = MutableStateFlow<UIState<Boolean>>(UIState.UILoading)
+    val setup2FAState: StateFlow<UIState<Boolean>> = _setup2FAState
+
+    fun setupTwoFA() {
+        viewModelScope.launch {
+            _setup2FAState.value = UIState.UILoading
+            try {
+                val response = setUp2FAUseCase(_otpState.value.otp)
+                updateProfileUseCase(
+                    UpdateUserDto(
+                        firstName = userProfile.value?.firstName ?: "",
+                        lastName = userProfile.value?.lastName ?: "",
+                        dob = userProfile.value?.dob ?: "",
+                        address = userProfile.value?.address ?: "",
+                        require2FA = response.data.require2FA
+                    )
+                )
+                syncProfileUseCase()
+                _setup2FAState.value = UIState.UISuccess(response.data.require2FA)
+            } catch (e: ApiException) {
+                e.printStackTrace()
+                _setup2FAState.value = UIState.UIError(UIErrorType.BadRequestError)
+            }
+        }
+    }
+
+
+    private val _disable2FAState = MutableStateFlow<UIState<Boolean>>(UIState.UILoading)
+    val disable2FAState: StateFlow<UIState<Boolean>> = _disable2FAState
+
+    fun disableTwoFA() {
+        viewModelScope.launch {
+            _disable2FAState.value = UIState.UILoading
+            try {
+                val response = turnOff2FAUseCase()
+                updateProfileUseCase(
+                    UpdateUserDto(
+                        firstName = userProfile.value?.firstName ?: "",
+                        lastName = userProfile.value?.lastName ?: "",
+                        dob = userProfile.value?.dob ?: "",
+                        address = userProfile.value?.address ?: "",
+                        require2FA = response.data.require2FA
+                    )
+                )
+                syncProfileUseCase()
+                _disable2FAState.value = UIState.UISuccess(response.data.require2FA)
+            } catch (e: ApiException) {
+                e.printStackTrace()
+                _disable2FAState.value = UIState.UIError(UIErrorType.BadRequestError)
+            }
+        }
+    }
+
 }

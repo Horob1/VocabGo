@@ -94,6 +94,7 @@ import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.presentation.screen.user.profile.component.AvatarPickerBottomSheet
 import com.acteam.vocago.presentation.screen.user.profile.component.DateField
 import com.acteam.vocago.presentation.screen.user.profile.component.ModernButton
+import com.acteam.vocago.presentation.screen.user.profile.component.TwoFactorAuthenticatorCard
 import com.acteam.vocago.utils.responsiveDP
 import java.io.File
 import java.time.LocalDate
@@ -158,13 +159,11 @@ fun ProfileScreen(
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
-            Log.d("ProfileScreen", "Camera result: success=$success, uri=$capturedImageUri")
             if (success) {
                 capturedImageUri?.let { uri ->
-                    Log.d("ProfileScreen", "Launching updateAvatar with $uri")
                     viewModel.updateAvatar(uri, context)
                     isShowModelChooseAvatar = false
-                } ?: Log.e("ProfileScreen", "capturedImageUri is null after camera success")
+                }
             }
         }
     )
@@ -212,19 +211,15 @@ fun ProfileScreen(
     val requestCameraPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
-        Log.d("ProfileScreen", "Camera permission granted=$isGranted")
         try {
             if (isGranted) {
                 val photoFile = File(context.externalCacheDir, "temp_image.jpg")
-                Log.d("ProfileScreen", "Creating photoFile: ${photoFile.absolutePath}")
 
                 capturedImageUri = FileProvider.getUriForFile(
                     context,
                     "${context.packageName}.fileprovider",
                     photoFile
                 )
-                Log.d("ProfileScreen", "capturedImageUri = $capturedImageUri")
-
                 capturedImageUri?.let { uri ->
                     cameraLauncher.launch(uri)
                 }
@@ -236,7 +231,6 @@ fun ProfileScreen(
                 ).show()
             }
         } catch (e: Exception) {
-            Log.e("ProfileScreen", "Error launching camera", e)
         }
     }
 
@@ -342,7 +336,7 @@ fun ProfileScreen(
                         model = imageRequest,
                         contentDescription = "User Avatar Online",
                         modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop,
+                        contentScale = ContentScale.Fit,
                         loading = {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(avatarSize * 0.5f)
@@ -535,9 +529,6 @@ fun ProfileScreen(
                 ),
             )
 
-
-
-
             DateField(
                 year = year,
                 month = month,
@@ -554,6 +545,11 @@ fun ProfileScreen(
                     )
                 }
             )
+
+            TwoFactorAuthenticatorCard(
+                viewModel = viewModel
+            )
+
         }
 
         Spacer(
