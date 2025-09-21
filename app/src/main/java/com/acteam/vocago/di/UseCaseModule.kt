@@ -5,6 +5,7 @@ import com.acteam.vocago.domain.usecase.ChangePasswordUseCase
 import com.acteam.vocago.domain.usecase.ChooseLanguageUserCase
 import com.acteam.vocago.domain.usecase.CreateVocaListUseCase
 import com.acteam.vocago.domain.usecase.DeleteAlarmByIdUseCase
+import com.acteam.vocago.domain.usecase.DeleteInfoUseCase
 import com.acteam.vocago.domain.usecase.DeleteVocaListUseCase
 import com.acteam.vocago.domain.usecase.DeleteVocaUseCase
 import com.acteam.vocago.domain.usecase.ForgotPasswordUseCase
@@ -14,6 +15,7 @@ import com.acteam.vocago.domain.usecase.GetAllVocaListUseCase
 import com.acteam.vocago.domain.usecase.GetChapterUseCase
 import com.acteam.vocago.domain.usecase.GetChosenNewsCategoriesUseCase
 import com.acteam.vocago.domain.usecase.GetChosenNewsLevelUseCase
+import com.acteam.vocago.domain.usecase.GetCredentialIdUseCase
 import com.acteam.vocago.domain.usecase.GetDevicesListUseCase
 import com.acteam.vocago.domain.usecase.GetDictionaryWordUseCase
 import com.acteam.vocago.domain.usecase.GetDynamicColorUseCase
@@ -362,5 +364,13 @@ val useCaseModule = module {
 
     single {
         SaveTTSConfigUseCase(get())
+    }
+
+    single {
+        GetCredentialIdUseCase(get())
+    }
+
+    single {
+        DeleteInfoUseCase(get(), get())
     }
 }

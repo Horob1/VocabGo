@@ -18,8 +18,10 @@ import com.acteam.vocago.domain.usecase.GetDynamicColorUseCase
 import com.acteam.vocago.domain.usecase.GetStartScreenUseCase
 import com.acteam.vocago.domain.usecase.GetThemeUseCase
 import com.acteam.vocago.presentation.navigation.SetupNavGraph
+import com.acteam.vocago.presentation.socket.SocketViewModel
 import com.acteam.vocago.presentation.ui.theme.VocaGoTheme
 import com.acteam.vocago.utils.isTablet
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -51,6 +53,7 @@ class MainActivity : AppCompatActivity(), KoinComponent {
             }
 
             val startDestination = remember { getOnBoardingStateUseCase() }
+            koinViewModel<SocketViewModel>()
 
             VocaGoTheme(
                 userTheme = userTheme,

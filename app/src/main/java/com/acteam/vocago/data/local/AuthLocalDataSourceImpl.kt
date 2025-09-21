@@ -18,6 +18,9 @@ class AuthLocalDataSourceImpl(context: Context) : AuthLocalDataSource {
     private val _isAuth = MutableStateFlow(false)
     override val isAuth: StateFlow<Boolean> = _isAuth
 
+    private val _credentialId = MutableStateFlow<String?>(null)
+    override val credentialIdFlow: StateFlow<String?> = _credentialId
+
     companion object {
         private const val AUTH_PREF_NAME = "AUTH_PREF_NAME"
         private const val ACCESS_TOKEN_KEY = "ACCESS_TOKEN_KEY"
@@ -29,6 +32,7 @@ class AuthLocalDataSourceImpl(context: Context) : AuthLocalDataSource {
         accessToken = prefs.getString(ACCESS_TOKEN_KEY, null)
         refreshToken = prefs.getString(REFRESH_TOKEN_KEY, null)
         credentialId = prefs.getString(CREDENTIAL_ID_KEY, null)
+        _credentialId.value = credentialId
         _isAuth.value = accessToken != null
     }
 
@@ -43,6 +47,7 @@ class AuthLocalDataSourceImpl(context: Context) : AuthLocalDataSource {
         accessToken = null
         refreshToken = null
         credentialId = null
+        _credentialId.value = null
         _isAuth.value = false
         prefs.edit {
             remove(ACCESS_TOKEN_KEY)
@@ -79,6 +84,7 @@ class AuthLocalDataSourceImpl(context: Context) : AuthLocalDataSource {
         this.credentialId = credentialId
         this.accessToken = accessToken
         this.refreshToken = refreshToken
+        _credentialId.value = credentialId
         _isAuth.value = true
         prefs.edit {
             putString(ACCESS_TOKEN_KEY, accessToken)

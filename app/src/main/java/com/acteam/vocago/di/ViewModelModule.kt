@@ -28,6 +28,7 @@ import com.acteam.vocago.presentation.screen.user.usernavigator.UserNavigatorVie
 import com.acteam.vocago.presentation.screen.vocalistdetail.VocaListDetailViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import com.acteam.vocago.presentation.screen.worddetail.WordDetailViewModel
+import com.acteam.vocago.presentation.socket.SocketViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -200,6 +201,15 @@ val viewModelModule = module {
 
     viewModel {
         ListenNovelViewModel(get(), get(), get())
+    }
+
+    viewModel {
+        SocketViewModel(
+            get(),
+            get(),
+            get(),
+            get()
+        )
     }
 
 }
