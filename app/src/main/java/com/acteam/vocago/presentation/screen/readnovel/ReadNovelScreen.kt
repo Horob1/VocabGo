@@ -1,8 +1,15 @@
 package com.acteam.vocago.presentation.screen.readnovel
 
-import FontSizeAdjuster
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +24,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -41,21 +49,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.acteam.vocago.R
-import com.acteam.vocago.data.model.NovelDetailDto
+import com.acteam.vocago.domain.model.NovelDetail
+import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.presentation.screen.readnovel.component.ColorPicker
 import com.acteam.vocago.presentation.screen.readnovel.component.ContentSection
 import com.acteam.vocago.presentation.screen.readnovel.component.EnableImmersiveMode
 import com.acteam.vocago.presentation.screen.readnovel.component.FontPicker
+import com.acteam.vocago.presentation.screen.readnovel.component.FontSizeAdjuster
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,6 +85,26 @@ fun ReadNovelScreen(
     val fontSize by viewModel.fontSize.collectAsState()
     val theme by viewModel.theme.collectAsState()
     val fontFamily by viewModel.fontFamily.collectAsState()
+    val context = LocalContext.current
+
+    val laucher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            rootNavController.navigate(
+                NavScreen.ListenNovelNavScreen(
+                    novelId = novelId,
+                    chapterId = chapterId
+                )
+            )
+        } else {
+            Toast.makeText(
+                context,
+                context.getString(R.string.alert_permission_diened),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 
     EnableImmersiveMode(true)
 
@@ -91,6 +123,7 @@ fun ReadNovelScreen(
         if (novelDetail !is UIState.UISuccess) {
             viewModel.loadChapters(chapterId) {
                 // toast error
+                Log.e("ReadNovelScreen", "Error loading chapters")
             }
         }
     }
@@ -106,7 +139,7 @@ fun ReadNovelScreen(
         ) {
             if (novelDetail is UIState.UISuccess) {
                 val novelData = remember {
-                    (novelDetail as UIState.UISuccess<NovelDetailDto>).data
+                    (novelDetail as UIState.UISuccess<NovelDetail>).data
                 }
                 // Horizontally Pager
                 val pagerState = rememberPagerState(
@@ -204,23 +237,66 @@ fun ReadNovelScreen(
                                     Spacer(modifier = Modifier.width(12.dp))
 
                                     // Enhanced settings button
-                                    IconButton(
-                                        onClick = {
-                                            showSettingDialog = true
-                                        },
-                                        modifier = Modifier
-                                            .size(36.dp)
-                                            .clip(CircleShape),
-                                        colors = IconButtonDefaults.iconButtonColors(
-                                            containerColor = theme.textColor.copy(alpha = 0.1f)
-                                        )
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Settings,
-                                            contentDescription = "Setting",
-                                            tint = theme.textColor.copy(alpha = 0.7f),
-                                            modifier = Modifier.size(18.dp)
-                                        )
+                                        IconButton(
+                                            onClick = {
+                                                showSettingDialog = true
+                                            },
+                                            modifier = Modifier
+                                                .size(36.dp)
+                                                .clip(CircleShape),
+                                            colors = IconButtonDefaults.iconButtonColors(
+                                                containerColor = theme.textColor.copy(alpha = 0.1f)
+                                            )
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Filled.Settings,
+                                                contentDescription = "Setting",
+                                                tint = theme.textColor.copy(alpha = 0.7f),
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                        }
+
+                                        IconButton(
+                                            onClick = {
+                                                val hasPermission =
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                        ContextCompat.checkSelfPermission(
+                                                            context,
+                                                            Manifest.permission.POST_NOTIFICATIONS
+                                                        ) == PackageManager.PERMISSION_GRANTED
+                                                    } else {
+                                                        true
+                                                    }
+
+                                                if (hasPermission) {
+                                                    rootNavController.navigate(
+                                                        NavScreen.ListenNovelNavScreen(
+                                                            novelId = novelId,
+                                                            chapterId = chapterId
+                                                        )
+                                                    )
+                                                } else {
+                                                    laucher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                                }
+                                            },
+                                            modifier = Modifier
+                                                .size(36.dp)
+                                                .clip(CircleShape),
+                                            colors = IconButtonDefaults.iconButtonColors(
+                                                containerColor = theme.textColor.copy(alpha = 0.1f)
+                                            )
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.AutoMirrored.Filled.VolumeUp,
+                                                contentDescription = "Listen",
+                                                tint = theme.textColor.copy(alpha = 0.7f),
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                        }
                                     }
                                 }
                             }

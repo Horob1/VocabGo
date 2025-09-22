@@ -3,11 +3,11 @@ package com.acteam.vocago.data.local.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.acteam.vocago.domain.model.Alarm
-import java.util.UUID
 
 @Entity(tableName = "alarms")
 data class AlarmEntity(
-    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
     val hour: Int,
     val minute: Int,
     val enabled: Boolean = true,

@@ -9,6 +9,8 @@ interface AuthLocalDataSource {
     fun getCredentialId(): String?
     fun getTokens(): Pair<String?, String?>
     val isAuth: StateFlow<Boolean>
+
+    val credentialIdFlow: StateFlow<String?>
     fun refreshTokens(accessToken: String, refreshToken: String)
     fun saveCredential(credentialId: String, accessToken: String, refreshToken: String)
 }

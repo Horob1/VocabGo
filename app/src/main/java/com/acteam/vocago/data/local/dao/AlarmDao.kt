@@ -14,14 +14,14 @@ interface AlarmDao {
     fun getAllAlarms(): Flow<List<AlarmEntity>>
 
     @Query("SELECT * FROM alarms WHERE id = :id LIMIT 1")
-    suspend fun getAlarmById(id: String): AlarmEntity?
+    suspend fun getAlarmById(id: Int): AlarmEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAlarm(alarm: AlarmEntity)
+    suspend fun insertAlarm(alarm: AlarmEntity): Long
 
     @Update
     suspend fun updateAlarm(alarm: AlarmEntity)
 
     @Query("DELETE FROM alarms WHERE id = :id")
-    suspend fun deleteAlarmById(id: String)
+    suspend fun deleteAlarmById(id: Int)
 }

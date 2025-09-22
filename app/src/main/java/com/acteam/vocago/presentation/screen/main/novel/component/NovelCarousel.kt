@@ -222,6 +222,7 @@ fun TabletCarousel(
     novel: List<Novel>,
     onItemClick: (String) -> Unit,
 ) {
+    if (novel.isEmpty()) return
     val realSize = novel.size
     val startIndex = Int.MAX_VALUE / 2 // Start from middle to allow left/right scroll
 
@@ -258,7 +259,7 @@ fun TabletCarousel(
                 .padding(vertical = 24.dp),
             pageSpacing = 40.dp
         ) { index ->
-            val realIndex = index % realSize
+            val realIndex = index % (realSize)
             val currentNovel = novel[realIndex]
 
             Row(

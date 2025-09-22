@@ -9,14 +9,20 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_IMAGES"
+        tools:ignore="SelectedPhotoAccess" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:name=".presentation.VocabGoApp"
@@ -30,8 +36,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VocaGo"
         tools:targetApi="31">
+        <service
+            android:name=".presentation.screen.noveldetail.DownloadNovelService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            android:permission="android.permission.FOREGROUND_SERVICE" />
+        <service
+            android:name=".presentation.screen.listennovel.NovelPlayerService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback"
+            android:permission="android.permission.FOREGROUND_SERVICE" />
 
-
+        <activity
+            android:name=".presentation.AppAlarmActivity"
+            android:exported="false"
+            android:label="@string/title_activity_app_alarm"
+            android:theme="@style/Theme.VocaGo" />
         <activity
             android:name=".presentation.MainActivity"
             android:autofillHints="username,password"
@@ -43,18 +65,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Receiver -->
-        <receiver
-            android:name=".receiver.AlarmReceiver"
-            android:exported="false" />
-        <receiver
-            android:name=".receiver.StopAlarmReceiver"
-            android:exported="false" />
+        </activity>
 
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
             android:enabled="false"
-            android:exported="false"><!-- To support android 12 and lower -->
+            android:exported="false">
+
+            <!-- To support android 12 and lower -->
             <meta-data
                 android:name="autoStoreLocales"
                 android:value="true" />
@@ -63,6 +81,10 @@
             android:name=".service.AlarmSoundService"
             android:enabled="true"
             android:exported="false" />
+
+        <receiver
+            android:name=".presentation.screen.listennovel.NovelPlayerReceiver"
+            android:enabled="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

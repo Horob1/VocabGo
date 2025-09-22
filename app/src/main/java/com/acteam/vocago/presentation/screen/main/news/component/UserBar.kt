@@ -27,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
@@ -88,14 +89,17 @@ fun UserBar(
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.weight(1f)
         ) {
             Text(
                 text = titleText, // Explicitly pass text
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = fontSize,
                     color = MaterialTheme.colorScheme.primary
-                )
+                ),
+                maxLines = 1,
+                overflow = Ellipsis
             )
             Spacer(
                 modifier = Modifier.size(

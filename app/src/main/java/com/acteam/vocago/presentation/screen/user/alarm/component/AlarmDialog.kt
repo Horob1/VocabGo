@@ -29,7 +29,6 @@ import com.acteam.vocago.R
 import com.acteam.vocago.domain.model.Alarm
 import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.presentation.screen.user.alarm.AlarmViewModel
-import java.util.UUID
 
 sealed class DialogMode {
     data object ADD : DialogMode()
@@ -59,6 +58,7 @@ fun AlarmDialog(
             minute = alarmData.minute
             enabled = alarmData.enabled
             label = alarmData.label
+            isLoop = alarmData.isLoop
         }
     }
 
@@ -86,8 +86,7 @@ fun AlarmDialog(
             TextButton(onClick = {
                 onSave(
                     Alarm(
-                        id = if (mode is DialogMode.ADD) UUID.randomUUID()
-                            .toString() else (alarm as UIState.UISuccess<Alarm>).data.id,
+                        id = if (mode is DialogMode.ADD) 0 else (alarm as UIState.UISuccess<Alarm>).data.id,
                         hour = hour,
                         minute = minute,
                         enabled = enabled,

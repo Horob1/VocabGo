@@ -13,11 +13,11 @@ class AlarmRepositoryImpl(
     override fun getAlarmList(): Flow<List<Alarm>> =
         alarmDao.getAllAlarms().map { it.map(AlarmEntity::toAlarm) }
 
-    override suspend fun getAlarmById(id: String): Alarm? = alarmDao.getAlarmById(id)?.toAlarm()
+    override suspend fun getAlarmById(id: Int): Alarm? = alarmDao.getAlarmById(id)?.toAlarm()
 
-    override suspend fun insertAlarm(alarm: Alarm) = alarmDao.insertAlarm(alarm.toEntity())
-
+    override suspend fun insertAlarm(alarm: AlarmEntity) = alarmDao.insertAlarm(alarm).toInt()
+    
     override suspend fun updateAlarm(alarm: Alarm) = alarmDao.updateAlarm(alarm.toEntity())
 
-    override suspend fun deleteAlarmById(id: String) = alarmDao.deleteAlarmById(id)
+    override suspend fun deleteAlarmById(id: Int) = alarmDao.deleteAlarmById(id)
 }

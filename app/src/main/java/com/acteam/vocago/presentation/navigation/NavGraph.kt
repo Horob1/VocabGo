@@ -24,6 +24,8 @@ import com.acteam.vocago.presentation.screen.flashcard.FlashCardScreen
 import com.acteam.vocago.presentation.screen.flashcard.FlashCardViewModel
 import com.acteam.vocago.presentation.screen.learn.LearnScreen
 import com.acteam.vocago.presentation.screen.learn.LearnViewModel
+import com.acteam.vocago.presentation.screen.listennovel.ListenNovelScreen
+import com.acteam.vocago.presentation.screen.listennovel.ListenNovelViewModel
 import com.acteam.vocago.presentation.screen.main.SetupMainNavGraph
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.chat.component.CommonChatScreen
@@ -314,6 +316,17 @@ fun SetupNavGraph(
                 vocaListId = arg.listId,
                 viewModel = learnViewModel,
                 navController = navController
+            )
+        }
+
+        composable<NavScreen.ListenNovelNavScreen> {
+            val listenNovelViewModel = koinViewModel<ListenNovelViewModel>()
+            val arg = it.toRoute<NavScreen.ListenNovelNavScreen>()
+            ListenNovelScreen(
+                novelId = arg.novelId,
+                beginChapterId = arg.chapterId,
+                navController = navController,
+                viewModel = listenNovelViewModel
             )
         }
     }

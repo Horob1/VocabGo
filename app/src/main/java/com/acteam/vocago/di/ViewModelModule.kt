@@ -9,6 +9,7 @@ import com.acteam.vocago.presentation.screen.auth.verifyemail.VerifyEmailViewMod
 import com.acteam.vocago.presentation.screen.choosevoca.ChooseVocaViewModel
 import com.acteam.vocago.presentation.screen.flashcard.FlashCardViewModel
 import com.acteam.vocago.presentation.screen.learn.LearnViewModel
+import com.acteam.vocago.presentation.screen.listennovel.ListenNovelViewModel
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.main.novel.NovelViewModel
@@ -28,6 +29,7 @@ import com.acteam.vocago.presentation.screen.user.usernavigator.UserNavigatorVie
 import com.acteam.vocago.presentation.screen.vocalistdetail.VocaListDetailViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import com.acteam.vocago.presentation.screen.worddetail.WordDetailViewModel
+import com.acteam.vocago.presentation.socket.SocketViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -197,9 +199,20 @@ val viewModelModule = module {
     viewModel {
         LearnViewModel(get())
     }
-
     viewModel {
         RankingViewModel(get())
+    }
+    viewModel {
+        ListenNovelViewModel(get(), get(), get())
+    }
+
+    viewModel {
+        SocketViewModel(
+            get(),
+            get(),
+            get(),
+            get()
+        )
     }
 
 }

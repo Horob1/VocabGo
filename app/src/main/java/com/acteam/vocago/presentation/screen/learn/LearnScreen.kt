@@ -52,7 +52,7 @@ import com.acteam.vocago.R
 fun LearnScreen(
     vocaListId: Int,
     viewModel: LearnViewModel,
-    navController: NavController
+    navController: NavController,
 ) {
     val questions by viewModel.questions.collectAsState()
     val listId by viewModel.listId.collectAsState()

@@ -1,12 +1,6 @@
 package com.acteam.vocago.presentation.screen.user.alarm
 
-import android.Manifest
 import android.app.Activity
-import android.content.pm.PackageManager
-import android.os.Build
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +33,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.acteam.vocago.R
 import com.acteam.vocago.domain.model.Alarm
@@ -47,6 +41,8 @@ import com.acteam.vocago.presentation.screen.user.alarm.component.AlarmDialog
 import com.acteam.vocago.presentation.screen.user.alarm.component.AlarmItem
 import com.acteam.vocago.presentation.screen.user.alarm.component.DialogMode
 import com.acteam.vocago.presentation.screen.user.common.UserTopBar
+import com.meticha.triggerx.permission.rememberAppPermissionState
+import kotlinx.coroutines.launch
 
 @Composable
 fun AlarmScreen(
@@ -54,25 +50,15 @@ fun AlarmScreen(
     navController: NavController,
 ) {
     val context = LocalContext.current
-    val activity = context as? Activity
+    context as? Activity
     val alarmList by viewModel.alarmListUiState.collectAsState()
     var isShowDialog by remember { mutableStateOf(false) }
     var dialogMode by remember { mutableStateOf<DialogMode>(DialogMode.ADD) }
     var isShowDeleteDialog by remember { mutableStateOf(false) }
     val chosenAlarm by viewModel.alarmUiState.collectAsState()
-    val notificationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            // Do nothing
-        } else {
-            Toast.makeText(
-                context,
-                "Vui lòng cấp quyền thông báo để xử dụng cn này",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
+    val permissionState = rememberAppPermissionState()
+    val coroutines = rememberCoroutineScope()
+
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -166,31 +152,13 @@ fun AlarmScreen(
 
         FloatingActionButton(
             onClick = {
-                //toast cannot create if had 4 alarm
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                    ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.POST_NOTIFICATIONS
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    activity?.let {
-                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                coroutines.launch {
+                    if (permissionState.allRequiredGranted()) {
+                        dialogMode = DialogMode.ADD
+                        isShowDialog = true
+                    } else {
+                        permissionState.requestPermission()
                     }
-                } else {
-                    if (
-                        (alarmList as? UIState.UISuccess<List<Alarm>>)?.data?.size == 4
-                    ) {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.alert_cannot_create_more_alarm),
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                        return@FloatingActionButton
-                    }
-                    dialogMode = DialogMode.ADD
-                    viewModel.setDefaultAlarm()
-                    isShowDialog = true
                 }
             },
             containerColor = MaterialTheme.colorScheme.primary,

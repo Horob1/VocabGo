@@ -48,6 +48,7 @@ import com.acteam.vocago.utils.responsiveSP
 fun NovelCard(
     modifier: Modifier = Modifier,
     novel: Novel,
+    showDate: Boolean = true,
     onClick: (String) -> Unit,
 ) {
     val imageModifier = Modifier
@@ -251,46 +252,47 @@ fun NovelCard(
                 )
 
                 // Enhanced date information with better spacing
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
+                if (showDate)
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Text(
-                            text = stringResource(R.string.createdAt),
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = MaterialTheme.colorScheme.onSurface.copy(0.6f),
-                                fontWeight = FontWeight.Medium
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(R.string.createdAt),
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    color = MaterialTheme.colorScheme.onSurface.copy(0.6f),
+                                    fontWeight = FontWeight.Medium
+                                )
                             )
-                        )
-                        Text(
-                            text = ": ${DateDisplayHelper.formatDateString(novel.createdAt)}",
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = MaterialTheme.colorScheme.onSurface.copy(0.8f)
+                            Text(
+                                text = ": ${DateDisplayHelper.formatDateString(novel.createdAt)}",
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    color = MaterialTheme.colorScheme.onSurface.copy(0.8f)
+                                )
                             )
-                        )
+                        }
+                        if (showDate)
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.updatedAt),
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = MaterialTheme.colorScheme.onSurface.copy(0.6f),
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                )
+                                Text(
+                                    text = ": ${DateDisplayHelper.formatDateString(novel.updatedAt)}",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = MaterialTheme.colorScheme.primary.copy(0.8f),
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                )
+                            }
                     }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = stringResource(R.string.updatedAt),
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = MaterialTheme.colorScheme.onSurface.copy(0.6f),
-                                fontWeight = FontWeight.Medium
-                            )
-                        )
-                        Text(
-                            text = ": ${DateDisplayHelper.formatDateString(novel.updatedAt)}",
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = MaterialTheme.colorScheme.primary.copy(0.8f),
-                                fontWeight = FontWeight.Medium
-                            )
-                        )
-                    }
-                }
             }
         }
     }

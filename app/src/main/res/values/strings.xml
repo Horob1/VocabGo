@@ -426,4 +426,30 @@
         Awesome! You’ve successfully checked in!\nLet’s start the day full of energy! ✨
     </string>
 
+    <string name="title_activity_app_alarm" translatable="false">Alarm</string>
+    <string name="btn_ok" translatable="false">Ok</string>
+    <string name="text_list">C.List</string>
+    <string name="text_setting">Setting</string>
+    <string name="text_help">Help</string>
+    <string name="txt_auto_off">Auto off</string>
+    <string name="text_cancel_alarm">Cancel alarm off</string>
+    <string name="text_download_chapter">Downloading chapters</string>
+    <string name="text_download_done">download done!</string>
+    <string name="already_downloading">Another novel is downloading. Please wait!</string>
+    <string name="download_all">Download all</string>
+    <string name="notification_permission_denied">Notification permission denied</string>
+    <string name="chapterList">Chapter List</string>
+    <string name="alert_permission_diened">Approve permission to use this feature!</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="text_speed">Speed</string>
+    <string name="text_slow">Slow</string>
+    <string name="text_fast">Fast</string>
+    <string name="text_pitch">Pitch</string>
+    <string name="text_low">Low</string>
+    <string name="text_high">High</string>
+    <string name="text_voice">Voice</string>
+    <string name="text_select_voice">Select voice</string>
+    <string name="desc_setting_voice">Config your voice setting</string>
+    <string name="title_setting_voice">Setting voice</string>
+
 </resources>

@@ -1,10 +1,10 @@
 package com.acteam.vocago.domain.usecase
 
-import com.acteam.vocago.domain.remote.NovelRemoteDataSource
+import com.acteam.vocago.domain.repository.NovelRepository
 
 class GetChapterUseCase(
-    private val novelRemoteDataSource: NovelRemoteDataSource,
+    private val novelRepository: NovelRepository,
 ) {
     suspend operator fun invoke(chapterId: String) =
-        novelRemoteDataSource.getChapterDetail(chapterId).getOrNull()
+        novelRepository.getChapterDetail(chapterId).getOrNull()
 }
