@@ -16,6 +16,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -44,20 +48,39 @@ fun OTPInputField(
             OTPDigitField(
                 value = char,
                 onValueChange = { value ->
-                    if (value.length <= 1 && value.all { it.isDigit() }) {
-                        val newOtp = otp.toMutableList()
-                        if (otp.length > index) {
-                            newOtp[index] = value.firstOrNull() ?: ' '
-                        } else {
-                            newOtp.add(value.firstOrNull() ?: ' ')
+                    // Chỉ cho phép số hoặc chuỗi rỗng
+                    if (value.all { it.isDigit() } && value.length <= 1) {
+                        // Tạo mảng char từ OTP hiện tại, đảm bảo có đủ 6 vị trí
+                        val otpArray = CharArray(6) { i ->
+                            otp.getOrNull(i) ?: ' '
                         }
-                        onOtpChange(newOtp.joinToString("").trim())
 
-                        if (value.isNotEmpty() && index < 5) {
-                            focusRequesters[index + 1].requestFocus()
-                        } else if (index == 5) {
-                            localFocusManager.clearFocus()
+                        // Cập nhật ký tự tại vị trí index
+                        if (value.isNotEmpty()) {
+                            otpArray[index] = value[0]
+                            // Tự động chuyển focus sang ô tiếp theo
+                            if (index < 5) {
+                                focusRequesters[index + 1].requestFocus()
+                            } else {
+                                localFocusManager.clearFocus()
+                            }
+                        } else {
+                            // Xóa ký tự - thay thế bằng khoảng trắng
+                            otpArray[index] = ' '
                         }
+
+                        // Tạo OTP string mới, loại bỏ khoảng trắng cuối
+                        val newOtp = otpArray.concatToString().trimEnd()
+                        onOtpChange(newOtp)
+                    }
+                },
+                onKeyEvent = { keyEvent ->
+                    // Xử lý phím Backspace để chuyển focus về ô trước
+                    if (keyEvent.key == Key.Backspace && char.isEmpty() && index > 0) {
+                        focusRequesters[index - 1].requestFocus()
+                        true
+                    } else {
+                        false
                     }
                 },
                 modifier = Modifier
@@ -77,6 +100,7 @@ fun OTPInputField(
 fun OTPDigitField(
     value: String,
     onValueChange: (String) -> Unit,
+    onKeyEvent: (KeyEvent) -> Boolean = { false },
     modifier: Modifier = Modifier,
 ) {
     val colorScheme = MaterialTheme.colorScheme
@@ -88,7 +112,8 @@ fun OTPDigitField(
         singleLine = true,
         modifier = modifier
             .shadow(8.dp, shape = RoundedCornerShape(0.dp))
-            .clip(RoundedCornerShape(0.dp)),
+            .clip(RoundedCornerShape(0.dp))
+            .onKeyEvent(onKeyEvent),
         textStyle = MaterialTheme.typography.bodyMedium.copy(
             fontSize = if (deviceType == DeviceType.Mobile) 14.sp else 30.sp,
             textAlign = TextAlign.Center,
@@ -100,16 +125,16 @@ fun OTPDigitField(
         visualTransformation = VisualTransformation.None,
         shape = RoundedCornerShape(0.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = colorScheme.primary, // Viền khi được chọn có màu chính của theme
-            unfocusedBorderColor = colorScheme.onSurfaceVariant, // Viền khi không được chọn
-            focusedContainerColor = colorScheme.surfaceVariant, // Nền khi được chọn
-            unfocusedContainerColor = colorScheme.surfaceVariant, // Nền khi không được chọn
-            focusedTextColor = colorScheme.onSurface, // Văn bản khi được chọn
-            unfocusedTextColor = colorScheme.onSurfaceVariant, // Văn bản khi không được chọn
+            focusedBorderColor = colorScheme.primary,
+            unfocusedBorderColor = colorScheme.onSurfaceVariant,
+            focusedContainerColor = colorScheme.surfaceVariant,
+            unfocusedContainerColor = colorScheme.surfaceVariant,
+            focusedTextColor = colorScheme.onSurface,
+            unfocusedTextColor = colorScheme.onSurfaceVariant,
             cursorColor = colorScheme.primary
         ),
         placeholder = {
-            Text(" ", color = colorScheme.outlineVariant) // Màu placeholder
+            Text(" ", color = colorScheme.outlineVariant)
         }
     )
 }

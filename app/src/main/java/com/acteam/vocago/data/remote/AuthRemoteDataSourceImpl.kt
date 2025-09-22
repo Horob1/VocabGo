@@ -13,7 +13,7 @@ import com.acteam.vocago.data.model.ResetPasswordRequest
 import com.acteam.vocago.data.model.SuccessResponse
 import com.acteam.vocago.data.model.VerifyEmailRequest
 import com.acteam.vocago.data.model.VerifyTwoFARequest
-import com.acteam.vocago.data.model.VerifyTwoFARespose
+import com.acteam.vocago.data.model.VerifyTwoFAResponse
 import com.acteam.vocago.domain.remote.AuthRemoteDataSource
 import com.acteam.vocago.utils.VocaGoRoutes
 import io.ktor.client.HttpClient
@@ -148,14 +148,14 @@ class AuthRemoteDataSourceImpl(
         }
     }
 
-    override suspend fun verifyTwoFA(email: String, otpToken: String): VerifyTwoFARespose {
+    override suspend fun verifyTwoFA(email: String, otpToken: String): VerifyTwoFAResponse {
         val response = client.post(VocaGoRoutes.VerifyTwoFA.path) {
             contentType(ContentType.Application.Json)
             setBody(VerifyTwoFARequest(email = email, otpToken = otpToken))
         }
         when (response.status) {
             HttpStatusCode.OK -> {
-                val data = response.body<SuccessResponse<VerifyTwoFARespose>>()
+                val data = response.body<SuccessResponse<VerifyTwoFAResponse>>()
                 return data.data
             }
 

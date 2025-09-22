@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -23,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -67,6 +70,9 @@ fun VerifyTwoFAScreen(
     val textFontSize = responsiveSP(20, 24, 24)
     val buttonHeight = responsiveDP(48, 56, 60)
 
+    val imeBottomPx = WindowInsets.ime.getBottom(LocalDensity.current)
+    val imeBottomDp = with(LocalDensity.current) { imeBottomPx.toDp() }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -76,6 +82,7 @@ fun VerifyTwoFAScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(bottom = imeBottomDp)
                     .padding(horizontal = horizontalPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(verticalSpacing)

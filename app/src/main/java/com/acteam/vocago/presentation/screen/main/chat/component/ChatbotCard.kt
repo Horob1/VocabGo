@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,7 +26,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -61,38 +59,36 @@ fun UserProfileCard(
     val isCompact = deviceType == DeviceType.Mobile || deviceType == DeviceType.TabletLandscape
     val isTabletLandscape = deviceType == DeviceType.TabletLandscape
 
-    val nameFontSize = if (isCompact) 24.sp else 30.sp
-    val statusFontSize = if (isCompact) 13.sp else 16.sp
-    val jobFontSize = if (isCompact) 14.sp else 18.sp
-    val iconSize = if (isCompact) 28.dp else 32.dp
-    val buttonSize = if (isCompact) 44.dp else 52.dp
-    val buttonHeight = if (isCompact) 44.dp else 52.dp
-    val contentPadding = if (isCompact) 16.dp else 24.dp
-    val sectionSpacing = if (isCompact) 4.dp else 12.dp
+    val nameFontSize = if (isCompact) 20.sp else 24.sp
+    val statusFontSize = if (isCompact) 12.sp else 14.sp
+    val jobFontSize = if (isCompact) 14.sp else 16.sp
+    val iconSize = if (isCompact) 20.dp else 24.dp
+    val buttonSize = if (isCompact) 40.dp else 48.dp
+    val buttonHeight = if (isCompact) 40.dp else 48.dp
+    val contentPadding = if (isCompact) 16.dp else 20.dp
+    val sectionSpacing = if (isCompact) 6.dp else 8.dp
 
     val imageHeight = when (deviceType) {
         DeviceType.TabletPortrait -> 480.dp
-        DeviceType.TabletLandscape -> 300.dp
-        else -> 230.dp
+        DeviceType.TabletLandscape -> 240.dp
+        else -> 240.dp
     }
 
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(24.dp))
-            .padding(16.dp),
-        shape = RoundedCornerShape(24.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFDFDFD))
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(6.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Column(
-            modifier = Modifier.background(Color.White)
-        ) {
+        Column {
+            // Image section
             Box(
                 modifier = Modifier
                     .height(imageHeight)
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
             ) {
                 Image(
                     painter = painterResource(id = imageResId),
@@ -100,224 +96,204 @@ fun UserProfileCard(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.matchParentSize()
                 )
+                // Gradient overlay
                 Box(
                     modifier = Modifier
                         .matchParentSize()
                         .background(
                             Brush.verticalGradient(
-                                colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.3f)),
-                                startY = 100f
+                                colors = listOf(
+                                    Color.Transparent,
+                                    Color.Black.copy(alpha = 0.4f)
+                                ),
+                                startY = 0.6f
                             )
                         )
                 )
             }
 
-            // Content Box với thông tin và nút
-            Box(
+            // Content section
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = if (deviceType == DeviceType.TabletPortrait) (-48).dp else (-24).dp)
-                    .clip(RoundedCornerShape(24.dp))
-                    .background(Color.White)
                     .padding(contentPadding)
             ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
+                // Status indicator
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = sectionSpacing)
                 ) {
-                    Spacer(modifier = Modifier.height(sectionSpacing + 4.dp))
+                    val statusColor = if (status.equals("online", ignoreCase = true)) {
+                        Color(0xFF4CAF50)
+                    } else {
+                        Color(0xFFF44336)
+                    }
 
+                    Box(
+                        modifier = Modifier
+                            .size(12.dp)
+                            .background(statusColor, CircleShape)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = status.replaceFirstChar { it.uppercase() },
+                        color = Color.Gray,
+                        fontSize = statusFontSize,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+
+                // User info section
+                Column(
+                    modifier = Modifier.padding(bottom = sectionSpacing + 4.dp)
+                ) {
+                    // Name
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(vertical = 2.dp)
                     ) {
-                        val statusColor = if (status.equals("online", ignoreCase = true)) {
-                            Color(0xFF4CAF50)
-                        } else {
-                            Color(0xFFF44336)
-                        }
-
-                        Box(
-                            modifier = Modifier
-                                .size(16.dp)
-                                .background(statusColor, CircleShape)
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Name",
+                            tint = Color.Black,
+                            modifier = Modifier.size(iconSize)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = status,
-                            color = Color.Black,
-                            fontSize = statusFontSize,
-                            fontWeight = FontWeight.Medium,
-                            letterSpacing = 0.5.sp
+                            text = name,
+                            fontSize = nameFontSize,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(sectionSpacing))
-
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
+                    // Job title
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(vertical = 2.dp)
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(vertical = 4.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Name Icon",
-                                tint = Color.Black,
-                                modifier = Modifier.size(iconSize)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = name,
-                                fontSize = nameFontSize,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = Color.Black
-                            )
-                        }
-
-                        // Job title row
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(vertical = 4.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Work,
-                                contentDescription = "Job Icon",
-                                tint = Color.Black,
-                                modifier = Modifier.size(iconSize)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = jobTitle,
-                                color = Color.Black,
-                                fontSize = jobFontSize,
-                                fontWeight = FontWeight.Normal
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Default.Work,
+                            contentDescription = "Job",
+                            tint = Color.Gray,
+                            modifier = Modifier.size(iconSize)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = jobTitle,
+                            color = Color.Gray,
+                            fontSize = jobFontSize,
+                            fontWeight = FontWeight.Normal
+                        )
                     }
+                }
 
-                    Spacer(modifier = Modifier.height(sectionSpacing + 4.dp))
+                // Action buttons
+                if (isTabletLandscape) {
+                    // Add spacing for tablet landscape to prevent overlap
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                    if (isTabletLandscape) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            IconButton(
-                                onClick = onToggleLocationClick,
-                                modifier = Modifier
-                                    .size(buttonHeight)
-                                    .background(Color(0xFFF0F0F0), shape = CircleShape)
-                            ) {
-                                Icon(
-                                    Icons.Default.LocationOn,
-                                    contentDescription = "Map",
-                                    tint = Color(0xFF616161),
-                                    modifier = Modifier.size(iconSize)
-                                )
-                            }
-                            Spacer(modifier = Modifier.weight(1f))
-
-                            IconButton(
-                                onClick = onVideoCallClick,
-                                modifier = Modifier
-                                    .size(buttonHeight)
-                                    .background(Color(0xFFF0F0F0), shape = CircleShape)
-                            ) {
-                                Icon(
-                                    Icons.Default.Videocam,
-                                    contentDescription = "Call",
-                                    tint = Color(0xFF616161),
-                                    modifier = Modifier.size(iconSize)
-                                )
-                            }
-                            Spacer(modifier = Modifier.weight(1f))
-
-                            Button(
-                                onClick = onclick,
-                                shape = RoundedCornerShape(28.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF000000)
-                                ),
-                                modifier = Modifier
-                                    .height(buttonHeight)
-                                    .weight(1f)
-                            ) {
-                                Text(
-                                    stringResource(R.string.text_chat),
-                                    color = Color.White,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            }
-                        }
-                    } else {
-                        Row(
+                    // Tablet landscape layout
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(
+                            onClick = onToggleLocationClick,
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                                .size(buttonHeight)
+                                .background(Color(0xFFF5F5F5), CircleShape)
                         ) {
-                            // Location button
-                            IconButton(
-                                onClick = onToggleLocationClick,
-                                modifier = Modifier
-                                    .size(buttonSize)
-                                    .background(
-                                        MaterialTheme.colorScheme.background,
-                                        CircleShape
-                                    )
-                            ) {
-                                Icon(
-                                    Icons.Default.LocationOn,
-                                    contentDescription = "Map",
-                                    tint = MaterialTheme.colorScheme.onBackground,
-                                    modifier = Modifier.size(iconSize)
-                                )
-                            }
-                            Spacer(modifier = Modifier.weight(1f))
+                            Icon(
+                                Icons.Default.LocationOn,
+                                contentDescription = "Location",
+                                tint = Color(0xFF666666),
+                                modifier = Modifier.size(iconSize)
+                            )
+                        }
 
+                        IconButton(
+                            onClick = onVideoCallClick,
+                            modifier = Modifier
+                                .size(buttonHeight)
+                                .background(Color(0xFFF5F5F5), CircleShape)
+                        ) {
+                            Icon(
+                                Icons.Default.Videocam,
+                                contentDescription = "Video Call",
+                                tint = Color(0xFF666666),
+                                modifier = Modifier.size(iconSize)
+                            )
+                        }
 
-                            IconButton(
-                                onClick = onVideoCallClick,
-                                modifier = Modifier
-                                    .size(buttonSize)
-                                    .background(
-                                        MaterialTheme.colorScheme.background,
-                                        CircleShape
-                                    )
-                            ) {
-                                Icon(
-                                    Icons.Default.Videocam,
-                                    contentDescription = "Call",
-                                    tint = MaterialTheme.colorScheme.onBackground,
-                                    modifier = Modifier.size(iconSize)
-                                )
-                            }
-                            Spacer(modifier = Modifier.weight(1f))
-
-                            IconButton(
-                                onClick = onclick,
-                                modifier = Modifier
-                                    .size(buttonSize)
-                                    .background(
-                                        MaterialTheme.colorScheme.background,
-                                        CircleShape
-                                    )
-                            ) {
-                                Icon(
-                                    Icons.AutoMirrored.Filled.Chat,
-                                    contentDescription = "Call",
-                                    tint = MaterialTheme.colorScheme.onBackground,
-                                    modifier = Modifier.size(iconSize)
-                                )
-                            }
+                        Button(
+                            onClick = onclick,
+                            shape = RoundedCornerShape(24.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Black
+                            ),
+                            modifier = Modifier
+                                .height(buttonHeight)
+                                .weight(1f)
+                        ) {
+                            Text(
+                                stringResource(R.string.text_chat),
+                                color = Color.White,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
                         }
                     }
+                } else {
+                    // Mobile and tablet portrait layout
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(
+                            onClick = onToggleLocationClick,
+                            modifier = Modifier
+                                .size(buttonSize)
+                                .background(Color(0xFFF5F5F5), CircleShape)
+                        ) {
+                            Icon(
+                                Icons.Default.LocationOn,
+                                contentDescription = "Location",
+                                tint = Color(0xFF666666),
+                                modifier = Modifier.size(iconSize)
+                            )
+                        }
 
-                    // Bottom spacing
-                    Spacer(modifier = Modifier.height(sectionSpacing))
+                        IconButton(
+                            onClick = onVideoCallClick,
+                            modifier = Modifier
+                                .size(buttonSize)
+                                .background(Color(0xFFF5F5F5), CircleShape)
+                        ) {
+                            Icon(
+                                Icons.Default.Videocam,
+                                contentDescription = "Video Call",
+                                tint = Color(0xFF666666),
+                                modifier = Modifier.size(iconSize)
+                            )
+                        }
+
+                        IconButton(
+                            onClick = onclick,
+                            modifier = Modifier
+                                .size(buttonSize)
+                                .background(Color.Black, CircleShape)
+                        ) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.Chat,
+                                contentDescription = "Chat",
+                                tint = Color.White,
+                                modifier = Modifier.size(iconSize)
+                            )
+                        }
+                    }
                 }
             }
         }

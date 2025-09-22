@@ -6,6 +6,7 @@ cameraCamera2Version = "1.4.2"
 coilCompose = "2.5.0"
 coilGif = "2.5.0"
 coreSplashscreen = "1.0.1"
+coreVersion = "3.5.3"
 credentials = "1.5.0"
 datastorePreferences = "1.0.0"
 googleGenerativeai = "0.6.0"
@@ -49,6 +50,8 @@ roomTestingVersion = "2.7.1"
 serialization = "1.6.3"
 textRecognitionVersion = "16.0.1"
 translateVersion = "17.0.3"
+zxingAndroidEmbeddedVersion = "4.3.0"
+foundationVersion = "1.9.1"
 
 [libraries]
 accompanist-flowlayout-v0360 = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayoutVersion" }
@@ -78,6 +81,7 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomTestingVersion" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coilGif" }
+core = { module = "com.google.zxing:core", version.ref = "coreVersion" }
 generativeai-v060 = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "googleGenerativeai" }
 google-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleidVersion" }
@@ -108,6 +112,9 @@ navigation-compose = { module = "androidx.navigation:navigation-compose", versio
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 socket-io-client = { module = "io.socket:socket.io-client", version.ref = "socketIoClientVersion" }
 text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "textRecognitionVersion" }
+translate = { module = "com.google.mlkit:translate", version.ref = "translateVersion" }
+zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbeddedVersion" }
+foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundationVersion" }
 triggerx = { module = "com.meticha:triggerx", version.ref = "triggerx" }
 
 [plugins]

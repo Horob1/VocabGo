@@ -17,6 +17,7 @@ data class LoggedInUser(
     val avatar: String,
     val roles: String,
     val status: String,
+    val require2FA: Boolean,
     val createdAt: String,
     val updatedAt: String,
 )

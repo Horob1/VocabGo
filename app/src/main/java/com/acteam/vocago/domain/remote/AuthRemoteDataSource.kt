@@ -2,7 +2,7 @@ package com.acteam.vocago.domain.remote
 
 import com.acteam.vocago.data.model.LoginGoogleResponse
 import com.acteam.vocago.data.model.LoginResponse
-import com.acteam.vocago.data.model.VerifyTwoFARespose
+import com.acteam.vocago.data.model.VerifyTwoFAResponse
 
 interface AuthRemoteDataSource {
     suspend fun login(username: String, password: String): LoginResponse
@@ -16,7 +16,7 @@ interface AuthRemoteDataSource {
 
     suspend fun verifyEmail(email: String, otp: String)
     suspend fun resendVerifyEmail(email: String)
-    suspend fun verifyTwoFA(email: String, otpToken: String): VerifyTwoFARespose
+    suspend fun verifyTwoFA(email: String, otpToken: String): VerifyTwoFAResponse
     suspend fun loginGoogle(token: String): LoginGoogleResponse
     suspend fun logout(credentialId: String)
 }

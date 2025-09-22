@@ -68,7 +68,7 @@ fun UserBar(
         }
     }
 
-    val titleText = "$helloText, $name"
+    val titleText = "$helloText, ${name.limit(10)}"
 
     val horizontalPadding =
         responsiveDP(mobile = 16, tabletPortrait = 24, tabletLandscape = 32)
@@ -185,3 +185,6 @@ fun UserAvatar(
         }
     }
 }
+
+fun String.limit(maxLength: Int): String =
+    if (this.length > maxLength) this.take(maxLength) + "…" else this

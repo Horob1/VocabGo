@@ -8,4 +8,5 @@ data class UpdateUserDto(
     val lastName: String,
     val address: String,
     val dob: String,
+    val require2FA: Boolean,
 )

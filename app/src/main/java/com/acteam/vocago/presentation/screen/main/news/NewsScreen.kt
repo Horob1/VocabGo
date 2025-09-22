@@ -10,6 +10,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -24,7 +25,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.common.LoadingSurface
 import com.acteam.vocago.presentation.screen.common.LoginRequiredDialog
+import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.presentation.screen.main.news.component.BigNewsCard
+import com.acteam.vocago.presentation.screen.main.news.component.CheckInDialog
 import com.acteam.vocago.presentation.screen.main.news.component.FeatureBar
 import com.acteam.vocago.presentation.screen.main.news.component.FilterBar
 import com.acteam.vocago.presentation.screen.main.news.component.FilterDialog
@@ -52,6 +55,30 @@ fun NewsScreen(
         }
     }
     val pullRefreshState = rememberPullToRefreshState()
+    var isShowCheckInDialog by remember { mutableStateOf(false) }
+    val checkInState by viewModel.isCheckInState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        if (isAuth) {
+            viewModel.getUserRanking()
+        }
+    }
+
+    LaunchedEffect(checkInState) {
+        when (checkInState) {
+            is UIState.UISuccess -> {
+                val isCheckedInToday = (checkInState as UIState.UISuccess<Boolean>).data
+                if (!isCheckedInToday) {
+                    isShowCheckInDialog = true
+                }
+            }
+
+            is UIState.UIError -> {
+            }
+
+            else -> Unit
+        }
+    }
 
     Column {
         AnimatedVisibility(
@@ -151,6 +178,15 @@ fun NewsScreen(
             }
         }
     }
+    CheckInDialog(
+        isVisible = isShowCheckInDialog,
+        onDismiss = {
+            isShowCheckInDialog = false
+        },
+        onCheckIn = {
+            viewModel.checkIn()
+        }
+    )
 
     FilterDialog(
         isVisible = isShowFilterDialog,

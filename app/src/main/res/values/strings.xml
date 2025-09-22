@@ -404,6 +404,27 @@
     <string name="text_delete_device">Delete device</string>
     <string name="text_delete">Delete</string>
     <string name="text_delete_device_confirm">Do you want to delete this device?</string>
+    <string name="title_ranking">Ranking</string>
+    <string name="your_achievements">Your Achievements</string>
+    <string name="text_keep_trying_continue">Keep up the good work!</string>
+    <string name="text_current_streak">Current Streak</string>
+    <string name="text_max_streak">Max Streak</string>
+    <string name="ranking_top">Top students</string>
+    <string name="setup_2fa_failed">OTP is invalid, please try again</string>
+    <string name="disable_2fa_failed">2FA disabled failed, try again</string>
+    <string name="two_factor_authentication">Two Factor Authenticator</string>
+    <string name="btn_enable">Enable</string>
+    <string name="btn_disable">Disable</string>
+    <string name="desc_two_factor_setup">Scan this QR code with your authenticator app</string>
+    <string name="desc_two_factor_setup_2">\"Enter the 6-digit code from your app\"</string>
+    <string name="daily_check_in_title">🎉 Daily Check-in 🎉</string>
+    <string name="check_in_title">🎉 Check-in 🎉</string>
+    <string name="daily_check_in_message">
+        Today will be a wonderful day!\nTap the icon to check in! 💪
+    </string>
+    <string name="check_in_success_message">
+        Awesome! You’ve successfully checked in!\nLet’s start the day full of energy! ✨
+    </string>
 
     <string name="title_activity_app_alarm" translatable="false">Alarm</string>
     <string name="btn_ok" translatable="false">Ok</string>

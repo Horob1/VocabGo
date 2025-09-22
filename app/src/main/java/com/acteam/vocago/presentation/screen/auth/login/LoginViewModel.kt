@@ -67,7 +67,7 @@ class LoginViewModel(
                         401 -> UIState.UIError(UIErrorType.UnauthorizedError)
                         404 -> UIState.UIError(UIErrorType.NotFoundError)
                         403 -> UIState.UIError(UIErrorType.ForbiddenError)
-//                        428 -> UIState.UIError(UIErrorType.PreconditionFailedError)
+                        428 -> UIState.UIError(UIErrorType.PreconditionFailedError)
                         else -> UIState.UIError(UIErrorType.UnknownError)
                     }
                 } else {

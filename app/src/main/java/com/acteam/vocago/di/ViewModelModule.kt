@@ -24,6 +24,7 @@ import com.acteam.vocago.presentation.screen.searchnovel.SearchNovelViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingViewModel
 import com.acteam.vocago.presentation.screen.user.alarm.AlarmViewModel
 import com.acteam.vocago.presentation.screen.user.profile.ProfileViewModel
+import com.acteam.vocago.presentation.screen.user.ranking.RankingViewModel
 import com.acteam.vocago.presentation.screen.user.usernavigator.UserNavigatorViewModel
 import com.acteam.vocago.presentation.screen.vocalistdetail.VocaListDetailViewModel
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
@@ -69,7 +70,7 @@ val viewModelModule = module {
 
     viewModel {
         NewsViewModel(
-            get(), get(), get(), get(), get(), get(), get(), get()
+            get(), get(), get(), get(), get(), get(), get(), get(), get(), get()
         )
     }
 
@@ -116,7 +117,7 @@ val viewModelModule = module {
 
     viewModel {
         ProfileViewModel(
-            get(), get(), get(), get(), get(), get(), get()
+            get(), get(), get(), get(), get(), get(), get(), get(), get(), get()
         )
     }
     viewModel {
@@ -198,7 +199,9 @@ val viewModelModule = module {
     viewModel {
         LearnViewModel(get())
     }
-
+    viewModel {
+        RankingViewModel(get())
+    }
     viewModel {
         ListenNovelViewModel(get(), get(), get())
     }
