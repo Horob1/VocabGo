@@ -54,4 +54,8 @@ sealed class VocaGoRoutes(val path: String) {
     data object CheckIn : VocaGoRoutes("/api/v1/user/check-in")
     data object GetRanking : VocaGoRoutes("/api/v1/user/ranking-table")
 
+    //premium
+    data object CreatePayment : VocaGoRoutes("/api/v1/payment")
+    data object MoMoPay : VocaGoRoutes("/api/v1/momo/ipn")
+
 }

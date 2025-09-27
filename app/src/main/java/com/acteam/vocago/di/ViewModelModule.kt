@@ -19,6 +19,7 @@ import com.acteam.vocago.presentation.screen.newsdetail.NewsDetailViewModel
 import com.acteam.vocago.presentation.screen.newshistory.NewsHistoryViewModel
 import com.acteam.vocago.presentation.screen.noveldetail.NovelDetailViewModel
 import com.acteam.vocago.presentation.screen.novelhistory.NovelHistoryViewModel
+import com.acteam.vocago.presentation.screen.premium.PremiumViewModel
 import com.acteam.vocago.presentation.screen.readnovel.ReadNovelViewModel
 import com.acteam.vocago.presentation.screen.searchnovel.SearchNovelViewModel
 import com.acteam.vocago.presentation.screen.setting.SettingViewModel
@@ -214,5 +215,9 @@ val viewModelModule = module {
             get()
         )
     }
+    viewModel {
+        PremiumViewModel(get())
+    }
+
 
 }

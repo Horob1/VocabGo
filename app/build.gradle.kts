@@ -28,7 +28,6 @@ android {
         buildConfigField("String", "BASE_URL", "\"${localProperties["BASE_URL"]}\"")
         buildConfigField("String", "GEMINI_API_KEY", "\"${localProperties["GEMINI_API_KEY"]}\"")
         buildConfigField("String", "GOOGLE_CLIENT_ID", "\"${localProperties["GOOGLE_CLIENT_ID"]}\"")
-
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
@@ -61,6 +60,8 @@ android {
 }
 
 dependencies {
+    //
+    implementation(libs.androidx.browser)
     // Socket
     implementation(libs.socket.io.client)
     // Media

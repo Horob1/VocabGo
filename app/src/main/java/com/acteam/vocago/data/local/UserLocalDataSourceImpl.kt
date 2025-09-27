@@ -59,7 +59,6 @@ class UserLocalDataSourceImpl(
         }
     }
 
-
     override suspend fun clear() {
         userDao.clear()
     }

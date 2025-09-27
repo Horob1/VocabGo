@@ -12,5 +12,4 @@ interface ToeicRemoteDataSource {
     suspend fun submitToeicTest(request: SubmitRequest): Result<TestResultDto>
     suspend fun getToeicResult(id: String): Result<List<TestResultListDto>>
     suspend fun getToeicResultDetail(id: String): Result<List<TestResultListDto>>
-
 }

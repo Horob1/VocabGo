@@ -2,15 +2,17 @@ package com.acteam.vocago.di
 
 import com.acteam.vocago.data.remote.AuthRemoteDataSourceImpl
 import com.acteam.vocago.data.remote.NewsRemoteDataSourceImpl
-import com.acteam.vocago.data.remote.ToeicRemoteDataSourceImpl
 import com.acteam.vocago.data.remote.NovelRemoteDataSourceImpl
+import com.acteam.vocago.data.remote.PaymentRemoteDataSourceImpl
+import com.acteam.vocago.data.remote.ToeicRemoteDataSourceImpl
 import com.acteam.vocago.data.remote.UserRemoteDataSourceImpl
 import com.acteam.vocago.data.remote.VocaRemoteDataSourceImpl
 import com.acteam.vocago.data.remote.WordRemoteDataSourceImpl
 import com.acteam.vocago.domain.remote.AuthRemoteDataSource
 import com.acteam.vocago.domain.remote.NewsRemoteDataSource
-import com.acteam.vocago.domain.remote.ToeicRemoteDataSource
 import com.acteam.vocago.domain.remote.NovelRemoteDataSource
+import com.acteam.vocago.domain.remote.PaymentRemoteDataSource
+import com.acteam.vocago.domain.remote.ToeicRemoteDataSource
 import com.acteam.vocago.domain.remote.UserRemoteDataSource
 import com.acteam.vocago.domain.remote.VocaRemoteDataSource
 import com.acteam.vocago.domain.remote.WordRemoteDataSource
@@ -42,5 +44,9 @@ val remoteModule = module {
 
     single<VocaRemoteDataSource> {
         VocaRemoteDataSourceImpl(get(named(VOCAB_GO_BE_QUALIFIER)), get(named(GOOGLE_IMAGE)))
+    }
+
+    single<PaymentRemoteDataSource> {
+        PaymentRemoteDataSourceImpl(get(named(VOCAB_GO_BE_QUALIFIER)))
     }
 }

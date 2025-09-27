@@ -1,5 +1,6 @@
 package com.acteam.vocago.presentation.screen.main.chat
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -21,6 +22,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +43,7 @@ import androidx.navigation.NavController
 import com.acteam.vocago.R
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.main.chat.component.LocationCard
+import com.acteam.vocago.presentation.screen.main.chat.component.RandomUserCard
 import com.acteam.vocago.presentation.screen.main.chat.component.UserProfileCard
 import com.acteam.vocago.utils.DeviceType
 import com.acteam.vocago.utils.getDeviceType
@@ -50,12 +53,13 @@ import kotlin.math.absoluteValue
 @Composable
 fun ChatScreen(
     rootNavController: NavController,
+    viewModel: ChatViewModel
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
     val visibleLocationCardPage = remember { mutableStateOf<Int?>(null) }
-
+    val user = viewModel.userState.collectAsState().value
     val deviceType = getDeviceType()
 
     val userProfileList = listOf(
@@ -223,7 +227,7 @@ fun ChatScreen(
 
     val pagerState = rememberPagerState(
         initialPage = userProfileList.size / 2
-    ) { userProfileList.size }
+    ) { userProfileList.size + 1 }
 
     val cardWidth = when (deviceType) {
         DeviceType.TabletLandscape -> screenWidth * 0.5f
@@ -237,6 +241,8 @@ fun ChatScreen(
             repeat(userProfileList.size) { add(IntOffset.Zero) }
         }
     }
+    val middleIndex = userProfileList.size / 2
+
     Column {
         Header()
 
@@ -278,48 +284,75 @@ fun ChatScreen(
                     .fillMaxWidth()
                     .height(cardHeight)
             ) { page ->
+                if (page == middleIndex) {
+                    RandomUserCard(
+                        modifier = Modifier
+                            .width(cardWidth)
+                            .height(cardHeight),
+                        isRandomizing = false,
+                        onRandomClick = {
+                            val roles =
+                                user?.roles?.map { it.name } ?: emptyList()  // Bỏ toString()
+                            Log.d("NavigationCheck", "Roles list: $roles")
 
-                val pageOffset =
-                    (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
-                val absOffset = pageOffset.absoluteValue.coerceIn(0f, 1f)
+// Kiểm tra có đúng 1 role và role đó toString() chứa "USER"
+                            val hasOnlyUserRole =
+                                roles.size == 1 && roles.first().toString().contains("name=USER")
 
-                val scale = lerp(0.85f, 1f, 1f - absOffset)
-                val alpha = lerp(0.5f, 1f, 1f - absOffset)
-                val rotationY = lerp(if (pageOffset < 0) 15f else -15f, 0f, 1f - absOffset)
-                val density = LocalDensity.current.density
+                            Log.d("NavigationCheck", "Has only USER role: $hasOnlyUserRole")
 
-                UserProfileCard(
-                    imageResId = userProfileList[page].imageResId,
-                    status = userProfileList[page].status,
-                    name = userProfileList[page].name,
-                    jobTitle = userProfileList[page].jobTitle,
-                    modifier = Modifier
-                        .graphicsLayer {
-                            scaleX = scale
-                            scaleY = scale
-                            this.alpha = alpha
-                            this.rotationY = rotationY
-                            this.cameraDistance = 12 * density
-                        }
-                        .width(cardWidth)
-                        .height(cardHeight),
-                    onclick = { userProfileList[page].onclick(userProfileList[page].chatId) },
-                    onToggleLocationClick = {
-                        visibleLocationCardPage.value =
-                            if (visibleLocationCardPage.value == page) null else page
-                    },
-                    onVideoCallClick = {
-                        rootNavController.navigate(
-                            NavScreen.VideoCallNavScreen(
-                                receivedName = userProfileList[page].name,
-                                avatarResId = userProfileList[page].imageResId,
-                                videoResId = userProfileList[page].videoResId
+                            if (hasOnlyUserRole) {
+                                rootNavController.navigate(NavScreen.PremiumNavScreen)
+                            } else {
+
+                            }
+                        },
+                    )
+                } else {
+                    val actualIndex = if (page < middleIndex) page else page - 1
+                    val user = userProfileList[actualIndex]
+
+                    val pageOffset =
+                        (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+                    val absOffset = pageOffset.absoluteValue.coerceIn(0f, 1f)
+
+                    val scale = lerp(0.85f, 1f, 1f - absOffset)
+                    val alpha = lerp(0.5f, 1f, 1f - absOffset)
+                    val rotationY = lerp(if (pageOffset < 0) 15f else -15f, 0f, 1f - absOffset)
+                    val density = LocalDensity.current.density
+
+                    UserProfileCard(
+                        imageResId = user.imageResId,
+                        status = user.status,
+                        name = user.name,
+                        jobTitle = user.jobTitle,
+                        modifier = Modifier
+                            .graphicsLayer {
+                                scaleX = scale
+                                scaleY = scale
+                                this.alpha = alpha
+                                this.rotationY = rotationY
+                                this.cameraDistance = 12 * density
+                            }
+                            .width(cardWidth)
+                            .height(cardHeight),
+                        onclick = { user.onclick(user.chatId) },
+                        onToggleLocationClick = {
+                            visibleLocationCardPage.value =
+                                if (visibleLocationCardPage.value == page) null else page
+                        },
+                        onVideoCallClick = {
+                            rootNavController.navigate(
+                                NavScreen.VideoCallNavScreen(
+                                    receivedName = user.name,
+                                    avatarResId = user.imageResId,
+                                    videoResId = user.videoResId
+                                )
                             )
-                        )
-                    }
-                )
+                        }
+                    )
+                }
             }
-
             visibleLocationCardPage.value?.let { page ->
                 val pos = cardPositions.getOrNull(page) ?: IntOffset.Zero
                 var offsetY = 0
