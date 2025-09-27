@@ -7,7 +7,6 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -16,13 +15,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.acteam.vocago.presentation.navigation.NavScreen
 import com.acteam.vocago.presentation.screen.main.chat.ChatScreen
+import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.common.NavBottomBar
 import com.acteam.vocago.presentation.screen.main.news.NewsScreen
 import com.acteam.vocago.presentation.screen.main.news.NewsViewModel
 import com.acteam.vocago.presentation.screen.main.novel.NovelScreen
+import com.acteam.vocago.presentation.screen.main.novel.NovelViewModel
 import com.acteam.vocago.presentation.screen.main.toeictest.ToeicScreen
 import com.acteam.vocago.presentation.screen.main.toeictest.ToeicViewModel
-import com.acteam.vocago.presentation.screen.main.novel.NovelViewModel
 import com.acteam.vocago.presentation.screen.main.voca.VocaScreen
 import com.acteam.vocago.presentation.screen.main.voca.VocaViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -73,8 +73,10 @@ fun SetupMainNavGraph(rootNavController: NavController) {
                 )
             }
             composable<NavScreen.ChatNavScreen> {
+                val chatViewModel = koinViewModel<ChatViewModel>()
                 ChatScreen(
                     rootNavController = rootNavController,
+                    viewModel = chatViewModel
                 )
             }
         }

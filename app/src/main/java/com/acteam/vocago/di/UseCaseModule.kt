@@ -4,6 +4,7 @@ import com.acteam.vocago.domain.usecase.AnswerNewsUseCase
 import com.acteam.vocago.domain.usecase.ChangePasswordUseCase
 import com.acteam.vocago.domain.usecase.CheckInUseCase
 import com.acteam.vocago.domain.usecase.ChooseLanguageUserCase
+import com.acteam.vocago.domain.usecase.CreatePaymentUseCase
 import com.acteam.vocago.domain.usecase.CreateVocaListUseCase
 import com.acteam.vocago.domain.usecase.DeleteAlarmByIdUseCase
 import com.acteam.vocago.domain.usecase.DeleteInfoUseCase
@@ -395,5 +396,9 @@ val useCaseModule = module {
 
     single {
         DeleteInfoUseCase(get(), get())
+    }
+
+    single {
+        CreatePaymentUseCase(get())
     }
 }

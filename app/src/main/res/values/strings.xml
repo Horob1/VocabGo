@@ -451,5 +451,6 @@
     <string name="text_select_voice">Select voice</string>
     <string name="desc_setting_voice">Config your voice setting</string>
     <string name="title_setting_voice">Setting voice</string>
+    <string name="title_premium">PREMIUM</string>
 
 </resources>

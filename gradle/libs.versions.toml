@@ -2,6 +2,7 @@
 accompanistFlowlayoutVersion = "0.36.0"
 accompanistPermissions = "0.32.0"
 agp = "8.9.1"
+browserVersion = "1.5.0"
 cameraCamera2Version = "1.4.2"
 coilCompose = "2.5.0"
 coilGif = "2.5.0"
@@ -56,6 +57,7 @@ foundationVersion = "1.9.1"
 [libraries]
 accompanist-flowlayout-v0360 = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayoutVersion" }
 android-lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieComposeVersion" }
+androidx-browser = { module = "androidx.browser:browser", version.ref = "browserVersion" }
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2Version" }
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraCamera2Version" }
 androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCamera2Version" }

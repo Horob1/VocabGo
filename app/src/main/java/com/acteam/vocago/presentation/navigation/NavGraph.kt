@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.acteam.vocago.R
 import com.acteam.vocago.data.local.entity.VocaEntity
@@ -44,6 +45,8 @@ import com.acteam.vocago.presentation.screen.noveldetail.NovelDetailScreen
 import com.acteam.vocago.presentation.screen.noveldetail.NovelDetailViewModel
 import com.acteam.vocago.presentation.screen.novelhistory.NovelHistoryScreen
 import com.acteam.vocago.presentation.screen.novelhistory.NovelHistoryViewModel
+import com.acteam.vocago.presentation.screen.premium.PremiumScreen
+import com.acteam.vocago.presentation.screen.premium.PremiumViewModel
 import com.acteam.vocago.presentation.screen.readnovel.ReadNovelScreen
 import com.acteam.vocago.presentation.screen.readnovel.ReadNovelViewModel
 import com.acteam.vocago.presentation.screen.searchnovel.SearchNovelScreen
@@ -83,7 +86,13 @@ fun SetupNavGraph(
                 rootNavController = navController
             )
         }
-        composable<NavScreen.MainNavScreen> {
+        composable<NavScreen.MainNavScreen>(
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "vocago://payments/result"
+                }
+            )
+        ) {
             SetupMainNavGraph(
                 rootNavController = navController
             )
@@ -327,6 +336,13 @@ fun SetupNavGraph(
                 beginChapterId = arg.chapterId,
                 navController = navController,
                 viewModel = listenNovelViewModel
+            )
+        }
+        composable<NavScreen.PremiumNavScreen> {
+            val premiumViewModel = koinViewModel<PremiumViewModel>()
+            PremiumScreen(
+                viewModel = premiumViewModel,
+                navController = navController
             )
         }
     }
