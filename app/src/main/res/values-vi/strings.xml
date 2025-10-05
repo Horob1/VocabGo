@@ -435,5 +435,22 @@
     <string name="text_select_voice">Chọn giọng nói</string>
     <string name="desc_setting_voice">Tuỳ chỉnh giọng nói theo ý bạn</string>
     <string name="title_setting_voice">Tuỳ chỉnh giọng nói</string>
+    <string name="finding_user">Đang tìm kiếm người dùng…</string>
+    <string name="text_stop">Dừng</string>
+    <string name="text_end">Kết thúc</string>
+
+    //premium
     <string name="title_premium">PREMIUM</string>
+    <string name="text_go_premium">Nâng cấp ngay</string>
+    <string name="text_only">Chỉ</string>
+    <string name="premium_title">VocaGo Premium</string>
+    <string name="premium_unlock">Mở khóa tiềm năng học tập của bạn</string>
+    <string name="premium_feature_learning_title">Học không giới hạn</string>
+    <string name="premium_feature_learning_desc">Truy cập tất cả khóa học và bài tập</string>
+    <string name="premium_feature_stats_title">Thống kê chi tiết</string>
+    <string name="premium_feature_stats_desc">Theo dõi tiến độ học tập của bạn</string>
+    <string name="premium_feature_sync_title">Đồng bộ đám mây</string>
+    <string name="premium_feature_sync_desc">Lưu trữ và đồng bộ trên mọi thiết bị</string>
+    <string name="premium_feature_support_title">Hỗ trợ 24/7</string>
+    <string name="premium_feature_support_desc">Được ưu tiên hỗ trợ kỹ thuật</string>
 </resources>

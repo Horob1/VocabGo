@@ -31,6 +31,7 @@ import com.acteam.vocago.presentation.screen.main.SetupMainNavGraph
 import com.acteam.vocago.presentation.screen.main.chat.ChatViewModel
 import com.acteam.vocago.presentation.screen.main.chat.component.CommonChatScreen
 import com.acteam.vocago.presentation.screen.main.chat.component.VideoCallScreen
+import com.acteam.vocago.presentation.screen.main.chat.component.WebRtcScreen
 import com.acteam.vocago.presentation.screen.main.toeictest.ToeicViewModel
 import com.acteam.vocago.presentation.screen.main.toeictest.component.ResultDetailScreen
 import com.acteam.vocago.presentation.screen.main.toeictest.component.TOEICPartSelectionScreen
@@ -60,6 +61,7 @@ import com.acteam.vocago.presentation.screen.welcome.WelcomeScreen
 import com.acteam.vocago.presentation.screen.welcome.WelcomeViewModel
 import com.acteam.vocago.presentation.screen.worddetail.WordDetailScreen
 import com.acteam.vocago.presentation.screen.worddetail.WordDetailViewModel
+import com.acteam.vocago.presentation.socket.SocketViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @ExperimentalAnimationApi
@@ -112,6 +114,14 @@ fun SetupNavGraph(
                 avatarRes = arg.avatarRes,
                 viewModel = chatViewModel,
                 rootNavController = navController
+            )
+        }
+
+        composable<NavScreen.WebRtcNavScreen> {
+            val socketViewModel = koinViewModel<SocketViewModel>()
+            WebRtcScreen(
+                viewModel = socketViewModel,
+                navController = navController
             )
         }
 

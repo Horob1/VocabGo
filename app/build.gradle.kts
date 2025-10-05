@@ -60,6 +60,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.stream.webrtc.android)
     //
     implementation(libs.androidx.browser)
     // Socket

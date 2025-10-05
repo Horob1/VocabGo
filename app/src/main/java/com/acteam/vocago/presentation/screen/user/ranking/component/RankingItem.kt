@@ -49,27 +49,20 @@ fun RankingItem(
         BorderStroke(
             width = 2.dp,
             brush = when (rank) {
-                1 -> Brush.linearGradient(listOf(Color(0xFFFFD700), Color(0xFFFFA500))) // vàng
-                2 -> Brush.linearGradient(listOf(Color(0xFFC0C0C0), Color(0xFF808080))) // bạc
-                else -> Brush.linearGradient(listOf(Color(0xFFCD7F32), Color(0xFF8B4513))) // đồng
+                1 -> Brush.linearGradient(listOf(Color(0xFFFFD700), Color(0xFFFFA500)))
+                2 -> Brush.linearGradient(listOf(Color(0xFFC0C0C0), Color(0xFF808080)))
+                else -> Brush.linearGradient(listOf(Color(0xFFCD7F32), Color(0xFF8B4513)))
             }
         )
     } else null
+
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = when {
-                isTop3 -> Color(0xFFFEF9C3) // nền vàng nhạt cho top 3
-                isCurrentUser -> Color(0xFF6366F1).copy(alpha = 0.08f)
-                else -> Color.White
-            }
+            containerColor = if (isTop3) Color(0xFFFEF9C3) else Color.White
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = when {
-                isTop3 -> 10.dp
-                isCurrentUser -> 6.dp
-                else -> 2.dp
-            }
+            defaultElevation = if (isTop3) 10.dp else 2.dp
         ),
         shape = RoundedCornerShape(16.dp),
         border = borderStroke
@@ -128,7 +121,7 @@ fun RankingItem(
                     text = userRanking.userId.username,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = if (isCurrentUser) Color(0xFFF59E0B) else Color(0xFF111827),
+                    color = Color(0xFF111827),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

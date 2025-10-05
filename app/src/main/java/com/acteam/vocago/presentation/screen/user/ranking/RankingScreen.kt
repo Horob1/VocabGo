@@ -111,7 +111,6 @@ fun RankingScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Content
         when (rankingState) {
             is UIState.UILoading -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
