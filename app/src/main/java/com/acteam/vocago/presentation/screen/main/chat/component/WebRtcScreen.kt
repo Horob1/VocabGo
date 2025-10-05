@@ -4,7 +4,6 @@ import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,6 +43,7 @@ import com.acteam.vocago.R
 import com.acteam.vocago.presentation.socket.CallUiState
 import com.acteam.vocago.presentation.socket.SocketViewModel
 import com.acteam.vocago.utils.WebRTCManager
+import org.webrtc.RendererCommon
 import org.webrtc.SurfaceViewRenderer
 
 @Composable
@@ -63,10 +63,9 @@ fun WebRtcScreen(
     LaunchedEffect(Unit) {
         viewModel.initWebRTC(context)
     }
+
     DisposableEffect(Unit) {
-        onDispose {
-            viewModel.clearWebRTC()
-        }
+        onDispose { viewModel.clearWebRTC() }
     }
 
     DisposableEffect(lifecycleOwner) {
@@ -91,16 +90,19 @@ fun WebRtcScreen(
             .fillMaxSize()
             .onSizeChanged { parentSize = it }
     ) {
-        if (webRTCManager != null &&
-            (uiState is CallUiState.RemoteStream || uiState is CallUiState.Connected)
-        ) {
+        // --- Remote video background ---
+        if (webRTCManager != null) {
             AndroidView(
                 factory = { ctx ->
                     SurfaceViewRenderer(ctx).apply {
-                        init(webRTCManager.eglBase.eglBaseContext, null)
-                        setEnableHardwareScaler(true)
+                        // ✅ Dùng chung EglBase với factory để tránh black screen
+                        init(webRTCManager.eglBaseLocal.eglBaseContext, null)
+                        setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
                         setMirror(false)
+                        setEnableHardwareScaler(true)
+                        setZOrderMediaOverlay(false)
                         remoteRendererRef = this
+                        webRTCManager.setRemoteVideoSink(this)
                     }
                 },
                 modifier = Modifier.fillMaxSize(),
@@ -110,9 +112,26 @@ fun WebRtcScreen(
             )
         }
 
-        if (webRTCManager != null &&
-            (uiState is CallUiState.LocalStream || uiState is CallUiState.Connected)
-        ) {
+        // --- Overlay TV noise + text khi chưa có remote ---
+        if (uiState is CallUiState.Idle) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                TvNoise(modifier = Modifier.fillMaxSize())
+                Text(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        } else if (uiState is CallUiState.Waiting) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                TvNoise(modifier = Modifier.fillMaxSize())
+                Text(
+                    text = stringResource(R.string.finding_user),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+
+        // --- Local preview (floating window) ---
+        if (webRTCManager != null) {
             FloatingLocalVideo(
                 modifier = Modifier
                     .size(width = 120.dp, height = 160.dp)
@@ -125,33 +144,7 @@ fun WebRtcScreen(
             )
         }
 
-        Column(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-        ) {
-            when (uiState) {
-                is CallUiState.Idle -> TvNoise()
-                is CallUiState.Waiting -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        TvNoise(modifier = Modifier.fillMaxSize())
-                        Text(
-                            text = stringResource(R.string.finding_user),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
-
-                is CallUiState.Connected -> {
-                    uiState as CallUiState.Connected
-                }
-
-                else -> {}
-            }
-        }
-
+        // --- Buttons ---
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
@@ -164,7 +157,12 @@ fun WebRtcScreen(
                 viewModel.findStranger()
                 isFirstClick = false
             }) {
-                Text(if (isFirstClick) stringResource(R.string.text_btn_start) else stringResource(R.string.text_next))
+                Text(
+                    if (isFirstClick)
+                        stringResource(R.string.text_btn_start)
+                    else
+                        stringResource(R.string.text_next)
+                )
             }
 
             Button(
@@ -197,7 +195,6 @@ private fun FloatingLocalVideo(
     var videoSize by remember { mutableStateOf(IntSize(0, 0)) }
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
-
     val offsetAnimated by animateOffsetAsState(targetValue = Offset(offsetX, offsetY))
 
     Card(
@@ -217,9 +214,11 @@ private fun FloatingLocalVideo(
         AndroidView(
             factory = { ctx ->
                 SurfaceViewRenderer(ctx).apply {
-                    init(webRTCManager.eglBase.eglBaseContext, null)
+                    init(webRTCManager.eglBaseLocal.eglBaseContext, null)
+                    setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT)
                     setMirror(true)
                     setEnableHardwareScaler(true)
+                    setZOrderMediaOverlay(true)
                     webRTCManager.setLocalVideoSink(this)
                     setRendererRef(this)
                 }
@@ -229,9 +228,7 @@ private fun FloatingLocalVideo(
             },
             modifier = Modifier
                 .fillMaxSize()
-                .onSizeChanged { size ->
-                    videoSize = size
-                }
+                .onSizeChanged { videoSize = it }
         )
     }
 }

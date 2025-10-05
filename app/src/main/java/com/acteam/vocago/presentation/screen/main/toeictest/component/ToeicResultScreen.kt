@@ -1,7 +1,5 @@
 package com.acteam.vocago.presentation.screen.main.toeictest.component
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,12 +29,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -66,7 +62,6 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToeicResultsScreen(
@@ -247,8 +242,8 @@ private fun StatisticsSummary(
 
                 StatItem(
                     icon = Icons.Default.AccessTime,
-                    label = stringResource(R.string.text_time),
-                    value = "${totalStudyTime / 60} ${stringResource(R.string.text_minute)}",
+                    label = stringResource(R.string.text_minute),
+                    value = "${totalStudyTime / 60}",
                     color = MaterialTheme.colorScheme.outline
                 )
             }
@@ -256,7 +251,6 @@ private fun StatisticsSummary(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TestResultCard(
     testDto: TestResultListDto,
@@ -405,71 +399,6 @@ private fun StatItem(
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-    }
-}
-
-@Composable
-private fun FilterSortBar(
-    selectedFilter: String,
-    onFilterChanged: (String) -> Unit,
-    sortOrder: String,
-    onSortChanged: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Filter chips
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                FilterChip(
-                    selected = selectedFilter == "all",
-                    onClick = { onFilterChanged("all") },
-                    label = { Text("Tất cả") }
-                )
-                FilterChip(
-                    selected = selectedFilter == "fulltest",
-                    onClick = { onFilterChanged("fulltest") },
-                    label = { Text("Thi thử") }
-                )
-                FilterChip(
-                    selected = selectedFilter == "practice",
-                    onClick = { onFilterChanged("practice") },
-                    label = { Text("Luyện tập") }
-                )
-            }
-
-            // Sort button
-            TextButton(
-                onClick = {
-                    onSortChanged(if (sortOrder == "newest") "score" else "newest")
-                }
-            ) {
-                Icon(
-                    imageVector = if (sortOrder == "newest")
-                        Icons.Default.AccessTime
-                    else
-                        Icons.AutoMirrored.Filled.TrendingUp,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(Modifier.width(4.dp))
-                Text(
-                    text = if (sortOrder == "newest") "Mới nhất" else "Điểm cao",
-                    fontSize = 12.sp
-                )
-            }
-        }
     }
 }
 

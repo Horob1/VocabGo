@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Quiz
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -87,27 +86,27 @@ fun ToeicItem(
                     )
 
                     Spacer(modifier = Modifier.height(4.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.School,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
-                            modifier = Modifier.size(14.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "${stringResource(R.string.text_test)} Toeic",
-                            fontSize = 11.sp,
-                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
+//
+//                    Row(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(bottom = 4.dp),
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        Icon(
+//                            imageVector = Icons.Default.School,
+//                            contentDescription = null,
+//                            tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+//                            modifier = Modifier.size(14.dp)
+//                        )
+//                        Spacer(modifier = Modifier.width(4.dp))
+//                        Text(
+//                            text = "${stringResource(R.string.text_test)} Toeic",
+//                            fontSize = 11.sp,
+//                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+//                            fontWeight = FontWeight.Medium
+//                        )
+//                    }
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))

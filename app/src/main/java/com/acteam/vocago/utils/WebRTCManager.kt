@@ -23,17 +23,14 @@ import org.webrtc.SurfaceViewRenderer
 import org.webrtc.VideoTrack
 import java.util.concurrent.CopyOnWriteArrayList
 
-/**
- * WebRTCManager: quản lý logic WebRTC cơ bản.
- * - Không gọi surfaceView.init(...) ở đây. UI (AndroidView.factory) phải init renderer.
- * - Manager lưu tham chiếu renderer (localRenderer / remoteRenderer) để addSink khi track có mặt.
- * - Thêm log chi tiết để debug.
- */
 class WebRTCManager(private val context: Context) {
 
     private val TAG = "WebRTCManager"
 
-    val eglBase: EglBase = EglBase.create()
+    // Hai EGL riêng biệt tránh conflict
+    val eglBaseLocal = EglBase.create()
+    val eglBaseRemote = EglBase.create()
+
     private val peerConnectionFactory: PeerConnectionFactory
 
     private var peerConnection: PeerConnection? = null
@@ -43,15 +40,12 @@ class WebRTCManager(private val context: Context) {
     private var localAudioTrack: AudioTrack? = null
     private var localMediaStream: MediaStream? = null
 
-    // remote video
     @Volatile
     private var remoteVideoTrack: VideoTrack? = null
 
-    // UI renderers (gắn bởi UI bằng gọi setLocalVideoSink / setRemoteVideoSink)
     private var localRenderer: SurfaceViewRenderer? = null
     private var remoteRenderer: SurfaceViewRenderer? = null
 
-    // pending ICE candidates nếu đến trước khi remoteDescription set
     private val pendingIceCandidates = CopyOnWriteArrayList<IceCandidate>()
 
     init {
@@ -62,75 +56,61 @@ class WebRTCManager(private val context: Context) {
         )
 
         peerConnectionFactory = PeerConnectionFactory.builder()
-            .setVideoEncoderFactory(DefaultVideoEncoderFactory(eglBase.eglBaseContext, true, true))
-            .setVideoDecoderFactory(DefaultVideoDecoderFactory(eglBase.eglBaseContext))
+            // ❗ Dùng eglBaseLocal cho encoder/decoder
+            .setVideoEncoderFactory(
+                DefaultVideoEncoderFactory(eglBaseLocal.eglBaseContext, true, true)
+            )
+            .setVideoDecoderFactory(
+                DefaultVideoDecoderFactory(eglBaseLocal.eglBaseContext)
+            )
             .createPeerConnectionFactory()
 
         Log.i(TAG, "PeerConnectionFactory initialized")
     }
 
-    /**
-     * Tạo local media stream (video + audio).
-     * Caller phải đảm bảo đã cấp CAMERA + RECORD_AUDIO permission.
-     */
     fun createLocalMediaStream(): MediaStream {
-        if (localVideoTrack != null && localAudioTrack != null && localMediaStream != null) {
-            Log.d(TAG, "createLocalMediaStream: reuse existing tracks")
-            return localMediaStream!!
-        }
+        if (localMediaStream != null) return localMediaStream!!
 
         videoCapturer = createCameraCapturer()
-            ?: throw IllegalStateException("No camera found on device")
+            ?: throw IllegalStateException("No camera found")
 
-        val surfaceHelper = SurfaceTextureHelper.create("CaptureThread", eglBase.eglBaseContext)
+        val surfaceHelper =
+            SurfaceTextureHelper.create("CaptureThread", eglBaseLocal.eglBaseContext)
         val videoSource = peerConnectionFactory.createVideoSource(videoCapturer!!.isScreencast)
         videoCapturer?.initialize(surfaceHelper, context, videoSource.capturerObserver)
-
-        try {
-            videoCapturer?.startCapture(640, 480, 30)
-            Log.d(TAG, "Camera capture started (640x480@30)")
-        } catch (t: Throwable) {
-            Log.e(TAG, "startCapture failed", t)
-        }
+        videoCapturer?.startCapture(640, 480, 30)
 
         localVideoTrack = peerConnectionFactory.createVideoTrack("LOCAL_VIDEO", videoSource)
-        Log.d(TAG, "Local video track created")
+        localAudioTrack =
+            peerConnectionFactory.createAudioTrack(
+                "LOCAL_AUDIO",
+                peerConnectionFactory.createAudioSource(MediaConstraints())
+            )
 
-        val audioSource = peerConnectionFactory.createAudioSource(MediaConstraints())
-        localAudioTrack = peerConnectionFactory.createAudioTrack("LOCAL_AUDIO", audioSource)
-        Log.d(TAG, "Local audio track created")
+        localMediaStream =
+            peerConnectionFactory.createLocalMediaStream("LOCAL_STREAM").apply {
+                addTrack(localVideoTrack)
+                addTrack(localAudioTrack)
+            }
 
-        localMediaStream = peerConnectionFactory.createLocalMediaStream("LOCAL_STREAM").apply {
-            addTrack(localVideoTrack)
-            addTrack(localAudioTrack)
-        }
-
-        // attach to renderer if UI đã set renderer trước đó
-        localRenderer?.let { renderer ->
+        localRenderer?.let {
             try {
-                Log.d(TAG, "Attaching localVideoTrack -> localRenderer")
-                localVideoTrack?.addSink(renderer)
+                localVideoTrack?.addSink(it)
+                Log.d(TAG, "Attached local video to renderer")
             } catch (t: Throwable) {
-                Log.w(TAG, "attach local renderer failed", t)
+                Log.w(TAG, "Attach local renderer failed", t)
             }
         }
 
         return localMediaStream!!
     }
 
-    /**
-     * Khởi tạo PeerConnection. Caller cung cấp callbacks để gửi ICE / xử lý remote stream.
-     */
     fun initPeerConnection(
         iceServers: List<PeerConnection.IceServer>,
         onIceCandidate: (IceCandidate) -> Unit,
         onAddRemoteStream: (MediaStream) -> Unit
     ) {
-        // dispose previous PC nếu có
-        try {
-            peerConnection?.dispose()
-        } catch (_: Exception) {
-        }
+        peerConnection?.dispose()
         peerConnection = null
         pendingIceCandidates.clear()
         remoteVideoTrack = null
@@ -143,56 +123,12 @@ class WebRTCManager(private val context: Context) {
             rtcConfig,
             object : PeerConnection.Observer {
                 override fun onIceCandidate(candidate: IceCandidate?) {
-                    if (candidate != null) {
-                        Log.d(
-                            TAG,
-                            "onIceCandidate => ${candidate.sdpMid}:${candidate.sdpMLineIndex}"
-                        )
-                        onIceCandidate(candidate)
+                    candidate?.let {
+                        Log.d(TAG, "onIceCandidate => ${it.sdpMid}:${it.sdpMLineIndex}")
+                        onIceCandidate(it)
                     }
                 }
 
-                override fun onSignalingChange(newState: PeerConnection.SignalingState?) {
-                    Log.d(TAG, "onSignalingChange: $newState")
-                }
-
-                override fun onIceConnectionChange(newState: PeerConnection.IceConnectionState?) {
-                    Log.d(TAG, "onIceConnectionChange: $newState")
-                }
-
-                override fun onIceConnectionReceivingChange(receiving: Boolean) {
-                    Log.d(TAG, "onIceConnectionReceivingChange: $receiving")
-                }
-
-                override fun onIceGatheringChange(state: PeerConnection.IceGatheringState?) {
-                    Log.d(TAG, "onIceGatheringChange: $state")
-                }
-
-                override fun onAddStream(stream: MediaStream?) {
-                    Log.d(TAG, "onAddStream called (deprecated API). stream=$stream")
-                    stream?.let { s ->
-                        val track = s.videoTracks.firstOrNull()
-                        if (track != null) {
-                            remoteVideoTrack = track
-                            Log.d(TAG, "Remote video track set from onAddStream")
-                            // attach to remote renderer nếu đã có
-                            remoteRenderer?.let { r ->
-                                try {
-                                    Log.d(
-                                        TAG,
-                                        "Attaching remoteVideoTrack -> remoteRenderer (onAddStream)"
-                                    )
-                                    track.addSink(r)
-                                } catch (t: Throwable) {
-                                    Log.w(TAG, "attach remote renderer failed", t)
-                                }
-                            }
-                        }
-                        onAddRemoteStream(s)
-                    }
-                }
-
-                // Modern callback for remote tracks
                 override fun onAddTrack(
                     receiver: RtpReceiver?,
                     mediaStreams: Array<out MediaStream>?
@@ -204,142 +140,101 @@ class WebRTCManager(private val context: Context) {
                         Log.d(TAG, "Remote video track set from onAddTrack")
                         remoteRenderer?.let { r ->
                             try {
-                                Log.d(
-                                    TAG,
-                                    "Attaching remoteVideoTrack -> remoteRenderer (onAddTrack)"
-                                )
                                 it.addSink(r)
+                                Log.d(TAG, "Remote track -> addSink succeeded")
                             } catch (t: Throwable) {
-                                Log.w(TAG, "attach remote renderer failed", t)
+                                Log.w(TAG, "Attach remote renderer failed", t)
                             }
                         }
                     }
-                    // if streams provided, call callback with first stream for legacy handling
-                    mediaStreams?.firstOrNull()?.let { s -> onAddRemoteStream(s) }
+                    mediaStreams?.firstOrNull()?.let(onAddRemoteStream)
                 }
 
-                override fun onIceCandidatesRemoved(p0: Array<out IceCandidate>?) {}
-                override fun onRemoveStream(p0: MediaStream?) {}
-                override fun onDataChannel(p0: DataChannel?) {}
-                override fun onRenegotiationNeeded() {}
+                override fun onIceConnectionChange(state: PeerConnection.IceConnectionState?) {
+                    Log.d(TAG, "onIceConnectionChange: $state")
+                }
+
                 override fun onConnectionChange(newState: PeerConnection.PeerConnectionState?) {
                     Log.d(TAG, "onConnectionChange: $newState")
                 }
 
-                override fun onStandardizedIceConnectionChange(newState: PeerConnection.IceConnectionState?) {
-                    Log.d(TAG, "onStandardizedIceConnectionChange: $newState")
+                override fun onIceConnectionReceivingChange(p0: Boolean) {
+                    TODO("Not yet implemented")
                 }
 
-                override fun onTrack(transceiver: RtpTransceiver?) {}
+                override fun onIceGatheringChange(state: PeerConnection.IceGatheringState?) {
+                    Log.d(TAG, "onIceGatheringChange: $state")
+                }
+
+                override fun onSignalingChange(newState: PeerConnection.SignalingState?) {
+                    Log.d(TAG, "onSignalingChange: $newState")
+                }
+
+                override fun onDataChannel(dc: DataChannel?) {}
+                override fun onRemoveStream(p0: MediaStream?) {}
+                override fun onRenegotiationNeeded() {}
+                override fun onAddStream(p0: MediaStream?) {}
+                override fun onTrack(p0: RtpTransceiver?) {}
+                override fun onIceCandidatesRemoved(p0: Array<out IceCandidate>?) {}
+                override fun onStandardizedIceConnectionChange(newState: PeerConnection.IceConnectionState?) {}
             }
         )
 
-        // nếu local track đã có, add vào peerConnection (Unified Plan: addTrack)
         localVideoTrack?.let {
-            try {
-                peerConnection?.addTrack(it)
-                Log.d(TAG, "Added local video track to PeerConnection")
-            } catch (t: Throwable) {
-                Log.w(TAG, "Failed to add local video track to PeerConnection", t)
-            }
+            peerConnection?.addTrack(it)
+            Log.d(TAG, "Added local video track to PeerConnection")
         }
         localAudioTrack?.let {
-            try {
-                peerConnection?.addTrack(it)
-                Log.d(TAG, "Added local audio track to PeerConnection")
-            } catch (t: Throwable) {
-                Log.w(TAG, "Failed to add local audio track to PeerConnection", t)
-            }
+            peerConnection?.addTrack(it)
+            Log.d(TAG, "Added local audio track to PeerConnection")
         }
     }
 
-    /**
-     * UI gọi để gán SurfaceViewRenderer cho local preview.
-     * NOTE: UI phải init(renderer) trước khi gọi.
-     */
     fun setLocalVideoSink(renderer: SurfaceViewRenderer) {
         localRenderer = renderer
-        Log.d(TAG, "setLocalVideoSink called. localVideoTrack exists=${localVideoTrack != null}")
-        localVideoTrack?.let { track ->
-            try {
-                // remove then add to avoid duplicates
-                try {
-                    track.removeSink(renderer)
-                } catch (_: Exception) {
-                }
-                track.addSink(renderer)
-                Log.d(TAG, "Local track -> addSink succeeded")
-            } catch (t: Throwable) {
-                Log.w(TAG, "Local track addSink failed", t)
-            }
+        localVideoTrack?.let {
+            it.removeSink(renderer)
+            it.addSink(renderer)
         }
     }
 
-    /**
-     * UI gọi để gán SurfaceViewRenderer cho remote video.
-     * NOTE: UI phải init(renderer) trước khi gọi.
-     */
     fun setRemoteVideoSink(renderer: SurfaceViewRenderer) {
         remoteRenderer = renderer
-        Log.d(TAG, "setRemoteVideoSink called. remoteVideoTrack exists=${remoteVideoTrack != null}")
-        remoteVideoTrack?.let { track ->
-            try {
-                try {
-                    track.removeSink(renderer)
-                } catch (_: Exception) {
-                }
-                track.addSink(renderer)
-                Log.d(TAG, "Remote track -> addSink succeeded")
-            } catch (t: Throwable) {
-                Log.w(TAG, "Remote track addSink failed", t)
-            }
+        remoteVideoTrack?.let {
+            it.removeSink(renderer)
+            it.addSink(renderer)
+            Log.d(TAG, "Remote track -> addSink succeeded (manual reattach)")
         }
     }
 
     fun createOffer(onOfferCreated: (SessionDescription) -> Unit) {
-        Log.d(TAG, "createOffer()")
         peerConnection?.createOffer(object : SdpObserverAdapter() {
             override fun onCreateSuccess(desc: SessionDescription?) {
-                if (desc == null) return
-                Log.d(TAG, "createOffer.onCreateSuccess: sdp length=${desc.description.length}")
-                peerConnection?.setLocalDescription(SdpObserverAdapter(), desc)
-                onOfferCreated(desc)
+                if (desc != null) {
+                    peerConnection?.setLocalDescription(SdpObserverAdapter(), desc)
+                    onOfferCreated(desc)
+                }
             }
         }, MediaConstraints())
     }
 
     fun createAnswer(onAnswerCreated: (SessionDescription) -> Unit) {
-        Log.d(TAG, "createAnswer()")
         peerConnection?.createAnswer(object : SdpObserverAdapter() {
             override fun onCreateSuccess(desc: SessionDescription?) {
-                if (desc == null) return
-                Log.d(TAG, "createAnswer.onCreateSuccess: sdp length=${desc.description.length}")
-                peerConnection?.setLocalDescription(SdpObserverAdapter(), desc)
-                onAnswerCreated(desc)
+                if (desc != null) {
+                    peerConnection?.setLocalDescription(SdpObserverAdapter(), desc)
+                    onAnswerCreated(desc)
+                }
             }
         }, MediaConstraints())
     }
 
     fun setRemoteDescription(desc: SessionDescription) {
-        Log.d(TAG, "setRemoteDescription type=${desc.type} len=${desc.description.length}")
         peerConnection?.setRemoteDescription(object : SdpObserverAdapter() {
             override fun onSetSuccess() {
-                Log.d(TAG, "setRemoteDescription: onSetSuccess")
-                // apply pending ICE if any
-                if (pendingIceCandidates.isNotEmpty()) {
-                    for (c in pendingIceCandidates) {
-                        try {
-                            peerConnection?.addIceCandidate(c)
-                        } catch (t: Throwable) {
-                            Log.w(TAG, "Failed adding pending ICE", t)
-                        }
-                    }
-                    pendingIceCandidates.clear()
-                }
-            }
-
-            override fun onSetFailure(error: String?) {
-                Log.w(TAG, "setRemoteDescription onSetFailure: $error")
+                Log.d(TAG, "Remote description set. Applying pending ICE")
+                pendingIceCandidates.forEach { peerConnection?.addIceCandidate(it) }
+                pendingIceCandidates.clear()
             }
         }, desc)
     }
@@ -347,36 +242,20 @@ class WebRTCManager(private val context: Context) {
     fun addIceCandidate(candidate: IceCandidate) {
         if (peerConnection?.remoteDescription == null) {
             pendingIceCandidates.add(candidate)
-            Log.d(
-                TAG,
-                "Queued ICE candidate (pending remoteDescription). total pending=${pendingIceCandidates.size}"
-            )
-            return
-        }
-        try {
+        } else {
             peerConnection?.addIceCandidate(candidate)
-            Log.d(TAG, "addIceCandidate applied: ${candidate.sdpMid}:${candidate.sdpMLineIndex}")
-        } catch (t: Throwable) {
-            Log.w(TAG, "addIceCandidate failed", t)
         }
     }
 
     fun close() {
         try {
             videoCapturer?.stopCapture()
-        } catch (t: Throwable) {
-            Log.w(TAG, "stop capture error", t)
-        }
-        try {
-            videoCapturer?.dispose()
         } catch (_: Exception) {
         }
+        videoCapturer?.dispose()
         videoCapturer = null
 
-        try {
-            peerConnection?.close()
-        } catch (_: Exception) {
-        }
+        peerConnection?.close()
         peerConnection = null
 
         localVideoTrack = null
@@ -396,7 +275,11 @@ class WebRTCManager(private val context: Context) {
         } catch (_: Exception) {
         }
         try {
-            eglBase.release()
+            eglBaseLocal.release()
+        } catch (_: Exception) {
+        }
+        try {
+            eglBaseRemote.release()
         } catch (_: Exception) {
         }
     }
@@ -414,9 +297,6 @@ class WebRTCManager(private val context: Context) {
     }
 }
 
-/**
- * Light SdpObserver adapter for logging.
- */
 open class SdpObserverAdapter : SdpObserver {
     override fun onCreateSuccess(p0: SessionDescription?) {}
     override fun onSetSuccess() {}
