@@ -451,6 +451,22 @@
     <string name="text_select_voice">Select voice</string>
     <string name="desc_setting_voice">Config your voice setting</string>
     <string name="title_setting_voice">Setting voice</string>
-    <string name="title_premium">PREMIUM</string>
+    <string name="finding_user">Finding user…</string>
+    <string name="text_stop">Stop</string>
+    <string name="text_end">End</string>
 
+    //premium
+    <string name="title_premium">PREMIUM</string>
+    <string name="text_go_premium">Go Premium</string>
+    <string name="text_only">Only</string>
+    <string name="premium_title">VocaGo Premium</string>
+    <string name="premium_unlock">Unlock your learning potential</string>
+    <string name="premium_feature_learning_title">Unlimited Learning</string>
+    <string name="premium_feature_learning_desc">Access all courses and exercises</string>
+    <string name="premium_feature_stats_title">Detailed Statistics</string>
+    <string name="premium_feature_stats_desc">Track your learning progress</string>
+    <string name="premium_feature_sync_title">Cloud Sync</string>
+    <string name="premium_feature_sync_desc">Save and sync across devices</string>
+    <string name="premium_feature_support_title">24/7 Support</string>
+    <string name="premium_feature_support_desc">Get priority technical support</string>
 </resources>

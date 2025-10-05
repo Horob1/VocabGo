@@ -22,6 +22,9 @@ sealed class NavScreen {
     data class CommonChatNavScreen(val id: Int, val title: String, val avatarRes: Int) : NavScreen()
 
     @Serializable
+    data object WebRtcNavScreen : NavScreen()
+
+    @Serializable
     data class NewsHistoryNavScreen(
         val isBookmark: Boolean,
     ) : NavScreen()

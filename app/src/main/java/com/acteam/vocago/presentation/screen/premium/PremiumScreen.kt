@@ -47,12 +47,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
+import com.acteam.vocago.R
 import com.acteam.vocago.data.model.PaymentRequest
 import com.acteam.vocago.data.model.PaymentResponse
 import com.acteam.vocago.presentation.screen.common.data.UIState
@@ -93,17 +95,6 @@ fun PremiumScreen(
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
-            Text(
-                text = "VocaGo Premium",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center
-            )
-            IconButton(onClick = { /*noop*/ }) {
-                Box(modifier = Modifier.size(24.dp)) {}
-            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -143,7 +134,7 @@ fun PremiumScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "🌟 VocaGo Premium 🌟",
+                text = stringResource(R.string.premium_title),
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 28.sp
@@ -154,7 +145,7 @@ fun PremiumScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Mở khóa tiềm năng học tập của bạn",
+                text = stringResource(R.string.premium_unlock),
                 style = MaterialTheme.typography.bodyLarge.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
@@ -166,26 +157,26 @@ fun PremiumScreen(
             val premiumFeatures = listOf(
                 PremiumFeature(
                     Icons.Default.School,
-                    "Học không giới hạn",
-                    "Truy cập tất cả khóa học và bài tập",
+                    stringResource(R.string.premium_feature_learning_title),
+                    stringResource(R.string.premium_feature_learning_desc),
                     Color(0xFF4CAF50)
                 ),
                 PremiumFeature(
                     Icons.Default.Analytics,
-                    "Thống kê chi tiết",
-                    "Theo dõi tiến độ học tập của bạn",
+                    stringResource(R.string.premium_feature_stats_title),
+                    stringResource(R.string.premium_feature_stats_desc),
                     Color(0xFF2196F3)
                 ),
                 PremiumFeature(
                     Icons.Default.CloudSync,
-                    "Đồng bộ đám mây",
-                    "Lưu trữ và đồng bộ trên mọi thiết bị",
+                    stringResource(R.string.premium_feature_sync_title),
+                    stringResource(R.string.premium_feature_sync_desc),
                     Color(0xFF9C27B0)
                 ),
                 PremiumFeature(
                     Icons.Default.SupportAgent,
-                    "Hỗ trợ 24/7",
-                    "Được ưu tiên hỗ trợ kỹ thuật",
+                    stringResource(R.string.premium_feature_support_title),
+                    stringResource(R.string.premium_feature_support_desc),
                     Color(0xFFFF5722)
                 )
             )
@@ -210,7 +201,7 @@ fun PremiumScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        "Chỉ với",
+                        stringResource(R.string.text_only),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
@@ -268,7 +259,7 @@ fun PremiumScreen(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Nâng cấp ngay",
+                            text = stringResource(R.string.text_go_premium),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = Color.Black
                         )

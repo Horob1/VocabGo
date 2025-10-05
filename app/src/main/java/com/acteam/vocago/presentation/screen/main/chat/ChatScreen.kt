@@ -1,6 +1,5 @@
 package com.acteam.vocago.presentation.screen.main.chat
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -23,9 +22,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -46,6 +47,7 @@ import com.acteam.vocago.presentation.screen.main.chat.component.LocationCard
 import com.acteam.vocago.presentation.screen.main.chat.component.RandomUserCard
 import com.acteam.vocago.presentation.screen.main.chat.component.UserProfileCard
 import com.acteam.vocago.utils.DeviceType
+import com.acteam.vocago.utils.RequestCameraAndMicPermissions
 import com.acteam.vocago.utils.getDeviceType
 import com.acteam.vocago.utils.responsiveSP
 import kotlin.math.absoluteValue
@@ -61,6 +63,20 @@ fun ChatScreen(
     val visibleLocationCardPage = remember { mutableStateOf<Int?>(null) }
     val user = viewModel.userState.collectAsState().value
     val deviceType = getDeviceType()
+
+    var shouldWebRtcNavigate by remember { mutableStateOf(false) }
+
+    if (shouldWebRtcNavigate) {
+        RequestCameraAndMicPermissions(
+            onGranted = {
+                rootNavController.navigate(NavScreen.WebRtcNavScreen)
+                shouldWebRtcNavigate = false
+            },
+            onDenied = {
+                shouldWebRtcNavigate = false
+            }
+        )
+    }
 
     val userProfileList = listOf(
         UserProfileData(
@@ -292,19 +308,13 @@ fun ChatScreen(
                         isRandomizing = false,
                         onRandomClick = {
                             val roles =
-                                user?.roles?.map { it.name } ?: emptyList()  // Bỏ toString()
-                            Log.d("NavigationCheck", "Roles list: $roles")
-
-// Kiểm tra có đúng 1 role và role đó toString() chứa "USER"
+                                user?.roles?.map { it.name } ?: emptyList()
                             val hasOnlyUserRole =
                                 roles.size == 1 && roles.first().toString().contains("name=USER")
-
-                            Log.d("NavigationCheck", "Has only USER role: $hasOnlyUserRole")
-
                             if (hasOnlyUserRole) {
                                 rootNavController.navigate(NavScreen.PremiumNavScreen)
                             } else {
-
+                                shouldWebRtcNavigate = true
                             }
                         },
                     )
