@@ -116,9 +116,6 @@ fun WebRtcScreen(
         if (uiState is CallUiState.Idle) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 TvNoise(modifier = Modifier.fillMaxSize())
-                Text(
-                    color = MaterialTheme.colorScheme.primary
-                )
             }
         } else if (uiState is CallUiState.Waiting) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
