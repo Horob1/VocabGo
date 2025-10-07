@@ -86,7 +86,6 @@ fun VocaScreen(
             )
     ) {
         // Header Section with improved design
-
         Row(
             modifier = Modifier
                 .padding(

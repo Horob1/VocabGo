@@ -26,20 +26,21 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Headset
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -50,6 +51,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -84,24 +86,41 @@ fun ResultDetailScreen(
     var selectedPartIndex by remember { mutableStateOf<Int?>(null) }
     var expandedExplanations by remember { mutableStateOf<Set<String>>(emptySet()) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.text_result_exam)) },
-                navigationIcon = {
-                    IconButton(onClick = { rootNavController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.05f),
+                        MaterialTheme.colorScheme.surface
+                    )
+                )
             )
-        }
-    ) { paddingValues ->
-        when (resultDetailState) {
+    ) {
+        TopAppBar(
+            title = {
+                Text(
+                    stringResource(R.string.text_result),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    rootNavController.popBackStack()
+                }) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Quay lại")
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+        )
+
+        when (val state = resultDetailState) {
             is UIState.UILoading -> {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
+                        .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
@@ -111,50 +130,51 @@ fun ResultDetailScreen(
             is UIState.UIError -> {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
+                        .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Lỗi khi tải dữ liệu",
+                        text = stringResource(R.string.text_error),
                         color = MaterialTheme.colorScheme.error
                     )
                 }
             }
 
             is UIState.UISuccess -> {
-                val data = (resultDetailState as UIState.UISuccess<List<TestResultListDto>>).data
+                val data = state.data
                 val testResult = data.firstOrNull()
 
                 if (testResult == null) {
                     Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
+                            .fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Không tìm thấy kết quả phù hợp",
+                            text = stringResource(R.string.text_no_result_yet),
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    return@Scaffold
                 }
 
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(16.dp)
-                        .padding(paddingValues),
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.05f),
+                                    MaterialTheme.colorScheme.surface
+                                )
+                            )
+                        )
+                        .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
-                        TestResultHeader(testResult)
-                    }
-
-                    item {
-                        ScoreOverviewCard(testResult)
+                        if (testResult != null) {
+                            ScoreOverviewCard(testResult)
+                        }
                     }
 
                     item {
@@ -167,12 +187,13 @@ fun ResultDetailScreen(
                         )
                     }
 
-                    itemsIndexed(testResult.parts) { index, part ->
+                    itemsIndexed(testResult?.parts ?: emptyList()) { index, part ->
                         PartResultCard(
                             part = part,
                             isExpanded = selectedPartIndex == index,
                             onExpandClick = {
-                                selectedPartIndex = if (selectedPartIndex == index) null else index
+                                selectedPartIndex =
+                                    if (selectedPartIndex == index) null else index
                             },
                             expandedExplanations = expandedExplanations,
                             onExplanationToggle = { questionId ->
@@ -191,77 +212,69 @@ fun ResultDetailScreen(
     }
 }
 
-@Composable
-fun TestResultHeader(
-    testResult: TestResultListDto,
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Column(modifier = Modifier.padding(20.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.text_result_exam),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-
-            Text(
-                text = "${stringResource(R.string.text_complete)}: ${formatDate(testResult.submittedAt)}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-        }
-    }
-}
 
 @Composable
 fun ScoreOverviewCard(testResult: TestResultListDto) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+            // Tiêu đề
             Text(
                 text = stringResource(R.string.text_overall_score),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 16.dp)
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSurface
             )
 
+            // Tổng điểm lớn ở giữa
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = testResult.totalScore.toString(),
+                    style = MaterialTheme.typography.displayMedium.copy(
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                )
+                Text(
+                    text = stringResource(R.string.text_total_score),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                )
+            }
+
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp),
+                thickness = DividerDefaults.Thickness,
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+            )
+
+            // 3 ô nhỏ còn lại (Listening, Reading, Time)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 ScoreItem(
-                    title = stringResource(R.string.text_total_score),
-                    score = testResult.totalScore.toString(),
-                    color = MaterialTheme.colorScheme.primary,
-                    icon = Icons.Default.Star
-                )
-
-                ScoreItem(
                     title = stringResource(R.string.listenning),
                     score = testResult.listeningScore.toString(),
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.tertiary,
                     icon = Icons.Default.Headset
                 )
 
@@ -275,7 +288,7 @@ fun ScoreOverviewCard(testResult: TestResultListDto) {
                 ScoreItem(
                     title = stringResource(R.string.text_time),
                     score = formatTime(testResult.completionTime),
-                    color = MaterialTheme.colorScheme.primaryContainer,
+                    color = MaterialTheme.colorScheme.tertiary,
                     icon = Icons.Default.AccessTime
                 )
             }

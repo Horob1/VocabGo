@@ -166,6 +166,9 @@ class SocketViewModel(
                     onIceCandidate = { candidate -> sendIceCandidate(candidate) },
                     onAddRemoteStream = { remoteStream ->
                         _callUiState.value = CallUiState.RemoteStream(remoteStream)
+                    },
+                    onConnectionClosed = {
+                        _callUiState.value = CallUiState.Idle
                     }
                 )
 

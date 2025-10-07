@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -26,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
@@ -60,14 +60,11 @@ fun WebRtcScreen(
     var localRendererRef by remember { mutableStateOf<SurfaceViewRenderer?>(null) }
     var isFirstClick by remember { mutableStateOf(true) }
 
-    LaunchedEffect(Unit) {
-        viewModel.initWebRTC(context)
-    }
+    // --- Init / clear WebRTC ---
+    LaunchedEffect(Unit) { viewModel.initWebRTC(context) }
+    DisposableEffect(Unit) { onDispose { viewModel.clearWebRTC() } }
 
-    DisposableEffect(Unit) {
-        onDispose { viewModel.clearWebRTC() }
-    }
-
+    // --- Release renderers on lifecycle destroy ---
     DisposableEffect(lifecycleOwner) {
         val obs = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_DESTROY) {
@@ -90,12 +87,10 @@ fun WebRtcScreen(
             .fillMaxSize()
             .onSizeChanged { parentSize = it }
     ) {
-        // --- Remote video background ---
         if (webRTCManager != null) {
             AndroidView(
                 factory = { ctx ->
                     SurfaceViewRenderer(ctx).apply {
-                        // ✅ Dùng chung EglBase với factory để tránh black screen
                         init(webRTCManager.eglBaseLocal.eglBaseContext, null)
                         setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
                         setMirror(false)
@@ -105,14 +100,20 @@ fun WebRtcScreen(
                         webRTCManager.setRemoteVideoSink(this)
                     }
                 },
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (uiState is CallUiState.Idle || uiState is CallUiState.Waiting)
+                            Modifier.alpha(0f) // ẩn tạm thời
+                        else Modifier
+                    ),
                 update = { renderer ->
                     webRTCManager.setRemoteVideoSink(renderer)
                 }
             )
         }
 
-        // --- Overlay TV noise + text khi chưa có remote ---
+        // --- Noise background khi chưa có remote stream ---
         if (uiState is CallUiState.Idle) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 TvNoise(modifier = Modifier.fillMaxSize())
@@ -122,13 +123,15 @@ fun WebRtcScreen(
                 TvNoise(modifier = Modifier.fillMaxSize())
                 Text(
                     text = stringResource(R.string.finding_user),
-                    color = MaterialTheme.colorScheme.primary
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.primary
                 )
             }
         }
 
-        // --- Local preview (floating window) ---
-        if (webRTCManager != null) {
+        // --- Local preview (floating) ---
+        if (webRTCManager != null &&
+            (uiState !is CallUiState.Idle && uiState !is CallUiState.Waiting)
+        ) {
             FloatingLocalVideo(
                 modifier = Modifier
                     .size(width = 120.dp, height = 160.dp)

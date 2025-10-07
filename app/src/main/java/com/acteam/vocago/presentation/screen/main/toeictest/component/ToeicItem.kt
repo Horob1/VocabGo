@@ -56,7 +56,8 @@ fun ToeicItem(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
-        Box {
+        Column {
+            // Header gradient
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -68,50 +69,20 @@ fun ToeicItem(
                                 MaterialTheme.colorScheme.secondary
                             )
                         )
-                    )
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+                    ),
+                contentAlignment = Alignment.CenterStart
             ) {
-                // Header Section - Compact
-                Column {
-                    Text(
-                        text = title,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
+                Text(
+                    text = title,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
 
-                    Spacer(modifier = Modifier.height(4.dp))
-//
-//                    Row(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(bottom = 4.dp),
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//                        Icon(
-//                            imageVector = Icons.Default.School,
-//                            contentDescription = null,
-//                            tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
-//                            modifier = Modifier.size(14.dp)
-//                        )
-//                        Spacer(modifier = Modifier.width(4.dp))
-//                        Text(
-//                            text = "${stringResource(R.string.text_test)} Toeic",
-//                            fontSize = 11.sp,
-//                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
-//                            fontWeight = FontWeight.Medium
-//                        )
-//                    }
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Stats Row - More compact
+            // Nội dung bên dưới
+            Column(modifier = Modifier.padding(16.dp)) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

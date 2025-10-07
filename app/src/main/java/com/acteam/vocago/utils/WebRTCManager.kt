@@ -108,7 +108,8 @@ class WebRTCManager(private val context: Context) {
     fun initPeerConnection(
         iceServers: List<PeerConnection.IceServer>,
         onIceCandidate: (IceCandidate) -> Unit,
-        onAddRemoteStream: (MediaStream) -> Unit
+        onAddRemoteStream: (MediaStream) -> Unit,
+        onConnectionClosed: () -> Unit
     ) {
         peerConnection?.dispose()
         peerConnection = null
@@ -156,10 +157,17 @@ class WebRTCManager(private val context: Context) {
 
                 override fun onConnectionChange(newState: PeerConnection.PeerConnectionState?) {
                     Log.d(TAG, "onConnectionChange: $newState")
+                    if (newState == PeerConnection.PeerConnectionState.CLOSED ||
+                        newState == PeerConnection.PeerConnectionState.DISCONNECTED ||
+                        newState == PeerConnection.PeerConnectionState.FAILED
+                    ) {
+                        onConnectionClosed()
+                    }
                 }
 
+
                 override fun onIceConnectionReceivingChange(p0: Boolean) {
-                    TODO("Not yet implemented")
+                    Log.d(TAG, "onConnectionChange:")
                 }
 
                 override fun onIceGatheringChange(state: PeerConnection.IceGatheringState?) {

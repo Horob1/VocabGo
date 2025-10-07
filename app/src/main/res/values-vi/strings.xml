@@ -305,8 +305,8 @@
     <string name="desc_voca_center">Sổ tay từ vựng của bạn</string>
     <string name="vocalist_title">Tên sổ tay</string>
     <string name="title_add_voca_list">Thêm sổ tay mới</string>
-    <string name="desc_sync_voca_list_to_server">Đồng bộ từ server</string>
-    <string name="desc_sync_voca_list_from_server">Đồng bộ lên server</string>
+    <string name="desc_sync_voca_list_to_server">Đồng bộ lên server</string>
+    <string name="desc_sync_voca_list_from_server">Đồng bộ từ server</string>
     <string name="tap_to_view_detail">Nhấn để xem chi tiết</string>
     <string name="title_sync_voca_list">Lựa chọn đồng bộ</string>
     <string name="tap_to_choose">Nhấn để chọn</string>
@@ -431,7 +431,7 @@
     <string name="text_pitch">Độ cao</string>
     <string name="text_low">Thấp</string>
     <string name="text_high">Cao</string>
-    <string name="text_voice">Gọng nói</string>
+    <string name="text_voice">Giọng nói</string>
     <string name="text_select_voice">Chọn giọng nói</string>
     <string name="desc_setting_voice">Tuỳ chỉnh giọng nói theo ý bạn</string>
     <string name="title_setting_voice">Tuỳ chỉnh giọng nói</string>
