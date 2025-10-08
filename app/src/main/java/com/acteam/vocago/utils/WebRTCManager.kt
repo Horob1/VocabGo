@@ -27,7 +27,6 @@ class WebRTCManager(private val context: Context) {
 
     private val TAG = "WebRTCManager"
 
-    // Hai EGL riêng biệt tránh conflict
     val eglBaseLocal = EglBase.create()
     val eglBaseRemote = EglBase.create()
 
@@ -56,7 +55,6 @@ class WebRTCManager(private val context: Context) {
         )
 
         peerConnectionFactory = PeerConnectionFactory.builder()
-            // ❗ Dùng eglBaseLocal cho encoder/decoder
             .setVideoEncoderFactory(
                 DefaultVideoEncoderFactory(eglBaseLocal.eglBaseContext, true, true)
             )

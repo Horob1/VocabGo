@@ -165,15 +165,15 @@ fun WebRtcScreen(
                 )
             }
 
-            Button(
-                onClick = {
-                    viewModel.leaveCall()
-                    isFirstClick = true
-                },
-                enabled = !isFirstClick
-            ) {
-                Text(stringResource(R.string.text_stop))
-            }
+//            Button(
+//                onClick = {
+//                    viewModel.leaveCall()
+//                    isFirstClick = true
+//                },
+//                enabled = !isFirstClick
+//            ) {
+//                Text(stringResource(R.string.text_stop))
+//            }
 
             Button(onClick = {
                 viewModel.leaveCall()

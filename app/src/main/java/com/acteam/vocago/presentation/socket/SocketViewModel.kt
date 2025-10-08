@@ -106,7 +106,7 @@ class SocketViewModel(
 
         socket?.apply {
             on(Socket.EVENT_CONNECT) {
-                println("✅ Socket connected with clientId=$clientId")
+                println("Socket connected with clientId=$clientId")
             }
 
             on("logout") { logout() }
@@ -137,13 +137,11 @@ class SocketViewModel(
             on("stranger-found") { args ->
                 val data = parseArgToJson(args.getOrNull(0))
                 if (data == null) {
-                    println("⚠️ stranger-found: payload null/invalid")
                     return@on
                 }
                 roomId = data.optString("roomId", null)
                 val isInitiator = data.optBoolean("isInitiator", false)
                 if (roomId == null) {
-                    println("⚠️ stranger-found: missing roomId")
                     return@on
                 }
                 _callUiState.value = CallUiState.Connected(roomId!!, isInitiator)
