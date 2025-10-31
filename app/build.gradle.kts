@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -60,6 +61,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.stream.webrtc.android)
     //
     implementation(libs.androidx.browser)
@@ -89,6 +91,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.generativeai.v060)
     implementation(libs.foundation)
+    implementation(libs.firebase.messaging.ktx.v2400)
     ksp(libs.androidx.room.compiler)
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)

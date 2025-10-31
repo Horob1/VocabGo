@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.acteam.vocago" />
+                  <option name="mobileSdkAppId" value="1:11145739817:android:67f1065a0f894d80cb6638" />
+                  <option name="projectId" value="vocago-f5bda" />
+                  <option name="projectNumber" value="11145739817" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

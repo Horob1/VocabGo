@@ -34,4 +34,6 @@ interface UserRemoteDataSource {
     suspend fun checkIn(): CheckInResponse
 
     suspend fun getRanking(): RankingResponse
+
+    suspend fun saveFcmToken(fcmToken: String, credentialId: String): Result<Unit>
 }

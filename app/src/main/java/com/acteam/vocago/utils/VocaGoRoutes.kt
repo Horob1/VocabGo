@@ -56,5 +56,6 @@ sealed class VocaGoRoutes(val path: String) {
 
     //premium
     data object CreatePayment : VocaGoRoutes("/api/v1/payment")
+    data object SaveFcmToken : VocaGoRoutes("/api/v1/user/save-fcm-token")
 
 }

@@ -219,5 +219,21 @@ class UserRemoteDataSourceImpl(
         }
     }
 
+    override suspend fun saveFcmToken(fcmToken: String, credentialId: String): Result<Unit> {
+        return try {
+            val response = client.post(VocaGoRoutes.SaveFcmToken.path) {
+                contentType(ContentType.Application.Json)
+                setBody(mapOf("fcmToken" to fcmToken, "credentialId" to credentialId))
+            }
+
+            when (response.status) {
+                HttpStatusCode.OK -> Result.success(Unit)
+                else -> Result.failure(ApiException(response.status.value))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
 
 }

@@ -40,7 +40,7 @@ val viewModelModule = module {
     }
     viewModel {
         LoginViewModel(
-            get(), get()
+            get(), get(), get()
         )
     }
     viewModel {
@@ -118,7 +118,7 @@ val viewModelModule = module {
 
     viewModel {
         ProfileViewModel(
-            get(), get(), get(), get(), get(), get(), get(), get(), get(), get()
+            get(), get(), get(), get(), get(), get(), get(), get(), get(), get(),get()
         )
     }
     viewModel {

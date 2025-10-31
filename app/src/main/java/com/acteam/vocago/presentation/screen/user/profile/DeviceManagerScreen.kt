@@ -196,11 +196,13 @@ fun DeviceItem(
                 )
             }
 
-            IconButton(
-                onClick = onDeleteClick,
-                colors = IconButtonDefaults.iconButtonColors(contentColor = Color.Red)
-            ) {
-                Icon(Icons.Default.Delete, contentDescription = "Xóa thiết bị")
+            if (!device.isCurrent) {
+                IconButton(
+                    onClick = onDeleteClick,
+                    colors = IconButtonDefaults.iconButtonColors(contentColor = Color.Red)
+                ) {
+                    Icon(Icons.Default.Delete, contentDescription = "Xóa thiết bị")
+                }
             }
         }
     }

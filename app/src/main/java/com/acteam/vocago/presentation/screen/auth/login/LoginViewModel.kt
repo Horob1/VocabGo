@@ -6,15 +6,20 @@ import androidx.lifecycle.viewModelScope
 import com.acteam.vocago.data.model.ApiException
 import com.acteam.vocago.domain.usecase.LoginGoogleUseCase
 import com.acteam.vocago.domain.usecase.LoginUseCase
+import com.acteam.vocago.domain.usecase.SaveFcmTokenUseCase
 import com.acteam.vocago.presentation.screen.auth.login.data.LoginFormState
 import com.acteam.vocago.presentation.screen.common.data.UIErrorType
 import com.acteam.vocago.presentation.screen.common.data.UIState
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
-    private val loginGoogleUseCase: LoginGoogleUseCase
+    private val loginGoogleUseCase: LoginGoogleUseCase,
+    private val saveFcmTokenUseCase: SaveFcmTokenUseCase,
 ) : ViewModel() {
     private val _loginFormState = MutableStateFlow(LoginFormState())
     val loginFormState = _loginFormState
@@ -45,7 +50,6 @@ class LoginViewModel(
 
     fun login(afterLoginSuccess: suspend () -> Unit) {
         if (!_loginFormState.value.isLoginButtonEnabled) {
-            Log.d("login", "❌ Login button disabled → abort login")
             return
         }
 
@@ -55,7 +59,8 @@ class LoginViewModel(
             val password = _loginFormState.value.password
 
             try {
-                loginUseCase(username = username, password = password)
+                val response = loginUseCase(username = username, password = password)
+                handleFcmToken(response.credentialId)
                 afterLoginSuccess()
                 _loginUIState.value = UIState.UISuccess(Unit)
 
@@ -83,6 +88,7 @@ class LoginViewModel(
             _loginUIState.value = UIState.UILoading
             try {
                 val response = loginGoogleUseCase(token)
+                handleFcmToken(response.credentialId)
                 Log.d("login response", response.toString())
                 afterLoginSuccess()
                 _loginUIState.value = UIState.UISuccess(Unit)
@@ -113,6 +119,16 @@ class LoginViewModel(
                 } else {
                     _loginUIState.value = UIState.UIError(UIErrorType.UnknownError)
                 }
+            }
+        }
+    }
+
+    private fun handleFcmToken(credentialId: String) {
+        viewModelScope.launch {
+            try {
+                val fcmToken = FirebaseMessaging.getInstance().token.await()
+                saveFcmTokenUseCase(fcmToken, credentialId)
+            } catch (e: Exception) {
             }
         }
     }

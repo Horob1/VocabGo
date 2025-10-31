@@ -13,6 +13,7 @@ import com.acteam.vocago.data.model.DeviceDTO
 import com.acteam.vocago.data.model.GetTwoFAQrCodeResponse
 import com.acteam.vocago.data.model.UpdateUserDto
 import com.acteam.vocago.domain.usecase.ChangePasswordUseCase
+import com.acteam.vocago.domain.usecase.GetCurrentDeviceUseCase
 import com.acteam.vocago.domain.usecase.GetDevicesListUseCase
 import com.acteam.vocago.domain.usecase.GetLocalUserProfileUseCase
 import com.acteam.vocago.domain.usecase.GetTwoFAQrCodeUseCase
@@ -47,7 +48,8 @@ class ProfileViewModel(
     private val logoutUserDeviceUseCase: LogoutDeviceUseCase,
     private val getTwoFAQrCodeUseCase: GetTwoFAQrCodeUseCase,
     private val setUp2FAUseCase: SetUp2FAUseCase,
-    private val turnOff2FAUseCase: TurnOff2FAUseCase
+    private val turnOff2FAUseCase: TurnOff2FAUseCase,
+    private val getCredentialIdUseCase: GetCurrentDeviceUseCase
 ) : ViewModel() {
     private val _userProfile = getLocalUserProfileUseCase().stateIn(
         viewModelScope,
@@ -241,15 +243,23 @@ class ProfileViewModel(
     fun getDevicesList() {
         viewModelScope.launch {
             _deviceListState.value = UIState.UILoading
+
             val result = getDevicesListUseCase()
+            val currentCredentialId = getCredentialIdUseCase()
+
             if (result.isSuccess && result.getOrNull() != null) {
                 val data = result.getOrNull()!!
-                _deviceListState.value = UIState.UISuccess(data)
+
+                val mappedData = data.map { device ->
+                    device.copy(isCurrent = device._id == currentCredentialId)
+                }
+                _deviceListState.value = UIState.UISuccess(mappedData)
             } else {
                 _deviceListState.value = UIState.UIError(UIErrorType.ServerError)
             }
         }
     }
+
 
     private val _logoutDeviceState = MutableStateFlow<UIState<Unit>>(UIState.UILoading)
     val logoutDeviceState: StateFlow<UIState<Unit>> = _logoutDeviceState

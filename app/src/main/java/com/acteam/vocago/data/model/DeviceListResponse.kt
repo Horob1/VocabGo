@@ -2,12 +2,6 @@ package com.acteam.vocago.data.model
 
 import kotlinx.serialization.Serializable
 
-data class DeviceListResponse(
-    val success: Boolean,
-    val message: String,
-    val data: List<DeviceDTO>
-)
-
 @Serializable
 data class DeviceDTO(
     val _id: String,
@@ -16,8 +10,9 @@ data class DeviceDTO(
     val userAgent: String,
     val iat: String,
     val exp: String,
-    val fcmTokens: String?,
-    val is2FAVerified: Boolean,
+    val fcmTokens:  List<String>? = null ,
+    val is2FAVerified: Boolean = false,
     val createdAt: String,
-    val updatedAt: String
+    val updatedAt: String,
+    val isCurrent: Boolean = false
 )

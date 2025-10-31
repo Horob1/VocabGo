@@ -7,6 +7,7 @@ import com.acteam.vocago.BuildConfig
 import com.acteam.vocago.data.model.UserDto
 import com.acteam.vocago.domain.usecase.DeleteInfoUseCase
 import com.acteam.vocago.domain.usecase.GetCredentialIdUseCase
+import com.acteam.vocago.domain.usecase.GetCurrentDeviceUseCase
 import com.acteam.vocago.domain.usecase.GetLocalUserProfileUseCase
 import com.acteam.vocago.domain.usecase.GetLoginStateUseCase
 import com.acteam.vocago.utils.WebRTCManager

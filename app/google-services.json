@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "11145739817",
+    "project_id": "vocago-f5bda",
+    "storage_bucket": "vocago-f5bda.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:11145739817:android:67f1065a0f894d80cb6638",
+        "android_client_info": {
+          "package_name": "com.acteam.vocago"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkBE7WIsest1sAd7zvXAJyemTBrjYkJdg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

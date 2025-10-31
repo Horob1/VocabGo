@@ -18,6 +18,7 @@ import com.acteam.vocago.domain.usecase.GetChapterUseCase
 import com.acteam.vocago.domain.usecase.GetChosenNewsCategoriesUseCase
 import com.acteam.vocago.domain.usecase.GetChosenNewsLevelUseCase
 import com.acteam.vocago.domain.usecase.GetCredentialIdUseCase
+import com.acteam.vocago.domain.usecase.GetCurrentDeviceUseCase
 import com.acteam.vocago.domain.usecase.GetDevicesListUseCase
 import com.acteam.vocago.domain.usecase.GetDictionaryWordUseCase
 import com.acteam.vocago.domain.usecase.GetDynamicColorUseCase
@@ -60,6 +61,7 @@ import com.acteam.vocago.domain.usecase.RegisterUseCase
 import com.acteam.vocago.domain.usecase.ResendVerifyEmailUseCase
 import com.acteam.vocago.domain.usecase.ResetPasswordUseCase
 import com.acteam.vocago.domain.usecase.SaveChapterUseCase
+import com.acteam.vocago.domain.usecase.SaveFcmTokenUseCase
 import com.acteam.vocago.domain.usecase.SaveOnBoardingStateUseCase
 import com.acteam.vocago.domain.usecase.SaveTTSConfigUseCase
 import com.acteam.vocago.domain.usecase.SaveWordToVocaListUseCase
@@ -401,4 +403,12 @@ val useCaseModule = module {
     single {
         CreatePaymentUseCase(get())
     }
+
+    single {
+        SaveFcmTokenUseCase(get())
+    }
+    single {
+        GetCurrentDeviceUseCase(get())
+    }
+
 }
