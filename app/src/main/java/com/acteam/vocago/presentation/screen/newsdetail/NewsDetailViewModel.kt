@@ -1,7 +1,9 @@
 package com.acteam.vocago.presentation.screen.newsdetail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.acteam.vocago.BuildConfig
 import com.acteam.vocago.data.model.NewsDetailDto
 import com.acteam.vocago.data.model.NewsDetailLogQsaDto
 import com.acteam.vocago.data.model.WordDto
@@ -13,6 +15,7 @@ import com.acteam.vocago.domain.usecase.ToggleBookmarkNewsUseCase
 import com.acteam.vocago.presentation.screen.common.data.UIErrorType
 import com.acteam.vocago.presentation.screen.common.data.UIState
 import com.acteam.vocago.presentation.screen.newsdetail.data.PracticeData
+import com.acteam.vocago.utils.decryptAES
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -150,15 +153,19 @@ class NewsDetailViewModel(
     suspend fun getNewsDetail(id: String) {
         _uiState.value = UIState.UILoading
         delay(500L)
+
         val newsDetail = getNewsDetailUseCase(id)
         if (newsDetail == null) {
-            _uiState.value = UIState.UIError(
-                UIErrorType.NotFoundError
-            )
+            _uiState.value = UIState.UIError(UIErrorType.NotFoundError)
             return
         }
+
+        val decrypted = decryptAES(newsDetail.content, BuildConfig.CRYPTO_KEY)
+        Log.d("TAG", "getNewsDetail: $decrypted")
+        val decryptedNews = newsDetail.copy(content = decrypted)
+
         retryPractice()
         _isShowTranslate.value = false
-        _uiState.value = UIState.UISuccess(newsDetail)
+        _uiState.value = UIState.UISuccess(decryptedNews)
     }
 }

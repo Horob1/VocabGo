@@ -28,6 +28,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", "\"${localProperties["BASE_URL"]}\"")
         buildConfigField("String", "GEMINI_API_KEY", "\"${localProperties["GEMINI_API_KEY"]}\"")
+        buildConfigField("String", "CRYPTO_KEY", "\"${localProperties["CRYPTO_KEY"]}\"")
         buildConfigField("String", "GOOGLE_CLIENT_ID", "\"${localProperties["GOOGLE_CLIENT_ID"]}\"")
         javaCompileOptions {
             annotationProcessorOptions {

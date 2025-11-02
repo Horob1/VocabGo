@@ -47,7 +47,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val notification = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.capybara_avatar)
-            .setContentTitle(title ?: "Thông báo")
+            .setContentTitle(title ?: "")
             .setContentText(body ?: "")
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
