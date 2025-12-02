@@ -68,6 +68,7 @@ class LoginViewModel(
                 if (e is ApiException) {
                     _loginUIState.value = when (e.code) {
                         422 -> UIState.UIError(UIErrorType.UnexpectedEntityError)
+                        423 -> UIState.UIError(UIErrorType.LockedError)
                         400 -> UIState.UIError(UIErrorType.BadRequestError)
                         401 -> UIState.UIError(UIErrorType.UnauthorizedError)
                         404 -> UIState.UIError(UIErrorType.NotFoundError)

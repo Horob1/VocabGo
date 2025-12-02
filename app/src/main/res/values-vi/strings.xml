@@ -74,6 +74,7 @@
     <string name="text_2fa_authentication">Xác thực 2 bước</string>
     <string name="text_2fa_description">Bạn cần xác thực 2 bước để tiếp tục.</string>
     <string name="text_verify_2fa_description">"Vui lòng mở ứng dụng Google Authenticator, tìm đến tài khoản Vocago và nhập mã 6 chữ số đang hiển thị. Mã sẽ thay đổi sau mỗi 30 giây"</string>
+    <string name="text_locked_account_5_minutes">Đăng nhập sai nhiều lần. Thử lại sau 5 phút</string>
 
     <string name="text_hello">Xin chào</string>
     <string name="text_anonymous">khách</string>

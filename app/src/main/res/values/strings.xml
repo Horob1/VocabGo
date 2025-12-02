@@ -55,6 +55,7 @@
     <string name="text_email_is_not_verify">Email is not verify</string>
     <string name="text_username_or_email_already_exists">Username or email already exists</string>
     <string name="text_error_user_not_found">User does not exist</string>
+    <string name="text_locked_account_5_minutes">Too many failed login attempts. Please try again in 5 minutes</string>
 
     <!--Register-->
     <string name="input_first_name">First Name</string>

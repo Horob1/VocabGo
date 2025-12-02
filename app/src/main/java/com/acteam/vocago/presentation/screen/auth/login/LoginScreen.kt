@@ -359,7 +359,20 @@ fun LoginScreen(
                 }
             } else if (errorType == UIErrorType.PreconditionFailedError) {
                 show2FADialog = true
-            } else {
+            } else if (errorType == UIErrorType.LockedError) {
+                ErrorBannerWithTimer(
+                    title = stringResource(R.string.text_error),
+                    message = stringResource(R.string.text_locked_account_5_minutes),
+                    iconResId = R.drawable.error_banner,
+                    onTimeout = { viewModel.clearUIState() },
+                    onDismiss = { viewModel.clearUIState() },
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(horizontal = 16.dp)
+                )
+                clearErrorSignal = false
+            }
+            else {
                 val messageResId = when (errorType) {
                     UIErrorType.NotFoundError,
                     UIErrorType.UnauthorizedError,
